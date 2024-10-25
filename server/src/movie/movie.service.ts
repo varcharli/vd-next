@@ -1,17 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { Movie } from '../models/movie.entity';
+import { Movie,Gallery } from '../models/movie.entity';
 
 @Injectable()
 export class MovieService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    @InjectRepository(Gallery)
+    private readonly galleryRepository: Repository<Gallery>,
   ) {}
 
   create(movie: Movie): Promise<Movie> {
-    return this.movieRepository.save(movie);
+    const newMovie = this.movieRepository.create(movie);
+    return this.movieRepository.save(newMovie);
   }
 
   update(id: number, movie: Movie): Promise<Movie> {

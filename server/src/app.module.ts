@@ -69,7 +69,27 @@ import { TagController } from './tag/tag.controller';
       Tag,
     ]),
   ],
-  controllers: [AppController, UserController, MovieController, ActorController, DirectorController, PlayLinkController, PlayListController, GalleryController, TagController],
-  providers: [AppService, UserService, MovieService, ActorService, DirectorService, PlayLinkService, PlayListService, GalleryService, TagService],
+  controllers: [
+    AppController, 
+    UserController, 
+    MovieController, 
+    ActorController, 
+    DirectorController, 
+    PlayLinkController, 
+    PlayListController, 
+    GalleryController, 
+    TagController
+  ],
+  providers: [
+    AppService, 
+    UserService, 
+    MovieService, 
+    ActorService, 
+    DirectorService, 
+    PlayLinkService, 
+    PlayListService, 
+    GalleryService, 
+    TagService
+  ],
 })
 export class AppModule { }

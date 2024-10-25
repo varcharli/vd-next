@@ -5,7 +5,7 @@ import { DeleteResult } from 'typeorm';
 
 @Controller('movies')
 export class MovieController {
-  constructor(private readonly movieService: MovieService) {}
+  constructor(private readonly movieService: MovieService) { }
 
   @Post()
   create(@Body() movie: Movie): Promise<Movie> {
@@ -18,8 +18,9 @@ export class MovieController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number): Promise<DeleteResult> {
-    return this.movieService.delete(id);
+  async delete(@Param('id') id: number): Promise<Boolean> {
+    const result = await this.movieService.delete(id);
+    return result.affected > 0;
   }
 
   @Get()
