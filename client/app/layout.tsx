@@ -23,8 +23,8 @@ export const metadata: Metadata = {
 const menuButton = (name: string, href: string) => {
   return (
     <Link href={href}
-      className="text-small-semi text-ui-fg-base flex items-center gap-x-2 basis-0
-       text-gray-400 hover:text-black">
+      className="text-small-semi text-ui-fg-base  font-thin flex items-center gap-x-2 basis-0
+       text-gray-700 hover:text-black">
       {name}
     </Link>
   );
@@ -35,7 +35,7 @@ const footer = () => {
     <footer className="bottom-0 left-0 w-full flex justify-between 
       items-center p-4  border-t border-gray-300 z-50">
       <div style={{ flex: 1 }} >
-        {menuButton('Home', '/')}
+        {menuButton('Movies', '/movies')}
       </div>
       <div style={{ flex: 1 }} >
         {menuButton('History', '/history')}
@@ -50,7 +50,7 @@ const footer = () => {
 const header = () => {
   return (
     <header className="fixed top-0 left-0 w-full flex justify-between 
-    items-center p-4  border-b border-gray-300 z-50">
+    items-center p-4 bg-white  border-b border-gray-300 z-50">
       {/* bg-gray-100 */}
       <div style={{ flex: 1 }} >
         {menuButton('Menu', '/')}
@@ -79,10 +79,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {header()}
-        <div style={{ marginTop: 80, marginLeft: 10, marginRight: 10, minHeight: 800 }} >
+        {/* <div style={{ marginTop: 80, marginLeft: 10, marginRight: 10, minHeight: 800 }} > */}
+        {/* <div className="container mt-20 mx-10 min-h-screen"> */}
+        <div style={{height: 60}}></div>
+        <div className="min-h-screen justify-center">
           {children}
         </div>
-        {footer()}
+        <div className="py-4 w-full flex items-center justify-center">
+          {footer()}
+        </div>
       </body>
     </html>
   );

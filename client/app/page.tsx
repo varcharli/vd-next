@@ -1,12 +1,8 @@
 // app/page.tsx
-import Movies from './movies';
+import { redirect } from 'next/navigation';
 
 const Home = () => {
-  return (
-    <div>
-      <Movies />
-    </div>
-  );
+    redirect('/movies');
 };
 
 export default Home;
