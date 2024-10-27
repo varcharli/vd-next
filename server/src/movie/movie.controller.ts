@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { Movie } from '../models/movie.entity';
 import { DeleteResult } from 'typeorm';
+
 
 @Controller('movies')
 export class MovieController {
@@ -23,9 +24,15 @@ export class MovieController {
     return result.affected > 0;
   }
 
+
   @Get()
-  findAll(): Promise<Movie[]> {
-    return this.movieService.findAll();
+  findAll(
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+    @Query('order') order?: string,
+    @Query('title') title?: string
+  ): Promise<Movie[]> {
+    return this.movieService.findAll({ limit, offset, order, title });
   }
 
   @Get(':id')

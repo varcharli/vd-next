@@ -1,53 +1,18 @@
 // app/page.tsx
 import { Suspense } from 'react';
-import axios from 'axios';
-import Image from 'next/image';
-
-
-interface Movie {
-    releaseDate: string;
-    posterUrl: string | undefined;
-    id: number;
-    name: string;
-    description: string;
-    sn: string;
-}
+import models, { Movie } from '@/services/models';
+import  MovieBox  from '@/components/MovieBox';
 
 const fetchMovies = async (): Promise<Movie[]> => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/movies`);
+    const response = await models.movie.get();
     const data = response.data;
     data.forEach((movie: Movie) => {
         const date = new Date(movie.releaseDate);
         movie.releaseDate = date.toLocaleDateString('en-CA');
-    }
-    );
+    });
     return data;
 };
 
-const MovieBox = ({ movie }: { movie: Movie }) => {
-    return (
-        <div className='flex flex-col my-2' >
-            <div className="w-48 h-72 border border-gray-300
-            rounded-lg overflow-hidden shadow-lg m-2">
-                <Image src={movie.posterUrl || '/default-poster.jpg'} alt={movie.name} width={200} height={300}
-                    className='object-cover w-full h-full'
-                />
-            </div>
-
-            <div className='w-48 mx-2 flex justify-between' >
-                <div className="font-thin text-gray-600">
-                    {movie.sn}
-                </div>
-                <div className='font-thin text-gray-600 text-right' >
-                    {movie.releaseDate}
-                </div>
-            </div>
-            <div className="w-48 mx-2 ">
-                <h2 className="line-clamp-2 overflow-hidden text-ellipsis">{movie.name}</h2>
-            </div>
-        </div>
-    );
-};
 
 const MoviesList = async () => {
     const movies = await fetchMovies();
@@ -62,6 +27,8 @@ const MoviesList = async () => {
         </div>
     );
 };
+
+
 
 const Movies = () => {
     return (
