@@ -38,7 +38,7 @@ export class MovieService {
       offset = 0,
       order = 'id DESC',
       title }: FindAllParams
-  ): Promise<Movie[]> {
+  ): Promise<[Movie[],number]> {
     const [field, direction] = (order).split(' ');
 
     const query: any = {
@@ -56,7 +56,7 @@ export class MovieService {
       ];
     }
 
-    return this.movieRepository.find(query);
+    return this.movieRepository.findAndCount(query);
   }
 
   findById(id: number): Promise<Movie> {

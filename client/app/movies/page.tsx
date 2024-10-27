@@ -1,36 +1,8 @@
-// app/page.tsx
+// app/movies/page.tsx
+import MoviesList from '@/components/MoviesList';
 import { Suspense } from 'react';
-import models, { Movie } from '@/services/models';
-import  MovieBox  from '@/components/MovieBox';
 
-const fetchMovies = async (): Promise<Movie[]> => {
-    const response = await models.movie.get();
-    const data = response.data;
-    data.forEach((movie: Movie) => {
-        const date = new Date(movie.releaseDate);
-        movie.releaseDate = date.toLocaleDateString('en-CA');
-    });
-    return data;
-};
-
-
-const MoviesList = async () => {
-    const movies = await fetchMovies();
-
-    return (
-        <div className='flex flex-wrap' >
-            {movies.map(movie => (
-                <div key={movie.id}>
-                    <MovieBox movie={movie} />
-                </div>
-            ))}
-        </div>
-    );
-};
-
-
-
-const Movies = () => {
+const MoviesPage = () => {
     return (
         <div className="flex">
             <div className="min-w-40 p-4" >
@@ -53,4 +25,7 @@ const Movies = () => {
     );
 };
 
-export default Movies;
+
+
+
+export default MoviesPage;

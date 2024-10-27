@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Link from 'next/link';
+import { NextUIProvider } from "@nextui-org/react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -83,7 +84,9 @@ export default function RootLayout({
         {/* <div className="container mt-20 mx-10 min-h-screen"> */}
         <div style={{height: 60}}></div>
         <div className="min-h-screen justify-center">
+          <NextUIProvider>
           {children}
+          </NextUIProvider>
         </div>
         <div className="py-4 w-full flex items-center justify-center">
           {footer()}

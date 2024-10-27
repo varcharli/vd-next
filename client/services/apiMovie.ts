@@ -12,13 +12,16 @@ export interface Movie {
 
 interface movieGetParams {
     limit?: number;
-    offset?: number;
+    page?: number;
     title?: string;
     order?: string;
 }
 
 export const movie = {
-    async get({ offset, limit, title, order }: movieGetParams = {}) {
+    async get({ page, limit, title, order }: movieGetParams = {}) {
+        const defaultPageSize = 28;
+        const offset = ((page || 1) - 1) * (limit || defaultPageSize);
+
         return await api.get('/movies', {
             params: {
                 offset,
@@ -26,6 +29,7 @@ export const movie = {
                 title,
                 order,
             },
+
         });
     },
     async getById(id: number) {
