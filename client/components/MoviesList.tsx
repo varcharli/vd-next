@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Pagination } from '@nextui-org/react';
 import models, { Movie } from '@/services/models';
 import MovieBox from '@/components/MovieBox';
+import { Empty, Loading } from '@/components';
 
 interface MoviesListProps {
     page: number;
@@ -13,9 +14,13 @@ interface MoviesListProps {
 
 const MoviesList = ({ page, limit, title, order, onPageChange }: MoviesListProps) => {
     const [movies, setMovies] = useState<Movie[]>([]);
-    // const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    // const limit = 16;
+    const [isLoading, setIsLoading] = useState(true);
+    const minHeight = limit === 8 ? 'h-[400px]' :
+        limit === 12 ? 'h-[1300px]' :
+            limit === 14 ? 'h-[800px]' :
+                'h-[80vh]'; // 默认值
+
 
 
 
@@ -29,36 +34,39 @@ const MoviesList = ({ page, limit, title, order, onPageChange }: MoviesListProps
         });
         const totalPages = Number.isInteger(response.data[1]) ? Math.ceil(response.data[1] / limit) : 0;
 
-        // if(data.length < limit) {
-        //     const diff = limit - data.length;
-        //     const addData = [];
-        //     for (let i = 0; i < diff; i++) {
-        //         addData.push({ id: i, name: '', releaseDate: '', sn: '', posterUrl: '' });
-        //     }
-        // }
-
         return { data, totalPages };
     };
 
     useEffect(() => {
+
+
+
         const loadMovies = async () => {
             // const order = localStorage.getItem('movieOrder') || 'id DESC';
             const { data, totalPages } = await fetchMovies(page, limit, title, order);
             setMovies(data);
             setTotalPages(totalPages);
+            setIsLoading(false);
         };
         loadMovies();
-    }, [page, limit, title,order]);
+    }, [page, limit, title, order]);
+
+    if (isLoading) {
+        return <Loading />;
+    }
 
     return (
         <div>
-            <div className='flex flex-wrap'>
-                {movies.map(movie => (
-                    <div key={movie.id}>
-                        <MovieBox movie={movie} />
-                    </div>
-                ))}
-            </div>
+            {movies.length === 0
+                ? <Empty /> :
+                <div className={`flex flex-wrap ${minHeight}`}>
+                    {movies.map(movie => (
+                        <div key={movie.id}>
+                            <MovieBox movie={movie} />
+                        </div>
+                    ))}
+                </div>
+            }
             <div className='flex justify-center'>
                 {totalPages > 1 &&
                     <Pagination

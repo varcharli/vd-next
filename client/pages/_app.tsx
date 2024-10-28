@@ -57,7 +57,7 @@ const Header = () => {
             items-center p-4 bg-white  border-b border-gray-300 z-50">
                 {/* bg-gray-100 */}
                 <div className='flex gap-3' style={{ flex: 1 }} >
-                    {menuButton('Home', '/')}
+                    {menuButton('Home', '/movies')}
                     {menuButton('History', '/history')}
                     {menuButton('List', '/lists')}
                 </div>

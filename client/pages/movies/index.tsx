@@ -69,8 +69,8 @@ const MoviesPage = () => {
 
     const orderLi = (orderName: string, orderTitle: string) => {
         return (
-            <li className="mb-2 py-1"  >
-                <GoTriangleRight className={`inline-block mb-1 mr-1 
+            <li className="py-2"  >
+                <GoTriangleRight className={`inline-block mb-1 mr-1
                     ${order === orderName ? "text-black-500" : "text-transparent"}`} />
                 <button onClick={() => handleOrderChange(orderName)}
                     className={order === orderName ? "text-black-500" : "text-gray-500"}>
