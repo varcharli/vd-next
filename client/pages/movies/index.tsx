@@ -2,6 +2,8 @@
 import { MoviesList } from '@/components';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import React from 'react';
+import { GoTriangleRight } from "react-icons/go";
 
 
 const MoviesPage = () => {
@@ -12,6 +14,7 @@ const MoviesPage = () => {
     const [order, setOrder] = useState('id DESC');
     const [limit, setLimit] = useState(pageSize);
     const [isLoading, setIsLoading] = useState(true);
+
 
     useEffect(() => {
         const storedOrder = localStorage.getItem('movieOrder');
@@ -56,7 +59,7 @@ const MoviesPage = () => {
         setOrder(order);
         router.push({
             pathname: `/movies`,
-            query: { page: 1, limit, title}
+            query: { page: 1, limit, title }
         });
     }
 
@@ -64,28 +67,27 @@ const MoviesPage = () => {
         return <div>Loading...</div>
     }
 
+    const orderLi = (orderName: string, orderTitle: string) => {
+        return (
+            <li className="mb-2 py-1"  >
+                <GoTriangleRight className={`inline-block mb-1 mr-1 
+                    ${order === orderName ? "text-black-500" : "text-transparent"}`} />
+                <button onClick={() => handleOrderChange(orderName)}
+                    className={order === orderName ? "text-black-500" : "text-gray-500"}>
+                    {orderTitle}
+                </button>
+            </li>
+        );
+    }
+
     return (
         <div className="flex">
             <div className="min-w-40 p-4" >
                 <h1 className="text-2xl font-thin text-gray-700 my-4">Sort by</h1>
                 <ul>
-                    <li className="mb-2" >
-                        <button onClick={() => handleOrderChange('id DESC')}
-                            className={order === "id DESC" ? "text-red-500" : "text-black"}
-                            >
-                            Create Date
-                        </button>
-                    </li>
-                    <li className="mb-2"  >
-                        <button onClick={() => handleOrderChange('releaseDate DESC')}>
-                            Release Date
-                        </button>
-                    </li>
-                    <li className="mb-2"  >
-                        <button onClick={() => handleOrderChange('sn ASC')}>
-                            Serial Number
-                        </button>
-                    </li>
+                    {orderLi('id DESC', 'Create Date')}
+                    {orderLi('releaseDate DESC', 'Release Date')}
+                    {orderLi('sn ASC', 'Serial Number')}
                 </ul>
             </div>
             <div className='w-full flex justify-center'>
