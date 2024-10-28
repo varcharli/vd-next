@@ -4,13 +4,12 @@ import models, { Movie } from '@/services/models';
 import { useRouter } from 'next/router';
 import { LinkButton } from '@/components';
 import UserImg from '@/public/images/user.svg';
-
+import { Loading } from '@/components';
 
 const MoviePage = () => {
   const router = useRouter();
-  // const movieId = parseInt(router.query.id as string, 10);
-  // console.log('movieId:', movieId);
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -30,6 +29,7 @@ const MoviePage = () => {
       const date = new Date(data.releaseDate);
       data.releaseDate = date.toLocaleDateString('en-CA');
       setMovie(data);
+      setIsLoading(false);
     };
     fetchMovie();
   }, [router]);
@@ -40,8 +40,8 @@ const MoviePage = () => {
     window.history.back();
   }
 
-  if (!movie) {
-    return <div>Loading...</div>;
+  if (!movie || isLoading) {
+    return <Loading />;
   }
 
   return (

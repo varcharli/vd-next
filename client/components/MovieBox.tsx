@@ -17,7 +17,7 @@ const MovieBox = ({ movie }: { movie: Movie }) => {
             border border-gray-300 rounded-2xl
             overflow-hidden shadow-lg m-2">
                 {movie.posterUrl ? <Image src={movie.posterUrl} alt={movie.name} width={200} height={300} />
-                    : <div className='w-[200px] h-[300px] bg-slate-300'/>
+                    : <div className='w-[200px] h-[300px] bg-slate-200'/>
                 }
 
             </div>

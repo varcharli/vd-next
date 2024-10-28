@@ -14,12 +14,13 @@ interface MoviesListProps {
 
 const MoviesList = ({ page, limit, title, order, onPageChange }: MoviesListProps) => {
     const [movies, setMovies] = useState<Movie[]>([]);
+    const [nullMovies, setNullMovies] = useState<Movie[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
-    const minHeight = limit === 8 ? 'h-[400px]' :
-        limit === 12 ? 'h-[1300px]' :
-            limit === 14 ? 'h-[800px]' :
-                'h-[80vh]'; // 默认值
+    // const minHeight = limit === 8 ? 'h-[400px]' :
+    //     limit === 12 ? 'h-[1300px]' :
+    //         limit === 14 ? 'h-[800px]' :
+    //             'h-[80vh]'; // 默认值
 
 
 
@@ -38,13 +39,22 @@ const MoviesList = ({ page, limit, title, order, onPageChange }: MoviesListProps
     };
 
     useEffect(() => {
-
-
-
         const loadMovies = async () => {
             // const order = localStorage.getItem('movieOrder') || 'id DESC';
             const { data, totalPages } = await fetchMovies(page, limit, title, order);
             setMovies(data);
+            setNullMovies([]);
+            if (data.length < limit) {
+                const nullMovies = Array(limit - data.length).fill({
+                    id: 0,
+                    name: '',
+                    releaseDate: '',
+                    posterUrl: '',
+                    sn: '',
+                });
+                setNullMovies(nullMovies);
+            }
+
             setTotalPages(totalPages);
             setIsLoading(false);
         };
@@ -59,9 +69,15 @@ const MoviesList = ({ page, limit, title, order, onPageChange }: MoviesListProps
         <div>
             {movies.length === 0
                 ? <Empty /> :
-                <div className={`flex flex-wrap ${minHeight}`}>
+                // <div className={`flex flex-wrap ${minHeight}`}>
+                <div className='flex flex-wrap'>
                     {movies.map(movie => (
                         <div key={movie.id}>
+                            <MovieBox movie={movie} />
+                        </div>
+                    ))}
+                    {nullMovies.map((movie, index) => (
+                        <div key={index}>
                             <MovieBox movie={movie} />
                         </div>
                     ))}

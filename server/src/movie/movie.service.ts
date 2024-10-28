@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Like, Repository } from 'typeorm';
+import { DeleteResult, ILike, Repository } from 'typeorm';
 import { Movie, Gallery } from '../models/movie.entity';
 
 
@@ -51,8 +51,8 @@ export class MovieService {
 
     if (title) {
       query.where = [
-        { name: Like(`%${title}%`) },
-        { sn: Like(`%${title}%`) }
+        { name: ILike(`%${title}%`) },
+        { sn: ILike(`%${title}%`) }
       ];
     }
 
