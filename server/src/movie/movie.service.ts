@@ -60,6 +60,9 @@ export class MovieService {
   }
 
   findById(id: number): Promise<Movie> {
-    return this.movieRepository.findOneBy({ id });
+    return this.movieRepository.findOne({
+      where: { id },
+      relations: ['actors', 'tags', 'playLinks', 'directors', 'playLists', 'galleries'],
+    });
   }
 }

@@ -1,13 +1,15 @@
 import api from './api';
+import { Actor } from './apiActor';
 
 export interface Movie {
     releaseDate: string;
     posterUrl: string | undefined;
-    bigPosterUrl: string | undefined;
+    largePosterUrl: string | undefined;
     id: number;
     name: string;
     description: string;
     sn: string;
+    actors: Actor[];
 }
 
 interface movieGetParams {

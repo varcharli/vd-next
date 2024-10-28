@@ -29,7 +29,7 @@ export class Movie {
     largePosterUrl: string;
 
     @Column({ nullable: true })
-    releaseDate: Date;
+    releaseDate: string;
 
     @ManyToMany(() => Director)
     @JoinTable()
