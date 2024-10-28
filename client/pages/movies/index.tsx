@@ -1,5 +1,5 @@
 // app/movies/page.tsx
-import MoviesList from '@/components/MoviesList';
+import { MoviesList } from '@/components';
 import { Suspense } from 'react';
 
 const MoviesPage = () => {
@@ -15,7 +15,7 @@ const MoviesPage = () => {
             </div>
             <div className='w-full flex justify-center'>
                 <div className="p-4 max-w-screen-2xl ">
-                    <h1 className="text-4xl font-bold my-4">Movies</h1>
+                    {/* <h1 className="text-4xl font-bold my-4">Movies</h1> */}
                     <Suspense fallback={<p>Loading...</p>}>
                         <MoviesList />
                     </Suspense>
