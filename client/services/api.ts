@@ -28,13 +28,19 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // 清除本地存储中的 token
-      localStorage.removeItem('token');
-      // 重定向到登录页面
-      const router = useRouter();
-      router.push('/login');
+    // if path is /auth/login, then don't redirect to login page
+    if (error.config.url === '/auth/login') {
+      // do nothing
+    } else {
+      if (error.response && error.response.status === 401) {
+        // 清除本地存储中的 token
+        localStorage.removeItem('token');
+        // 重定向到登录页面
+        const router = useRouter();
+        router.push('/login');
+      }
     }
+    
     return Promise.reject(error);
   }
 );

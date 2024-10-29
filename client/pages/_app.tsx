@@ -5,6 +5,9 @@ import type { AppProps } from 'next/app';
 import { Input } from '@nextui-org/react';
 import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import Logo from '@/public/icons/logo.svg';
+import Image from 'next/image';
+import Head from 'next/head';
 
 const menuButton = (name: string, href: string) => {
     return (
@@ -15,23 +18,6 @@ const menuButton = (name: string, href: string) => {
         </Link>
     );
 };
-
-// const footer = () => {
-//     return (
-//         <footer className="bottom-0 left-0 w-full flex justify-between 
-//         items-center p-4  border-t border-gray-300 z-50">
-//             <div style={{ flex: 1 }} >
-//                 {menuButton('Movies', '/movies')}
-//             </div>
-//             <div style={{ flex: 1 }} >
-//                 {menuButton('History', '/history')}
-//             </div>
-//             <div style={{ flex: 1 }} >
-//                 {menuButton('List', '/lists')}
-//             </div>
-//         </footer>
-//     );
-// }
 
 const Header = () => {
     const router = useRouter();
@@ -55,26 +41,27 @@ const Header = () => {
         <div className='mt-[65px]'>
             <header className="fixed top-0 left-0 w-full flex justify-between 
             items-center p-4 bg-white  border-b border-gray-300 z-50">
-                {/* bg-gray-100 */}
-                <div className='flex gap-3' style={{ flex: 1 }} >
-                    {menuButton('Home', '/movies')}
-                    {menuButton('History', '/history')}
-                    {menuButton('List', '/lists')}
+                <div className="flex gap-5 justify-end">
+                    <Image src={Logo} alt="logo" width={32} height={32} />
+                    <Input id="search_input"
+                        placeholder="Type to search..."
+                        size="md"
+                        startContent={<FaSearch
+                            onClick={() => handleSearch()}
+                            className='text-slate-400 w-4 cursor-pointer' />}
+                        type="search"
+                        onKeyDown={handleKeyDown}
+                    />
                 </div>
+
                 <div className="text-center" style={{ flex: 3 }} >
-                    {/* <h1 className="text-2xl font-bold uppercase text-gray-600">Vd Next</h1> */}
+                    {/* <h1 className="text-2xl font-bold uppercase text-gray-600">Vd-Next</h1> */}
                 </div>
                 <div className='items-end' style={{ flex: 1 }} >
-                    <div className="flex gap-5 justify-end">
-                        <Input id="search_input"
-                            placeholder="Type to search..."
-                            size="md"
-                            startContent={<FaSearch 
-                                onClick={() => handleSearch()}
-                                className='text-slate-400 w-4 cursor-pointer' />}
-                            type="search"
-                            onKeyDown={handleKeyDown}
-                        />
+                    <div className='flex gap-3' style={{ flex: 1 }} >
+                        {menuButton('Home', '/movies')}
+                        {menuButton('History', '/history')}
+                        {menuButton('List', '/lists')}
                     </div>
                 </div>
             </header>
@@ -84,11 +71,17 @@ const Header = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
-        <NextUIProvider>
-            {Header()}
-            <Component {...pageProps} />
-            {/* {footer()} */}
-        </NextUIProvider>
+        <>
+            <Head>
+                <link rel="icon" href="/icons/logo.svg" />
+                <title>VD-Next</title>
+            </Head>
+            <NextUIProvider>
+                {Header()}
+                <Component {...pageProps} />
+                {/* {footer()} */}
+            </NextUIProvider>
+        </>
     );
 }
 
