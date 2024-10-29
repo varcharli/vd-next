@@ -1,9 +1,10 @@
 // pages/movies/index.tsx
-import { MoviesList } from '@/components';
+import MoviesList from './MoviesList';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { GoTriangleRight } from "react-icons/go";
+import PlayListNav from './PlayListNav';
 
 
 const MoviesPage = () => {
@@ -89,6 +90,7 @@ const MoviesPage = () => {
                     {orderLi('releaseDate DESC', 'Release Date')}
                     {orderLi('sn ASC', 'Serial Number')}
                 </ul>
+                <PlayListNav />
             </div>
             <div className='w-full flex justify-center'>
                 <div className="p-4 max-w-screen-2xl ">

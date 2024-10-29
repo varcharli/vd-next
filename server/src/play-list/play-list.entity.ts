@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { Movie } from '../movie/movie.entity';
+import { User } from '../user/user.entity';
 // PlayList Entity
 @Entity()
 export class PlayList {
@@ -18,4 +19,13 @@ export class PlayList {
     @ManyToMany(() => Movie)
     @JoinTable()
     movies: Movie[];
+
+    @ManyToOne(() => User, user => user.playlists)
+    user: User;
+
+    @Column({default: false})
+    isSys: boolean;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    updatedAt: Date;
 }

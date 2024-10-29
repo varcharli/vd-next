@@ -17,14 +17,14 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async me(@Request() req) {
-    const userId = req.user.id; 
+    const userId = req.user.userId; 
     return this.authService.me(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('change-password')
   async changePassword(@Request() req, @Body() body) {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.authService.changePassword(userId,body.oldPassword,body.newPassword);
   }
 }
