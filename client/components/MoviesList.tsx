@@ -40,7 +40,6 @@ const MoviesList = ({ page, limit, title, order, onPageChange }: MoviesListProps
 
     useEffect(() => {
         const loadMovies = async () => {
-            // const order = localStorage.getItem('movieOrder') || 'id DESC';
             const { data, totalPages } = await fetchMovies(page, limit, title, order);
             setMovies(data);
             setNullMovies([]);
@@ -54,11 +53,16 @@ const MoviesList = ({ page, limit, title, order, onPageChange }: MoviesListProps
                 });
                 setNullMovies(nullMovies);
             }
-
             setTotalPages(totalPages);
-            setIsLoading(false);
         };
-        loadMovies();
+
+        const loading = async () => {
+            setIsLoading(true);
+            await loadMovies();
+            setIsLoading(false);
+        }
+
+        loading();
     }, [page, limit, title, order]);
 
     if (isLoading) {

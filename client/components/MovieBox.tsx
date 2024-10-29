@@ -14,12 +14,12 @@ const MovieBox = ({ movie }: { movie: Movie }) => {
         <div className='flex flex-col my-2'
             onClick={() => { handleMovieClick(movie) }}>
             <div className="w-48 h-72 
-            border border-gray-300 rounded-2xl
+            border border-gray-400 rounded-2xl
             overflow-hidden shadow-lg m-2">
-                {movie.posterUrl ? <Image src={movie.posterUrl} alt={movie.name} width={200} height={300} />
-                    : <div className='w-[200px] h-[300px] bg-slate-200'/>
+                {movie.posterUrl
+                    ? <Image isZoomed src={movie.posterUrl} alt={movie.name} width={200} height={300} />
+                    : <div className='w-[200px] h-[300px] bg-slate-200' />
                 }
-
             </div>
 
             <div className='w-48 h-6  mx-2 flex justify-between' >

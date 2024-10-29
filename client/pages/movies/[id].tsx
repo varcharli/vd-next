@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, Avatar } from '@nextui-org/react';
 import models, { Movie } from '@/services/models';
 import { useRouter } from 'next/router';
-import { LinkButton } from '@/components';
+import { Gallery, LinkButton } from '@/components';
 import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
 
@@ -46,7 +46,7 @@ const MoviePage = () => {
 
   return (
     <div className="flex">
-      <div className="p-4 flex flex-col gap-3 w-[350px]" >
+      <div className="p-4 flex flex-col gap-3 flex-initial w-[500px]" >
         <LinkButton onClick={handleBack} >
           Back to movies
         </LinkButton>
@@ -57,29 +57,31 @@ const MoviePage = () => {
         <div className="font-thin" >
           {movie.releaseDate}
         </div>
-        <div className="font-thin  gap-3 flex ">
+        <div className="font-thin gap-3 flex flex-wrap ">
           {movie.actors.map(actor => {
             return (
               <div key={actor.id} className='flex flex-col gap-1 items-center' >
                 <Avatar src={actor.photoUrl || UserImg} className='h-25 w-25' />
-                {actor.name}
+                <h1 className='w-20' >{actor.name}</h1> 
               </div>);
           }
           )}
-
-
-
         </div>
         <div className="font-thin text-gray-600">
           {movie.description}
         </div>
 
       </div>
-      <div className="flex flex-col flex-grow" >
+      <div className="flex flex-col flex-initial" >
         <div className="flex justify-center p-4" >
           <Image className='border border-gray-300 rounded-2xl shadow-lg '
             src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'} alt={movie.name} />
-
+        </div>
+        <div className='p-4'>
+          <Gallery
+            images={movie.galleries.map((i) => i.url).
+              filter((i) => i) as string[]
+            } />
         </div>
       </div>
     </div>

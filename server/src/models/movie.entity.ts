@@ -5,7 +5,7 @@
 // 添加playList表（播放列表），字段：名称，总数，海报URL。
 // 添加gallerey表（电影图片），字段：URL。
 
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne, Index } from 'typeorm';
 
 // Movie Entity
 @Entity()
@@ -19,6 +19,7 @@ export class Movie {
     @Column({ nullable: true })
     description: string;
 
+    @Index()
     @Column({ nullable: true })
     sn: string;
 
@@ -28,6 +29,7 @@ export class Movie {
     @Column({ nullable: true })
     largePosterUrl: string;
 
+    @Index()
     @Column({ nullable: true })
     releaseDate: string;
 

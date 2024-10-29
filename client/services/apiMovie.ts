@@ -1,5 +1,6 @@
 import api from './api';
 import { Actor } from './apiActor';
+import { Gallery } from './apiGallery';
 
 export interface Movie {
     releaseDate: string;
@@ -10,6 +11,7 @@ export interface Movie {
     description: string;
     sn: string;
     actors: Actor[];
+    galleries: Gallery[];
 }
 
 interface movieGetParams {

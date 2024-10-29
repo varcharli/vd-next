@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, ILike, Repository } from 'typeorm';
+import { DeleteResult, ILike, Repository, SelectQueryBuilder } from 'typeorm';
 import { Movie, Gallery } from '../models/movie.entity';
 
 
@@ -38,8 +38,23 @@ export class MovieService {
       offset = 0,
       order = 'id DESC',
       title }: FindAllParams
-  ): Promise<[Movie[],number]> {
+  ): Promise<[Movie[], number]> {
     const [field, direction] = (order).split(' ');
+    
+
+    // const queryBuilder: SelectQueryBuilder<Movie> = this.movieRepository.createQueryBuilder('movie');
+    // queryBuilder
+    //   .take(limit)
+    //   .skip(offset)
+    //   .orderBy(`"${field}"`, direction.toUpperCase() as 'ASC' | 'DESC', 'NULLS LAST');
+    // if(title) {
+    //   queryBuilder.where([
+    //     { name: ILike(`%${title}%`) },
+    //     { sn: ILike(`%${title}%`) }
+    //   ]);
+    // }
+    // const query = queryBuilder.getManyAndCount();
+    // return query;
 
     const query: any = {
       take: limit,

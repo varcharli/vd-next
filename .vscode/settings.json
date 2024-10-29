@@ -21,6 +21,17 @@
             "database": "vd",
             "username": "postgres",
             "password": "nononopwd"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "jvd_next",
+            "group": "local",
+            "database": "jvd_next",
+            "username": "postgres",
+            "password": "nononopwd"
         }
     ]
 }
