@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { GalleryService } from './gallery.service';
-import { Gallery } from '../models/movie.entity';
+import { Gallery } from './gallery.entity';
 
 @Controller('galleries')
 export class GalleryController {

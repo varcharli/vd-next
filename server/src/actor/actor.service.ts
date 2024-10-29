@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { Actor } from '../models/movie.entity';
+import { Actor } from './actor.entity';
 
 @Injectable()
 export class ActorService {

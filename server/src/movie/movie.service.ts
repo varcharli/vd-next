@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository, SelectQueryBuilder } from 'typeorm';
-import { Movie, Gallery } from '../models/movie.entity';
+import { Movie } from './movie.entity';
+import { Gallery } from '../gallery/gallery.entity';
 
 
 interface FindAllParams {
@@ -16,8 +17,8 @@ export class MovieService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
-    @InjectRepository(Gallery)
-    private readonly galleryRepository: Repository<Gallery>,
+    // @InjectRepository(Gallery)
+    // private readonly galleryRepository: Repository<Gallery>,
   ) { }
 
   create(movie: Movie): Promise<Movie> {

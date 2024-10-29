@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
 import { ActorService } from './actor.service';
-import { Actor } from '../models/movie.entity';
+import { Actor } from './actor.entity';
 
 @Controller('actors')
 export class ActorController {

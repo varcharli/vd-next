@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Tag } from '../models/movie.entity';
+import { Tag } from './tag.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -8,7 +8,7 @@ export class TagService {
   constructor(
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
-  ) {}
+  ) { }
 
   create(tag: Tag): Promise<Tag> {
     return this.tagRepository.save(tag);

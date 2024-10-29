@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { PlayListService } from './play-list.service';
-import { PlayList } from '../models/movie.entity';
+import { PlayList } from './play-list.entity';
 
 @Controller('play-lists')
 export class PlayListController {

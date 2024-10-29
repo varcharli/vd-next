@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PlayLink } from '../models/movie.entity';
+import { PlayLink } from './play-link.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 

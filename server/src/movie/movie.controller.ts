@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards } from '@nestjs/common';
 import { MovieService } from './movie.service';
-import { Movie } from '../models/movie.entity';
-import { DeleteResult } from 'typeorm';
+import { Movie } from './movie.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 
 @Controller('movies')
+@UseGuards(JwtAuthGuard)
 export class MovieController {
   constructor(private readonly movieService: MovieService) { }
 

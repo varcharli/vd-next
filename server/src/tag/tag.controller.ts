@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { TagService } from './tag.service';
-import { Tag } from '../models/movie.entity';
+import { Tag } from './tag.entity';
 
 @Controller('tags')
 export class TagController {

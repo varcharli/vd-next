@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { DirectorService } from './director.service';
-import { Director } from '../models/movie.entity';
+import { Director } from './director.entity';
 
 @Controller('directors')
 export class DirectorController {
