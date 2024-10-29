@@ -32,8 +32,11 @@ export class UserService {
         return this.userRepository.find();
     }
 
-    async findOne(id: number): Promise<User | undefined> {
-        return this.userRepository.findOneBy({ id });
+    async findById(id: number): Promise<User | undefined> {
+        return this.userRepository.findOne({
+            where: {id} ,
+            select: ['id', 'name', 'isAdmin']
+        });
     }
 
     async findOneByName(name: string): Promise<User | undefined> {
@@ -46,5 +49,25 @@ export class UserService {
 
     async remove(id: number): Promise<void> {
         await this.userRepository.delete(id);
+    }
+
+    async save(user: User): Promise<User> {
+        return this.userRepository.save(user);
+    }
+    async checkPassword(id:number, password: string): Promise<User | null> {
+        const user = await this.userRepository.findOneBy({id});
+        if (user && await bcrypt.compare(password, user.passwordHashed)) {
+            return user;
+        }
+        return null;
+    }
+
+    async changePassword(id: number, newPassword: string): Promise<User> {
+        const user = await this.userRepository.findOneBy ({id});
+        if (user) {
+            user.passwordHashed = await bcrypt.hash(newPassword, 10);
+            return this.userRepository.save(user);
+        }
+        return null;
     }
 }

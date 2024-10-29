@@ -31,4 +31,17 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async me(id:number) {
+    return this.usersService.findById(id);
+  }
+
+  async changePassword(id:number,oldPassword:string,newPassword:string){
+    const user = await this.usersService.checkPassword(id,oldPassword);
+    if(!user) return {ok:false};
+    await this.usersService.changePassword(id,newPassword);
+    return {ok:true};
+  }
+
+
 }

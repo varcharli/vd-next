@@ -17,7 +17,20 @@ const config: Config = {
     },
   },
   plugins: [
-    nextui()
+    nextui(
+      {
+        themes:{
+          light:{
+            colors:{
+              primary: "#999999",
+              secondary: "#AAAAAA",
+              background: "#FFFFFF",
+              foreground: "#000000",
+            }
+          }
+        }
+      }
+    )
   ],
 };
 export default config;

@@ -34,24 +34,24 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <Input
-                            isClearable
+                            
                             fullWidth
                             label="Name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            onClear={() => setName('')}
+                            // onClear={() => setName('')}
                             required
                         />
                     </div>
                     <div className="mb-4">
                         <Input
                             type="password"
-                            isClearable
+                            
                             fullWidth
                             label="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            onClear={() => setPassword('')}
+                            // onClear={() => setPassword('')}
                             required
                         />
                     </div>

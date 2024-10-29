@@ -82,7 +82,7 @@ const MoviesPage = () => {
 
     return (
         <div className="flex">
-            <div className="min-w-40 p-4" >
+            <div className="w-[200px] p-4" >
                 <h1 className="text-2xl font-thin text-gray-700 my-4">Sort by</h1>
                 <ul>
                     {orderLi('id DESC', 'Create Date')}

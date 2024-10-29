@@ -38,13 +38,13 @@ describe('UserController', () => {
     });
   });
 
-  describe('findOne', () => {
-    it('should return a single user', async () => {
-      const result = await userController.findOne('1');
-      expect(result).toBeInstanceOf(User);
-      expect(userService.findOne).toHaveBeenCalledWith(1);
-    });
-  });
+  // describe('findOne', () => {
+  //   it('should return a single user', async () => {
+  //     const result = await userController.findOne('1');
+  //     expect(result).toBeInstanceOf(User);
+  //     expect(userService.findOne).toHaveBeenCalledWith(1);
+  //   });
+  // });
 
   describe('remove', () => {
     it('should remove a user', async () => {

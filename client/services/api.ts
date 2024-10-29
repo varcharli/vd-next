@@ -1,6 +1,6 @@
 // client/services/api.ts
 import axios from 'axios';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { auth } from './apiAuth';
 
 const api = axios.create({
@@ -36,8 +36,9 @@ api.interceptors.response.use(
         // 清除本地存储中的 token
         localStorage.removeItem('token');
         // 重定向到登录页面
-        const router = useRouter();
-        router.push('/login');
+        // const router = useRouter();
+        // router.push('/login');
+        window.location.href = '/login';
       }
     }
     

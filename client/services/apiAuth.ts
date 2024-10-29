@@ -24,12 +24,8 @@ export const auth = {
     //     const response = await api.post('/auth/register', { username, password });
     //     return response.data;
     // },
-    async me(token: string): Promise<User> {
-        const response = await api.get('/auth/me', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+    async me(): Promise<User> {
+        const response = await api.get('/auth/me');
         return response.data;
     },
     saveToken(token: string) {
@@ -41,5 +37,13 @@ export const auth = {
     deleteToken() {
         localStorage.removeItem(tokenKey);
     },
+    logout() {
+        this.deleteToken();
+        window.location.href = '/login';
+    },
+    async changePassword(oldPassword: string, newPassword: string): Promise<AuthResponse> {
+        const response = await api.post('/auth/change-password', { oldPassword, newPassword });
+        return response.data;
+    }
 
 };
