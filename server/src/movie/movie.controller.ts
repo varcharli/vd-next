@@ -41,4 +41,9 @@ export class MovieController {
   findById(@Param('id') id: number): Promise<Movie> {
     return this.movieService.findById(id);
   }
+
+  @Post(':id/play-lists')
+  setPlayLists(@Param('id') id: number, @Body('playListIds') playListIds: number[]): Promise<boolean> {
+    return this.movieService.setPlayLists(id, playListIds);
+  }
 }

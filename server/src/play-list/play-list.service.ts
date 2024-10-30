@@ -64,6 +64,7 @@ export class PlayListService {
     }
   }
 
+  // 还没有验证的危险操作
   async addMovie(userId:number, playlistId: number, movieId: number): Promise<PlayList> {
     if( await this.checkOwner(userId, playlistId) === false){
       throw new Error('Not the owner of the playlist');
@@ -72,7 +73,8 @@ export class PlayListService {
     playlist.movies.push({ id: movieId } as any);
     return this.playlistRepository.save(playlist);
   }
-
+  
+  // 还没有验证的危险操作
   async removeMovie(userId:number, playlistId: number, movieId: number): Promise<PlayList> {
     if( await this.checkOwner(userId, playlistId) === false){
       throw new Error('Not the owner of the playlist');

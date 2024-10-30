@@ -14,8 +14,9 @@ export class ActorService {
     return this.actorRepository.save(actor);
   }
 
-  update(id: number, actor: Actor): Promise<Actor> {
-    return this.actorRepository.save({ ...actor, id });
+  async update(id: number, actor: Actor): Promise<Actor> {
+    await this.actorRepository.update(id,actor );
+    return this.actorRepository.findOneBy({id});
   }
 
   delete(id: number): Promise<DeleteResult> {

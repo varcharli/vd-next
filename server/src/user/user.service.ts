@@ -39,8 +39,16 @@ export class UserService {
         });
     }
 
-    async findOneByName(name: string): Promise<User | undefined> {
-        return this.userRepository.findOneBy({ name });
+    // async findOneByName(name: string): Promise<User | undefined> {
+    //     return this.userRepository.findOneBy({ name });
+    // }
+
+    async checkPasswordByUserName(name: string, password: string): Promise<User | null> {
+        const user = await this.userRepository.findOneBy({ name });
+        if (user && await bcrypt.compare(password, user.passwordHashed)) {
+            return user;
+        }
+        return null;
     }
 
     async create(user: User): Promise<User> {
@@ -66,7 +74,8 @@ export class UserService {
         const user = await this.userRepository.findOneBy ({id});
         if (user) {
             user.passwordHashed = await bcrypt.hash(newPassword, 10);
-            return this.userRepository.save(user);
+            await this.userRepository.update(id, { passwordHashed: user.passwordHashed });
+            return user;
         }
         return null;
     }

@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { Gallery, LinkButton } from '@/components';
 import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
+import { MovieActionBar } from './MovieActionBar';
+
 
 const MoviePage = () => {
   const router = useRouter();
@@ -51,6 +53,7 @@ const MoviePage = () => {
           Back to movies
         </LinkButton>
         <h1 className="text-3xl">{movie.name}</h1>
+
         <div className="font-thin">
           {movie.sn}
         </div>
@@ -62,7 +65,7 @@ const MoviePage = () => {
             return (
               <div key={actor.id} className='flex flex-col gap-1 items-center' >
                 <Avatar src={actor.photoUrl || UserImg} className='h-25 w-25' />
-                <h1 className='w-20' >{actor.name}</h1> 
+                <h1 className='w-20' >{actor.name}</h1>
               </div>);
           }
           )}
@@ -70,13 +73,14 @@ const MoviePage = () => {
         <div className="font-thin text-gray-600">
           {movie.description}
         </div>
-
+        <MovieActionBar currentMovie={movie} />
       </div>
       <div className="flex flex-col flex-initial" >
         <div className="flex justify-center p-4" >
           <Image className='border border-gray-300 rounded-2xl shadow-lg '
             src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'} alt={movie.name} />
         </div>
+
         <div className='p-4'>
           <Gallery
             images={movie.galleries.map((i) => i.url).

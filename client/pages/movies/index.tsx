@@ -5,14 +5,16 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { GoTriangleRight } from "react-icons/go";
 import PlayListNav from './PlayListNav';
-import Link from 'next/link';
+import { FaHome } from 'react-icons/fa';
+
 
 const MoviesPage = () => {
     const router = useRouter();
     const page = Number(router.query.page) || 1;
     const pageSize = Number(router.query.limit) || 0;
     const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title || '';
-    const playListId = Number(router.query.playListId) || undefined;
+    // const playListId = Number(router.query.playListId) || undefined;
+    const [playListId, setPlayListId] = useState<number | undefined>(undefined);
     const [order, setOrder] = useState('id DESC');
 
     const [limit, setLimit] = useState(pageSize);
@@ -24,8 +26,14 @@ const MoviesPage = () => {
         if (storedOrder) {
             setOrder(storedOrder);
         }
+        setPlayListId(Number(router.query.playListId) || undefined);
         setIsLoading(false);
-    }, []);
+    }, [router.query.playListId]);
+
+    const handleHome = () => {
+        // setPlayListId(undefined);
+        router.push('/movies');
+    }
 
     const handlePageChange = (page: number) => {
         // window.location.href = `/movies?page=${page}&limit=${limit}&title=${title}`;
@@ -58,6 +66,7 @@ const MoviesPage = () => {
     }, [limit]);
 
     const handlePlayListChange = (playListId?: number) => {
+        setPlayListId(playListId);
         router.push({
             pathname: `/movies`,
             query: { page: 1, limit, title, playListId }
@@ -93,8 +102,12 @@ const MoviesPage = () => {
     return (
         <div className="flex">
             <div className="w-[200px] p-4" >
-                <Link href={"/movies"}>Home</Link>
-                <PlayListNav onPlayListChange={handlePlayListChange} />
+                <div className='mt-3'></div>
+                <button onClick={handleHome} className="flex  font-thin"> 
+                    <div className='mt-1 mr-1'> <FaHome className='text-slate-500'/> </div>
+                    Home
+                </button>
+                <PlayListNav onPlayListChange={handlePlayListChange} playListId={playListId} />
                 <h1 className="text-2xl font-thin text-gray-700 my-4">Sort by</h1>
                 <ul>
                     {orderLi('id DESC', 'Create Date')}

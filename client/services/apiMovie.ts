@@ -1,8 +1,10 @@
 import api from './api';
 import { Actor } from './apiActor';
 import { Gallery } from './apiGallery';
+import { PlayList } from './apiPlayList';
 
 export interface Movie {
+    
     releaseDate: string;
     posterUrl: string | undefined;
     largePosterUrl: string | undefined;
@@ -12,6 +14,7 @@ export interface Movie {
     sn: string;
     actors: Actor[];
     galleries: Gallery[];
+    playLists: PlayList[];
 }
 
 interface movieGetParams {
@@ -50,5 +53,8 @@ export const movie = {
     async delete(id: number) {
         return await api.delete(`/movies/${id}`);
     },
+    async setPlayLists(id: number, playListIds: number[]) {
+        return await api.post(`/movies/${id}/play-lists`, { playListIds });
+    }
 };
 

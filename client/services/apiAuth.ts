@@ -12,6 +12,7 @@ export const auth = {
         const response = await api.post('/auth/login', { name, password });
         const data = response.data;
         const token = data.access_token;
+        console.log('token---', token);
         if (token) {
             this.saveToken(token);
             return { ok: true, message: 'Login successful' };

@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards,Request } from '@nestjs/common';
 import { PlayListService } from './play-list.service';
 import { PlayList } from './play-list.entity';
-import { query } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from 'src/user/user.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('play-lists')
@@ -10,7 +10,10 @@ export class PlayListController {
   constructor(private readonly playListService: PlayListService) {}
 
   @Post()
-  create(@Body() playList: PlayList): Promise<PlayList> {
+  create(@Request() req, @Body() playList: PlayList): Promise<PlayList> {
+    const user= new User();
+    user.id = req.user.userId;
+    playList.user = user;
     return this.playListService.create(playList);
   }
 

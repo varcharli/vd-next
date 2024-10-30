@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository, SelectQueryBuilder } from 'typeorm';
 import { Movie } from './movie.entity';
 import { Gallery } from '../gallery/gallery.entity';
+import { PlayList } from 'src/play-list/play-list.entity';
 
 
 interface FindAllParams {
@@ -18,8 +19,8 @@ export class MovieService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
-    // @InjectRepository(Gallery)
-    // private readonly galleryRepository: Repository<Gallery>,
+    @InjectRepository(PlayList)
+    private readonly playListRepository: Repository<PlayList>,
   ) { }
 
   create(movie: Movie): Promise<Movie> {
@@ -50,7 +51,6 @@ export class MovieService {
 
 
     // playListId and title cannot be used together
-    console.log('playListId---------', playListId);
     if (playListId) {
       queryBuilder.leftJoinAndSelect('movie.playLists', 'play-list')
         .where('play-list.id = :playListId', { playListId });
@@ -95,5 +95,19 @@ export class MovieService {
       where: { id },
       relations: ['actors', 'tags', 'playLinks', 'directors', 'playLists', 'galleries'],
     });
+  }
+
+  async setPlayLists(id: number, playListIds: number[]): Promise<boolean> {
+    const movie = await this.movieRepository.findOne({ where: { id }, relations: ['playLists'] });
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+
+    const playLists = await this.playListRepository.findByIds(playListIds);
+    movie.playLists = playLists;
+    console.log('playListIds-----', playListIds);
+    console.log('movie.playLists-----', movie.playLists);
+    await this.movieRepository.save(movie);
+    return true;
   }
 }

@@ -3,6 +3,7 @@ import Logo from '@/public/icons/logo.svg';
 import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { FaUserCircle } from "react-icons/fa";
 
 export const AppTopbar = () => {
 
@@ -23,14 +24,14 @@ export const AppTopbar = () => {
         }
     };
 
-    const item = (href: string, title: string) => {
-        return (
-            <NavbarItem className="ml-6 font-thin" >
-                <Link className="text-black "
-                    href={href}>{title} </Link>
-            </NavbarItem>
-        )
-    }
+    // const item = (href: string, title: string) => {
+    //     return (
+    //         <NavbarItem className="ml-6 font-thin" >
+    //             <Link className="text-black "
+    //                 href={href}>{title} </Link>
+    //         </NavbarItem>
+    //     )
+    // }
 
     return (
         <Navbar isBordered maxWidth="full">
@@ -55,10 +56,14 @@ export const AppTopbar = () => {
                 </NavbarBrand>
             </NavbarContent>
             <NavbarContent justify="end" >
-                {item('/movies', 'Home')}
+                {/* {item('/movies', 'Home')}
                 {item('/history', 'History')}
                 {item('/play-list', 'List')}
-                {item('/profile', 'Profile')}
+                {item('/profile', 'Profile')} */}
+                <NavbarItem className="ml-6 font-thin" >
+                    <Link className="text-black "
+                        href='/profile'><FaUserCircle size={26} className="text-slate-500 mt-2"/> </Link>
+                </NavbarItem>
             </NavbarContent>
         </Navbar>
     );

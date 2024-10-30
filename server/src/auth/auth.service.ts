@@ -13,12 +13,14 @@ export class AuthService {
   ) {}
 
   async validateUser(name: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOneByName(name);
-    if (user && await bcrypt.compare(pass, user.passwordHashed)) {
-      const { passwordHashed, ...result } = user;
-      return result;
-    }
-    return null;
+    // const user = await this.usersService.findOneByName(name);
+    // if (user && await bcrypt.compare(pass, user.passwordHashed)) {
+    //   const { passwordHashed, ...result } = user;
+    //   return result;
+    // }
+    // return null;
+    const user=await this.usersService.checkPasswordByUserName(name,pass);
+    return user;
   }
 
   async login(loginDto: LoginDto) {
