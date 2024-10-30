@@ -4,7 +4,11 @@ import models from '@/services/models';
 import type { PlayList } from '@/services/models';
 import { GoTriangleRight } from 'react-icons/go';
 
-const PlayListNav = () => {
+interface PlayListNavProps {
+    onPlayListChange: (id?: number) => void;
+}
+
+const PlayListNav : React.FC<PlayListNavProps> = ({ onPlayListChange }) => {
     const [lists, setLists] = useState<PlayList[]>([]);
     const [currentList, setCurrentList] = useState<number>(-1);
     const [isLoading, setIsLoading] = useState(true);
@@ -21,6 +25,7 @@ const PlayListNav = () => {
 
     const handleChange = (listId: number) => {
         setCurrentList(listId);
+        onPlayListChange(listId);
     }
 
     const listItem = (listId: number, listName: string) => {
@@ -29,7 +34,7 @@ const PlayListNav = () => {
                 <GoTriangleRight className={`inline-block mb-1 mr-1
                     ${currentList === listId ? "text-black-500" : "text-transparent"}`} />
                 <button onClick={() => handleChange(listId)}
-                    className={`${currentList === listId ? "text-black-500" : "text-gray-500"} font-thin`} >
+                    className={`${currentList === listId ? "" : "font-thin"}`} >
                     {listName}
                 </button>
             </li>
@@ -46,9 +51,9 @@ const PlayListNav = () => {
         <div className='mt-8' >
             <h1 className="text-2xl font-thin text-gray-700 my-4">Play List</h1>
             <ul>
-            {lists.map(list => (
-                listItem(list.id, list.name)
-            ))}
+                {lists.map(list => (
+                    listItem(list.id, list.name)
+                ))}
             </ul>
         </div>
     );

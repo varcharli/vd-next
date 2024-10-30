@@ -31,9 +31,10 @@ export class MovieController {
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
     @Query('order') order?: string,
-    @Query('title') title?: string
-  ): Promise<[Movie[],number]> {
-    return this.movieService.findAll({ limit, offset, order, title });
+    @Query('title') title?: string,
+    @Query('playListId') playListId?: number,
+  ): Promise<[Movie[], number]> {
+    return this.movieService.findAll({ limit, offset, order, title, playListId });
   }
 
   @Get(':id')

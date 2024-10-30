@@ -19,10 +19,11 @@ interface movieGetParams {
     page?: number;
     title?: string;
     order?: string;
+    playListId?: number;
 }
 
 export const movie = {
-    async get({ page, limit, title, order }: movieGetParams = {}) {
+    async get({ page, limit, title, order,playListId }: movieGetParams = {}) {
         const defaultPageSize = 28;
         const offset = ((page || 1) - 1) * (limit || defaultPageSize);
 
@@ -32,6 +33,7 @@ export const movie = {
                 limit,
                 title,
                 order,
+                playListId,
             },
 
         });

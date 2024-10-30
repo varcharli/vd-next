@@ -5,14 +5,16 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { GoTriangleRight } from "react-icons/go";
 import PlayListNav from './PlayListNav';
-
+import Link from 'next/link';
 
 const MoviesPage = () => {
     const router = useRouter();
     const page = Number(router.query.page) || 1;
     const pageSize = Number(router.query.limit) || 0;
     const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title || '';
+    const playListId = Number(router.query.playListId) || undefined;
     const [order, setOrder] = useState('id DESC');
+
     const [limit, setLimit] = useState(pageSize);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -55,12 +57,19 @@ const MoviesPage = () => {
         // };
     }, [limit]);
 
+    const handlePlayListChange = (playListId?: number) => {
+        router.push({
+            pathname: `/movies`,
+            query: { page: 1, limit, title, playListId }
+        });
+    }
+
     const handleOrderChange = (order: string) => {
         localStorage.setItem('movieOrder', order);
         setOrder(order);
         router.push({
             pathname: `/movies`,
-            query: { page: 1, limit, title }
+            query: { page: 1, limit, title, playListId }
         });
     }
 
@@ -74,7 +83,7 @@ const MoviesPage = () => {
                 <GoTriangleRight className={`inline-block mb-1 mr-1
                     ${order === orderName ? "text-black-500" : "text-transparent"}`} />
                 <button onClick={() => handleOrderChange(orderName)}
-                    className={order === orderName ? "text-black-500" : "text-gray-500"}>
+                    className={`${order === orderName ? "" : "font-thin"}`}>
                     {orderTitle}
                 </button>
             </li>
@@ -84,18 +93,19 @@ const MoviesPage = () => {
     return (
         <div className="flex">
             <div className="w-[200px] p-4" >
+                <Link href={"/movies"}>Home</Link>
+                <PlayListNav onPlayListChange={handlePlayListChange} />
                 <h1 className="text-2xl font-thin text-gray-700 my-4">Sort by</h1>
                 <ul>
                     {orderLi('id DESC', 'Create Date')}
                     {orderLi('releaseDate DESC', 'Release Date')}
                     {orderLi('sn ASC', 'Serial Number')}
                 </ul>
-                <PlayListNav />
             </div>
             <div className='w-full flex justify-center'>
                 <div className="p-4 max-w-screen-2xl ">
                     {/* <h1 className="text-4xl font-bold my-4">Movies</h1> */}
-                    <MoviesList page={page} limit={limit} title={title} order={order} onPageChange={handlePageChange} />
+                    <MoviesList page={page} limit={limit} title={title} order={order} playListId={playListId} onPageChange={handlePageChange} />
                 </div>
             </div>
         </div>
