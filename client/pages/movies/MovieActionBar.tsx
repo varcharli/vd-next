@@ -31,12 +31,12 @@ export const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie }) 
     return (
         <div className="flex gap-4 w-auto justify-end">
             <Button isIconOnly color="primary" variant="flat"
-                className='text-slate-500 hover:text-red-500'  >
+                className='text-slate-500 hover:bg-slate-300'  >
                 <FaLink size={20} />
             </Button>
             <Button isIconOnly color="primary" variant="flat"
                 onClick={handleShowPlayList}
-                className='text-slate-500 hover:text-red-500'  >
+                className={`${movie.playLists.length ? "text-orange-500" : "text-slate-500"} hover:bg-slate-300`}  >
                 <FaBookmark size={20} />
             </Button>
             <PlayListPop movie={movie} show={showPlayList} onClose={handleHidePlayList} />

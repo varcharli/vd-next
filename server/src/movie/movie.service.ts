@@ -105,8 +105,6 @@ export class MovieService {
 
     const playLists = await this.playListRepository.findByIds(playListIds);
     movie.playLists = playLists;
-    console.log('playListIds-----', playListIds);
-    console.log('movie.playLists-----', movie.playLists);
     await this.movieRepository.save(movie);
     return true;
   }
