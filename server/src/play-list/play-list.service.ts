@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PlayList } from './play-list.entity';
+import { PlayList, PlayListItem } from './play-list.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -8,6 +8,8 @@ export class PlayListService {
   constructor(
     @InjectRepository(PlayList)
     private readonly playlistRepository: Repository<PlayList>,
+    @InjectRepository(PlayListItem)
+    private readonly playlistItemRepository: Repository<PlayListItem>
   ) { }
 
   readonly favoriteName = 'Favorite';
@@ -37,13 +39,23 @@ export class PlayListService {
     );
   }
 
-  findOne(id: number): Promise<PlayList> {
-    return this.playlistRepository.findOneBy({ id });
+  findById(id: number): Promise<PlayList> {
+    return this.playlistRepository.findOne({
+      where: { id },
+      relations: ['items'],
+     });
   }
 
   async checkOwner(userId: number, playlistId: number): Promise<Boolean> {
-    const playlist = await this.playlistRepository.findOneBy({ id: playlistId });
-    return playlist.user.id === userId;
+    const playlist = await this.playlistRepository.findOne({
+      where: { id: playlistId ,user: { id: userId }},
+      select: ['id'],
+    }
+    );
+    if(!playlist){
+      return false;
+    }
+    return true;
   }
 
   async checkAndCreateFavorite(userId: number): Promise<PlayList> {
@@ -65,22 +77,38 @@ export class PlayListService {
   }
 
   // 还没有验证的危险操作
-  async addMovie(userId:number, playlistId: number, movieId: number): Promise<PlayList> {
+  async addMovie(userId:number, playlistId: number, movieId: number): Promise<PlayListItem> {
     if( await this.checkOwner(userId, playlistId) === false){
       throw new Error('Not the owner of the playlist');
     }
-    const playlist = await this.playlistRepository.findOneBy({ id: playlistId });
-    playlist.movies.push({ id: movieId } as any);
-    return this.playlistRepository.save(playlist);
+    const chkItem = await this.playlistItemRepository.findOne({
+      where: { playList: { id: playlistId }, movie: { id: movieId } }
+    });
+    if (chkItem) {
+      return chkItem;
+    }
+    const item = new PlayListItem();
+    item.playList = { id: playlistId } as any;
+    item.movie = { id: movieId } as any;
+    item.createAt = new Date();
+    return this.playlistItemRepository.save(item);
   }
   
   // 还没有验证的危险操作
-  async removeMovie(userId:number, playlistId: number, movieId: number): Promise<PlayList> {
+  async removeMovie(userId:number, playlistId: number, movieId: number): Promise<boolean> {
     if( await this.checkOwner(userId, playlistId) === false){
       throw new Error('Not the owner of the playlist');
     }
-    const playlist = await this.playlistRepository.findOneBy({ id: playlistId });
-    playlist.movies = playlist.movies.filter(m => m.id !== movieId);
-    return this.playlistRepository.save(playlist);
+    // const playlist = await this.playlistRepository.findOneBy({ id: playlistId });
+    // playlist.movies = playlist.movies.filter(m => m.id !== movieId);
+    // return this.playlistRepository.save(playlist);
+    const item = await this.playlistItemRepository.findOne({
+      where: { playList: { id: playlistId }, movie: { id: movieId } }
+    });
+    if (item) {
+      await this.playlistItemRepository.delete(item.id);
+      return true;
+    }
+    return false;
   }
 }

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards,Request } from '@nestjs/common';
 import { PlayListService } from './play-list.service';
-import { PlayList } from './play-list.entity';
+import { PlayList, PlayListItem } from './play-list.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from 'src/user/user.entity';
 
@@ -34,18 +34,18 @@ export class PlayListController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<PlayList> {
-    return this.playListService.findOne(id);
+  findById(@Param('id') id: number): Promise<PlayList> {
+    return this.playListService.findById(id);
   }
 
   @Post(':id/movie/:movieId')
-  addMovie(@Request() req, @Param('id') id: number, @Param('movieId') movieId: number): Promise<PlayList> {
+  addMovie(@Request() req, @Param('id') id: number, @Param('movieId') movieId: number): Promise<PlayListItem> {
     const userId = req.user.userId;
     return this.playListService.addMovie(userId, id, movieId);
   }
 
   @Delete(':id/movie/:movieId')
-  removeMovie(@Request() req, @Param('id') id: number, @Param('movieId') movieId: number): Promise<PlayList> {
+  removeMovie(@Request() req, @Param('id') id: number, @Param('movieId') movieId: number): Promise<boolean> {
     const userId = req.user.userId;
     return this.playListService.removeMovie(userId, id, movieId);
   }

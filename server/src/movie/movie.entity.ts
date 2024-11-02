@@ -3,7 +3,7 @@ import { Director } from '../director/director.entity';
 import { Actor } from '../actor/actor.entity';
 import { Tag } from '../tag/tag.entity';
 import { PlayLink } from '../play-link/play-link.entity';
-import { PlayList } from '../play-list/play-list.entity';
+import { PlayList, PlayListItem } from '../play-list/play-list.entity';
 import { Gallery } from '../gallery/gallery.entity';
 
 // Movie Entity
@@ -44,12 +44,11 @@ export class Movie {
     @JoinTable()
     tags: Tag[];
 
+    @ManyToOne(() => PlayListItem, playListItem => playListItem.movie)
+    playListItems: PlayListItem[];
+
     @OneToMany(() => PlayLink, playLink => playLink.movie)
     playLinks: PlayLink[];
-
-    @ManyToMany(() => PlayList)
-    @JoinTable()
-    playLists: PlayList[];
 
     @OneToMany(() => Gallery, gallery => gallery.movie)
     galleries: Gallery[];

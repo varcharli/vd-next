@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, ILike, Repository, SelectQueryBuilder } from 'typeorm';
+import { DeleteResult, ILike, Repository, SelectQueryBuilder, In } from 'typeorm';
 import { Movie } from './movie.entity';
 import { Gallery } from '../gallery/gallery.entity';
-import { PlayList } from 'src/play-list/play-list.entity';
+import { PlayList, PlayListItem } from 'src/play-list/play-list.entity';
+import { PlayListService } from 'src/play-list/play-list.service';
 
 
 interface FindAllParams {
@@ -12,6 +13,7 @@ interface FindAllParams {
   order?: string;
   title?: string;
   playListId?: number;
+  userId?: number;
 }
 
 @Injectable()
@@ -21,6 +23,9 @@ export class MovieService {
     private readonly movieRepository: Repository<Movie>,
     @InjectRepository(PlayList)
     private readonly playListRepository: Repository<PlayList>,
+    @InjectRepository(PlayListItem)
+    private readonly playListItemRepository: Repository<PlayListItem>,
+    private readonly playListService: PlayListService
   ) { }
 
   create(movie: Movie): Promise<Movie> {
@@ -36,76 +41,110 @@ export class MovieService {
     return this.movieRepository.delete(id);
   }
 
-  findAll(
+  async findAll(
     { limit = 30,
       offset = 0,
       order = 'id DESC',
       title,
       playListId,
+      userId
     }: FindAllParams
   ): Promise<[Movie[], number]> {
     const [field, direction] = (order).split(' ');
 
-
-    const queryBuilder: SelectQueryBuilder<Movie> = this.movieRepository.createQueryBuilder('movie');
-
-
-    // playListId and title cannot be used together
     if (playListId) {
-      queryBuilder.leftJoinAndSelect('movie.playLists', 'play-list')
-        .where('play-list.id = :playListId', { playListId });
-    } else {
-      if (title) {
-        queryBuilder.where([
-          { name: ILike(`%${title}%`) },
-          { sn: ILike(`%${title}%`) }
-        ]);
+
+      let orderStr = '';
+      if (field === 'id') {
+        orderStr = 'b."createAt" desc';
       }
+      else {
+        orderStr = `a."${field}" ${direction.toUpperCase() as 'ASC' | 'DESC'}`;
+      }
+
+      const re = await this.movieRepository.query(
+        `select a.* from movie a 
+          RIGHT join play_list_item b
+            on a.id = b."movieId"
+          LEFT JOIN play_list c
+            on b."playListId" = c.id and c."userId" = $1
+          where c.id = $2 
+          order by ${orderStr}
+          limit $3 
+          offset $4
+        `, [userId, playListId, limit, offset]);
+      return [re, re.length];
     }
 
-    queryBuilder
-    .take(limit)
-    .skip(offset)
-    .orderBy(`movie.${field}`, direction.toUpperCase() as 'ASC' | 'DESC', 'NULLS LAST');
-    // console.log('queryBuilder.getManyAndCount()---------', queryBuilder.getSql());
+    const repo = this.movieRepository.createQueryBuilder('movie');
+    if (title) {
+      repo.where([
+        { name: ILike(`%${title}%`) },
+        { sn: ILike(`%${title}%`) }
+      ]);
+    }
+    repo.orderBy(`movie."${field}"`, direction.toUpperCase() as 'ASC' | 'DESC');
+    repo.skip(offset);
+    repo.take(limit);
+    console.log('repo--------', repo.getSql());
+    const movies = repo.getManyAndCount();
 
-    const query = queryBuilder.getManyAndCount();
-    return query;
-
-    // const query: any = {
-    //   take: limit,
-    //   skip: offset,
-    //   order: {
-    //     [field]: direction.toUpperCase() as 'ASC' | 'DESC'
-    //   }
-    // };
-
-    // if (title) {
-    //   query.where = [
-    //     { name: ILike(`%${title}%`) },
-    //     { sn: ILike(`%${title}%`) }
-    //   ];
-    // }
-
-    // return this.movieRepository.findAndCount(query);
+    return movies;
   }
 
-  findById(id: number): Promise<Movie> {
-    return this.movieRepository.findOne({
+
+
+  async findById(id: number, userId: number): Promise<any> {
+    const re = await this.movieRepository.findOne({
       where: { id },
-      relations: ['actors', 'tags', 'playLinks', 'directors', 'playLists', 'galleries'],
-    });
+      relations: ['actors', 'tags', 'playLinks', 'directors', 'galleries'],
+    }) as any;
+
+    const playLists = await this.playListItemRepository.query(
+      `select a."playListId" as id,b.name from play_list_item a
+        inner join play_list b on a."playListId" = b.id
+      where "movieId" = $1 and b."userId" = $2`,
+      [id, userId]
+    )
+
+    // const playLists = await this.playListRepository.findByIds(playListIds);
+    // const playLists=await this.playListRepository.findBy({id:In(playListIds)});
+    re.playLists = playLists;
+
+    return re;
   }
 
-  async setPlayLists(id: number, playListIds: number[]): Promise<boolean> {
-    const movie = await this.movieRepository.findOne({ where: { id }, relations: ['playLists'] });
+  async setPlayLists(id: number, playListIds: number[], userId: number): Promise<boolean> {
+    const movieId = id;
+    const movie = await this.movieRepository.findOne({ where: { id } });
     if (!movie) {
       throw new Error('Movie not found');
     }
 
-    const playLists = await this.playListRepository.findByIds(playListIds);
-    movie.playLists = playLists;
-    await this.movieRepository.save(movie);
+    // Execute raw SQL query to get currentPlayListIds
+    const currentPlayListIdsResult = await this.movieRepository.query(
+      `select a."playListId" from play_list_item a 
+        inner join movie b on a."movieId" = b.id
+        inner join play_list c on a."playListId" = c.id
+        where a."movieId" = $1 and c."userId" = $2`,
+      [movieId, userId]
+    );
+
+    const currentPlayListIds = currentPlayListIdsResult.map(row => parseInt(row.playListId, 10)) as number[];
+
+    const playListsToAdd = playListIds.filter(playListId => !currentPlayListIds.includes(playListId));
+    const playListsToRemove = currentPlayListIds.filter(playListId => !playListIds.includes(playListId));
+
+    // Add new playLists
+    for (const playListId of playListsToAdd) {
+      await this.playListService.addMovie(userId, playListId, movieId);
+    }
+
+    // Remove old playLists
+    for (const playListId of playListsToRemove) {
+      await this.playListService.removeMovie(userId, playListId, movieId);
+    }
+
     return true;
   }
 }

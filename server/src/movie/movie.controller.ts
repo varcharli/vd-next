@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards, Request } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { Movie } from './movie.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -27,23 +27,26 @@ export class MovieController {
 
 
   @Get()
-  findAll(
+  findAll(@Request() req,
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
     @Query('order') order?: string,
     @Query('title') title?: string,
     @Query('playListId') playListId?: number,
   ): Promise<[Movie[], number]> {
-    return this.movieService.findAll({ limit, offset, order, title, playListId });
+    const userId = req.user.userId;
+    return this.movieService.findAll({ limit, offset, order, title, playListId,userId });
   }
 
   @Get(':id')
-  findById(@Param('id') id: number): Promise<Movie> {
-    return this.movieService.findById(id);
+  findById(@Request() req,@Param('id') id: number): Promise<Movie> {
+    const userId = req.user.userId;
+    return this.movieService.findById(id,userId);
   }
 
   @Post(':id/play-lists')
-  setPlayLists(@Param('id') id: number, @Body('playListIds') playListIds: number[]): Promise<boolean> {
-    return this.movieService.setPlayLists(id, playListIds);
+  setPlayLists(@Request() req,@Param('id') id: number, @Body('playListIds') playListIds: number[]): Promise<boolean> {
+    const userId = req.user.userId;
+    return this.movieService.setPlayLists(id, playListIds, userId);
   }
 }
