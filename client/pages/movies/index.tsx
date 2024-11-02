@@ -37,9 +37,16 @@ const MoviesPage = () => {
 
     const handlePageChange = (page: number) => {
         // window.location.href = `/movies?page=${page}&limit=${limit}&title=${title}`;
+        const query: { [key: string]: string | number | undefined } = {};
+
+        if (page > 1) { query.page = page; }
+        if (limit) { query.limit = limit; }
+        if (title) { query.title = title; }
+        if (playListId) { query.playListId = playListId; }
+
         router.push({
             pathname: `/movies`,
-            query: { page, limit, title }
+            query
         });
     }
     useEffect(() => {
@@ -103,8 +110,8 @@ const MoviesPage = () => {
         <div className="flex">
             <div className="w-[200px] p-4" >
                 <div className='mt-3'></div>
-                <button onClick={handleHome} className="flex  font-thin"> 
-                    <div className='mt-1 mr-1'> <FaHome className='text-slate-500'/> </div>
+                <button onClick={handleHome} className="flex  font-thin">
+                    <div className='mt-1 mr-1'> <FaHome className='text-slate-500' /> </div>
                     Home
                 </button>
                 <PlayListNav onPlayListChange={handlePlayListChange} playListId={playListId} />

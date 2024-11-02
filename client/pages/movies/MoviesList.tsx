@@ -35,7 +35,6 @@ const MoviesList = ({ page, limit, title, order,playListId, onPageChange }: Movi
             movie.releaseDate = date.toLocaleDateString('en-CA');
         });
         const totalPages = Number.isInteger(response.data[1]) ? Math.ceil(response.data[1] / limit) : 0;
-
         return { data, totalPages };
     };
 

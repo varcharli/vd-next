@@ -61,6 +61,14 @@ export class MovieService {
       else {
         orderStr = `a."${field}" ${direction.toUpperCase() as 'ASC' | 'DESC'}`;
       }
+      const countRe = await this.movieRepository.query(
+        `select count(*) from play_list_item a
+      inner join play_list b on a."playListId" = b.id and b."userId"=1
+      where a."playListId" = $1 ;`, [playListId]);
+      const count =parseInt( countRe[0].count,10);
+      if (count === 0) {
+        return [[], 0];
+      }
 
       const re = await this.movieRepository.query(
         `select a.* from movie a 
@@ -73,7 +81,7 @@ export class MovieService {
           limit $3 
           offset $4
         `, [userId, playListId, limit, offset]);
-      return [re, re.length];
+      return [re, count];
     }
 
     const repo = this.movieRepository.createQueryBuilder('movie');
