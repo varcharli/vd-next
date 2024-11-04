@@ -1,11 +1,13 @@
 import React from "react";
 import {
     Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button,
-    CheckboxGroup, Checkbox, Input
+    CheckboxGroup, Checkbox, Input, Tooltip
 } from "@nextui-org/react";
 import { Movie } from "@/services/apiMovie";
 import models, { PlayList } from "@/services/models";
 import { FaPlus } from 'react-icons/fa';
+import { FaGear } from 'react-icons/fa6';
+import ItemManager from "./ItemManager";
 
 
 interface PlayListPopProps {
@@ -18,6 +20,7 @@ export const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }
     const size = "xs";
     const [playLists, setPlayLists] = React.useState<PlayList[]>([]);
     const [selectedLists, setSelectedLists] = React.useState<string[]>([]);
+    const [isShowManager, setIsShowManager] = React.useState(false);
 
 
     React.useEffect(() => {
@@ -59,33 +62,96 @@ export const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }
         }
     }
 
+    const handleShowManager = () => {
+        setIsShowManager(true);
+    }
+    const handleCloseManager = () => {
+        setIsShowManager(false);
+    }
+
+    const handleUpdatePlayList = async (id: number, updatedValue: string) => {
+        const list = playLists.find(item => item.id === id);
+        if (list) {
+            list.name = updatedValue;
+            const re = await models.playList.update(id, updatedValue);
+            if (re) {
+                setPlayLists([...playLists]);
+            } else {
+                prompt('Update failed');
+            }
+        }
+    }
+
+    const handleDeletePlayList = async (id: number) => {
+        await models.playList.delete(id);
+        setSelectedLists(selectedLists.filter(item => item !== String(id)));
+    }
+
+
+
+    const managerContent = () => {
+        return <ModalContent>
+            <ModalHeader>
+                Play List Manager
+            </ModalHeader>
+            <ModalBody className="min-h-[200px]">
+                {playLists.map(list => (
+                    <ItemManager
+                        key={list.id}
+                        item={list}
+                        onUpdate={handleUpdatePlayList}
+                        onDelete={handleDeletePlayList}
+                    />
+                ))}
+                <div className="text-center font-thin text-slate-500">Click item to edit</div>
+            </ModalBody>
+            <ModalFooter>
+                <Button fullWidth onPress={handleCloseManager}>
+                    Return
+                </Button>
+            </ModalFooter>
+        </ModalContent>;
+    }
+
+    const playListContent = () => {
+        return <ModalContent>
+            <ModalHeader>
+                Play List
+                <Tooltip content="Play List Manager" color="secondary" placement="top">
+                    <div className="ml-4 flex flex-col justify-center cursor-pointer ho"
+                        onClick={handleShowManager} >
+                        <FaGear className="text-sm  text-slate-500 hover:text-blue-500" />
+                    </div>
+                </Tooltip>
+            </ModalHeader>
+            <ModalBody className="min-h-[200px]">
+                <CheckboxGroup value={selectedLists} onChange={handleSelectedLists}>
+                    {playLists.map(list => (
+                        <Checkbox key={list.id} value={String(list.id)} >
+                            {list.name}
+                        </Checkbox>
+                    ))}
+                </CheckboxGroup>
+            </ModalBody>
+            <ModalFooter className="flex flex-col gap-5">
+                <div className="flex gap-2">
+                    <Input id="newPlayList" placeholder="New Play List" className="text-slate-500" />
+                    <Button isIconOnly className="text-slate-500"
+                        onClick={handleNewPlayList} >
+                        <FaPlus />
+                    </Button>
+                </div>
+                <Button fullWidth onPress={onClose}>
+                    Close
+                </Button>
+            </ModalFooter>
+        </ModalContent>;
+    }
+
     return (
         <Modal size={size} placement="bottom-center" backdrop="opaque"
-            isOpen={show} onClose={onClose} >
-            <ModalContent>
-                <ModalHeader>Play List</ModalHeader>
-                <ModalBody className="min-h-[200px]">
-                    <CheckboxGroup value={selectedLists} onChange={handleSelectedLists}>
-                        {playLists.map(list => (
-                            <Checkbox key={list.id} value={String(list.id)} >
-                                {list.name}
-                            </Checkbox>
-                        ))}
-                    </CheckboxGroup>
-                </ModalBody>
-                <ModalFooter className="flex flex-col gap-5">
-                    <div className="flex gap-2">
-                        <Input id="newPlayList" placeholder="New Play List" className="text-slate-500" />
-                        <Button isIconOnly className="text-slate-500"
-                            onClick={handleNewPlayList} >
-                            <FaPlus />
-                        </Button>
-                    </div>
-                    <Button fullWidth onPress={onClose}>
-                        Close
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
+            isOpen={show} onClose={onClose}  >
+            {isShowManager ? managerContent() : playListContent()}
         </Modal>
     );
 

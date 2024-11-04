@@ -18,8 +18,9 @@ export class PlayListService {
     return this.playlistRepository.save(playlist);
   }
 
-  update(id: number, playlist: PlayList): Promise<PlayList> {
-    return this.playlistRepository.save({ ...playlist, id });
+  async update(id: number, playlist: PlayList): Promise<any> {
+    console.log('playlist update ----', { ...playlist, id });
+    return this.playlistRepository.update(id, playlist);
   }
 
   async delete(id: number): Promise<Boolean> {

@@ -2,9 +2,9 @@ import api from './api';
 import { Actor } from './apiActor';
 import { Gallery } from './apiGallery';
 import { PlayList } from './apiPlayList';
+import { PlayLink } from './apiPlayLink';
 
 export interface Movie {
-    
     releaseDate: string;
     posterUrl: string | undefined;
     largePosterUrl: string | undefined;
@@ -15,6 +15,7 @@ export interface Movie {
     actors: Actor[];
     galleries: Gallery[];
     playLists: PlayList[];
+    playLinks:PlayLink[];
 }
 
 interface movieGetParams {

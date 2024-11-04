@@ -94,7 +94,6 @@ export class MovieService {
     repo.orderBy(`movie."${field}"`, direction.toUpperCase() as 'ASC' | 'DESC');
     repo.skip(offset);
     repo.take(limit);
-    console.log('repo--------', repo.getSql());
     const movies = repo.getManyAndCount();
 
     return movies;

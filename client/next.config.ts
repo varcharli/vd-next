@@ -14,7 +14,6 @@ const nextConfig: NextConfig = {
       'img4.doubanio.com',
       'img5.doubanio.com',
       'img6.doubanio.com',
-      
     ],
   },
   // webpack: (config, { isServer }) => {
