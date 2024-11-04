@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Image, Avatar ,Link} from '@nextui-org/react';
+import { Avatar, Link } from '@nextui-org/react';
+import Image from 'next/image';
 import models, { Movie } from '@/services/models';
 import { useRouter } from 'next/router';
 import { Gallery, LinkButton } from '@/components';
@@ -47,8 +48,8 @@ const MoviePage = () => {
         <div className="flex flex-col gap-3" >
           {movie.playLinks.map((link, index) => {
             return (
-              <div key={index} 
-              className="flex gap-3 hover:bg-slate-100 p-2 rounded-lg" >
+              <div key={index}
+                className="flex gap-3 hover:bg-slate-100 p-2 rounded-lg" >
                 <Link href={link.url} target='_blank' >{link.name}</Link>
               </div>
             );
@@ -96,10 +97,15 @@ const MoviePage = () => {
         <MovieActionBar currentMovie={movie} />
         {playLinksPanel()}
       </div>
-      <div className="flex flex-col flex-initial" >
+      <div className="flex flex-col flex-initial " >
         <div className="flex justify-center p-4" >
-          <Image className='border border-gray-300 rounded-2xl shadow-lg '
-            src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'} alt={movie.name} />
+          <div>
+            <Image className='border border-gray-300 rounded-2xl shadow-lg '
+              width={0} height={0}
+              sizes='100vw'
+              style={{ width: '100%', height: 'auto' }}
+              src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'} alt={movie.name} />
+          </div>
         </div>
 
         <div className='p-4'>

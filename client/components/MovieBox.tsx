@@ -5,16 +5,14 @@ import { useRouter } from 'next/navigation';
 import { Movie } from '@/services/models';
 
 
-const MovieBox = ({ movie }: { movie: Movie }) => {
+const MovieBox = ({ movie ,isZoomed=true }: { movie: Movie,isZoomed:boolean }) => {
     const router = useRouter();
     const handleMovieClick = (movie: Movie) => {
         router.push(`/movies/${movie.id}`);
     }
 
-    return (
-        // use div relative and image layout=fill to make image responsive.
-        <div className='flex flex-col my-2'
-            onClick={() => { handleMovieClick(movie) }}>
+    const imageDiv=()=>{
+        return (
             <div className="w-48 h-72 
             border border-gray-300 rounded-2xl
             overflow-hidden relative
@@ -27,7 +25,35 @@ const MovieBox = ({ movie }: { movie: Movie }) => {
                     : <div className='w-[200px] h-[300px] bg-slate-200' />
                 }
             </div>
+        );
+    }
 
+    const zoomedDiv=()=>{
+        return (
+            <div className="w-48 h-72 group
+            border border-gray-300 rounded-2xl
+            overflow-hidden relative
+             shadow-lg m-2
+             hover:shadow-xl hover:shadow-slate-800/50 ">
+                {movie.posterUrl
+                    ? <Image
+                        src={movie.posterUrl} alt={movie.name}
+                        layout="fill"
+                        className="transition-transform duration-300 ease-in-out transform group-hover:scale-125"
+                    />
+                    : <div className='w-[200px] h-[300px] bg-slate-200' />
+                }
+            </div>
+        );
+    }
+
+
+    return (
+        // use div relative and image layout=fill to make image responsive.
+        <div className='flex flex-col my-2'
+            onClick={() => { handleMovieClick(movie) }}>
+
+            {isZoomed?zoomedDiv():imageDiv()}
             <div className='w-48 h-6  mx-2 flex justify-between' >
                 <div className="font-thin text-gray-600">
                     {movie.sn || ' '}
