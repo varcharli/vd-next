@@ -1,5 +1,6 @@
-// import Image from 'next/image';
-import { Image } from '@nextui-org/react';
+import Image from 'next/image';
+// import { Image } from '@nextui-org/react';
+
 import { useRouter } from 'next/navigation';
 import { Movie } from '@/services/models';
 
@@ -11,13 +12,18 @@ const MovieBox = ({ movie }: { movie: Movie }) => {
     }
 
     return (
+        // use div relative and image layout=fill to make image responsive.
         <div className='flex flex-col my-2'
             onClick={() => { handleMovieClick(movie) }}>
             <div className="w-48 h-72 
             border border-gray-300 rounded-2xl
-            overflow-hidden shadow-lg m-2">
+            overflow-hidden relative
+             shadow-lg m-2">
                 {movie.posterUrl
-                    ? <Image isZoomed src={movie.posterUrl} alt={movie.name} width={200} height={300} />
+                    ? <Image
+                        src={movie.posterUrl} alt={movie.name}
+                        layout="fill"
+                    />
                     : <div className='w-[200px] h-[300px] bg-slate-200' />
                 }
             </div>
