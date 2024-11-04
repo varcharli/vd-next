@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Image } from '@nextui-org/react';
 import { FaAngleLeft, FaAngleRight, FaWindowClose } from 'react-icons/fa';
 
@@ -43,6 +43,23 @@ export const GalleryPopup: React.FC<GalleryPopupProps> = ({ images, index, onClo
       onClose();
     }
   };
+
+  const handleWheel = (e: { deltaY: number; }) => {
+    if (e.deltaY < 0) {
+      handlePrev();
+    } else if (e.deltaY > 0) {
+      handleNext();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('wheel', handleWheel);
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
       onClick={handleOverlayClick}>
@@ -63,7 +80,7 @@ export const GalleryPopup: React.FC<GalleryPopupProps> = ({ images, index, onClo
         <Image
           src={images[currentIndex]}
           alt={`Image ${currentIndex + 1}`}
-
+          onClick={handleNext}
           className="rounded-lg"
         />
       </div>
