@@ -7,12 +7,15 @@ import { Gallery, LinkButton } from '@/components';
 import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
 import { MovieActionBar } from './MovieActionBar';
+import { GalleryPopup } from '@/components/Gallery';
 
 
 const MoviePage = () => {
   const router = useRouter();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isShowGallery, setIsShowGallery] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -44,12 +47,12 @@ const MoviePage = () => {
     }
     return (
       <div className="flex flex-col gap-3" >
-        <h1 className="text-xl text-slate-500" >Play Links</h1>
-        <div className="flex flex-col gap-3" >
+        {/* <h1 className="text-xl text-slate-500" >Play Links</h1> */}
+        <div className="flex flex-col gap-3 border-t-1" >
           {movie.playLinks.map((link, index) => {
             return (
               <div key={index}
-                className="flex gap-3 hover:bg-slate-100 p-2 rounded-lg" >
+                className="flex gap-3 cursor-pointer hover:bg-slate-100 p-2 " >
                 <Link href={link.url} target='_blank' >{link.name}</Link>
               </div>
             );
@@ -61,6 +64,14 @@ const MoviePage = () => {
 
   const handleBack = () => {
     window.history.back();
+  }
+
+  const handleShowGallery = (index: number) => {
+    setGalleryIndex(index);
+    setIsShowGallery(true);
+  }
+  const handleHideGallery = () => {
+    setIsShowGallery(false);
   }
 
   if (!movie || isLoading) {
@@ -111,8 +122,14 @@ const MoviePage = () => {
         <div className='p-4'>
           <Gallery
             images={movie.galleries.map((i) => i.url).
-              filter((i) => i) as string[]
-            } />
+              filter((i) => i) as string[]}
+            onClick={(index) => handleShowGallery(index)}
+          />
+          {isShowGallery && <GalleryPopup
+            images={movie.galleries.map((i) => i.url).filter((i) => i) as string[]}
+            index={galleryIndex}
+            onClose={handleHideGallery}
+          />}
         </div>
       </div>
     </div>
