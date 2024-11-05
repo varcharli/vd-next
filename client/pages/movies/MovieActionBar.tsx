@@ -4,12 +4,15 @@ import { FaBookmark, FaLink } from 'react-icons/fa';
 import { PlayListPop } from '../play-lists/PlayListPop';
 import { Movie } from '@/services/apiMovie';
 import { PlayLinksPopup } from '../play-links/PlayLinksPopup';
+import { PlayLink } from '@/services/apiPlayLink';
 
 interface MovieActionBarProps {
     currentMovie: Movie;
+    currentPlayLinks: PlayLink[];
+    setPlayLinks: (links: PlayLink[]) => void;
 }
 
-export const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie }) => {
+export const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie,currentPlayLinks,setPlayLinks }) => {
     const [showPlayList, setShowPlayList] = useState(false);
     const [movie, setMovie] = useState<Movie | null>(currentMovie);
     const [isShowPlayLinks, setIsShowPlayLinks] = useState(false);
@@ -54,9 +57,11 @@ export const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie }) 
             <PlayListPop movie={movie} show={showPlayList} onClose={handleHidePlayList} />
             <PlayLinksPopup
                 isOpen={isShowPlayLinks}
-                playLinks={movie.playLinks}
+                playLinks={currentPlayLinks}
+                setPlayLinks={setPlayLinks}
                 movieId={movie.id}
-                onClose={handleHidePlayLinks} />
+                onClose={handleHidePlayLinks} 
+                />
         </div>
 
     );

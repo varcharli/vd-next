@@ -1,12 +1,16 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Button, Input } from "@nextui-org/react";
-import { FaUndo, FaSave, FaTrash } from 'react-icons/fa';
+import { FaUndo, FaSave, FaTrash, FaPlus } from 'react-icons/fa';
 // import { PlayList } from "@/services/models";
+
+type ItemManagerStatus = 'create' | 'manage' | 'editing';
 
 interface ItemManagerProps {
     item: Item;
-    onUpdate: (item: Item) => void;
-    onDelete: (id: number) => void;
+    onUpdate?: (item: Item) => Promise<void>;
+    onDelete?: (id: number) => Promise<void>;
+    onCreate?: (item: Item) => Promise<void>;
+    status?: ItemManagerStatus;
 }
 
 interface ItemField {
@@ -20,7 +24,7 @@ export interface Item {
     fields: ItemField[];
 }
 
-const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete }) => {
+const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onCreate, status }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [fields, setFields] = useState(item.fields);
     const [inputValues, setInputValues] = useState<string[]>([]);
@@ -33,6 +37,20 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete }) =
         });
         // setInputValues(inputValues);    
     }
+
+    useEffect(() => {
+        if (status === 'create') {
+            setIsEditing(true);
+        }
+
+        if (status === 'manage') {
+            setIsEditing(false);
+        }
+
+        if (status === 'editing') {
+            setIsEditing(true);
+        }
+    }, [status]);
 
     useEffect(() => {
         resetValues();
@@ -51,14 +69,14 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete }) =
         inputValues.map((value, index) => {
             fields[index].value = value;
         });
-        onUpdate(item);
+        if (onUpdate) { onUpdate(item); }
         setFields(fields);
         setIsEditing(false);
     }
 
     const handleDelete = () => {
         if (confirm(`Are you sure you want to delete ${item.fields[0]?.value}?`)) {
-            onDelete(item.id);
+            if (onDelete) { onDelete(item.id); }
         }
     };
 
@@ -68,41 +86,58 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete }) =
         setIsEditing(false);
     }
 
+    const handleCreate = async () => {
+        inputValues.map((value, index) => {
+            item.fields[index].value = value;
+        });
+        if (onCreate) {
+            console.log('onCreate:', item);
+            await onCreate(item);
+        }
+        inputValues.map((value, index) => {
+            inputValues[index] = '';
+        });
+
+        console.log('handleCreate:', item);
+    }
+
+
     const Textbox = (text: string, index: number, size: number) => {
-        const cssSize = size > 0 ? `w-${size}` : '';
-        return <div key={index} className={`flex-1 ml-2 ${cssSize}`} >
-            <h1>{text}</h1>
+        return <div key={index} style={{ flex: size }}
+            className="ml-2 overflow-hidden " >
+            <h1 className="text-ellipsis whitespace-nowrap overflow-hidden">{text}</h1>
         </div>;
     }
     const InputBox = (index: number, size: number) => {
-        const cssSize = size > 0 ? `w-${size}` : '';
-        return <Input key={`{"input${index}"}`} value={inputValues[index]} 
-        ref={index===0?firstInputRef:null}
-        onChange={(e) => {
-            const newInputValues = [...inputValues];
-            newInputValues[index] = e.currentTarget.value;
-            setInputValues(newInputValues);
-        }} className={`flex-1 ${cssSize}`} />;
+
+        return <div key={`{"input${index}"}`}  className={`flex-1 `}
+            style={{ flex: size }}>
+            <Input value={inputValues[index]}
+                ref={index === 0 ? firstInputRef : null}
+                onChange={(e) => {
+                    const newInputValues = [...inputValues];
+                    newInputValues[index] = e.currentTarget.value;
+                    setInputValues(newInputValues);
+                }} />
+        </div>
     }
-
     const iconSize = 16;
-    return (
-        <div className="flex items-center gap-1 my-1">
-            {/* <Button isIconOnly onClick={handleEdit}
-                className="text-blue-500 bg-transparent hover:bg-slate-200">
-                {isEditing ? <FaSave size={iconSize} /> : <FaPen size={iconSize} />}
-            </Button> */}
 
-            <div className="flex-1 ">
+    console.log('currunt status:', status);
+
+    return (
+        <div className="flex items-center  ">
+            <div className="flex-1 h-11 flex flex-col justify-center mr-1">
                 {isEditing ? (
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 ">
                         {fields.map((field, index) => (
                             InputBox(index, field.size)
                         ))}
                     </div>)
                     : (
                         <div onClick={handleEdit}
-                            className="text-black bg-transparent hover:bg-slate-100 py-1 rounded-lg h-full">
+                            className="text-black bg-transparent hover:bg-slate-100 py-2
+                            rounded-lg ">
                             <div className="flex gap-1">
                                 {fields.map((field, index) => (
                                     Textbox(field.value, index, field.size)
@@ -112,24 +147,31 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete }) =
                     )}
             </div>
 
-            {isEditing
-                ? (
-                    <div className="flex">
-                        <Button isIconOnly onClick={handleUndo}
-                            className="text-blue-500 bg-transparent hover:bg-slate-200">
-                            <FaUndo size={iconSize} />
-                        </Button>
-                        <Button isIconOnly onClick={handleSave}
-                            className="text-blue-500 bg-transparent hover:bg-slate-200">
-                            <FaSave size={iconSize} />
-                        </Button></div>)
-                : (
-                    <div className="flex">
-                        <Button isIconOnly className='bg-transparent' disabled />
-                        <Button isIconOnly onClick={handleDelete}
-                            className="text-red-500 bg-transparent hover:bg-slate-200">
-                            <FaTrash size={iconSize} />
-                        </Button></div>)}
+            {status === 'create' ? <div className="flex">
+                <Button isIconOnly onClick={handleCreate}
+                    className="text-blue-500 bg-slate-200 hover:bg-slate-200 ">
+                    <FaPlus size={iconSize} />
+                </Button>
+                <Button isIconOnly className='bg-transparent' disabled />
+            </div> :
+                isEditing
+                    ? (
+                        <div className="flex">
+                            <Button isIconOnly onClick={handleUndo}
+                                className="text-blue-500 bg-transparent hover:bg-slate-200">
+                                <FaUndo size={iconSize} />
+                            </Button>
+                            <Button isIconOnly onClick={handleSave}
+                                className="text-blue-500 bg-transparent hover:bg-slate-200">
+                                <FaSave size={iconSize} />
+                            </Button></div>)
+                    : (
+                        <div className="flex">
+                            <Button isIconOnly className='bg-transparent' disabled />
+                            <Button isIconOnly onClick={handleDelete}
+                                className="text-red-500 bg-transparent hover:bg-slate-200">
+                                <FaTrash size={iconSize} />
+                            </Button></div>)}
         </div>
     );
 };

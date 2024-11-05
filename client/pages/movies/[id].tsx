@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from '@nextui-org/react';
 import Image from 'next/image';
-import models, { Movie } from '@/services/models';
+import models, { Movie, PlayLink } from '@/services/models';
 import { useRouter } from 'next/router';
 import { Gallery, LinkButton } from '@/components';
 import UserImg from '@/public/images/user.svg';
@@ -11,13 +11,13 @@ import { GalleryPopup } from '@/components/Gallery';
 import { PlayLinksPanel } from '../play-links/PlayLinksPanel';
 
 
-
 const MoviePage = () => {
   const router = useRouter();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isShowGallery, setIsShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [playLinks, setPlayLinks] = useState<PlayLink[]>([]);
 
 
   useEffect(() => {
@@ -38,13 +38,11 @@ const MoviePage = () => {
       const date = new Date(data.releaseDate);
       data.releaseDate = date.toLocaleDateString('en-CA');
       setMovie(data);
+      setPlayLinks(data.playLinks);
       setIsLoading(false);
     };
     fetchMovie();
   }, [router]);
-
-
-
 
   const handleBack = () => {
     window.history.back();
@@ -57,6 +55,11 @@ const MoviePage = () => {
   const handleHideGallery = () => {
     setIsShowGallery(false);
   }
+
+  useEffect(() => {
+    console.log('PlayLinksPanel', playLinks);
+  }
+    , [playLinks]);
 
 
   if (!movie || isLoading) {
@@ -90,13 +93,14 @@ const MoviePage = () => {
         <div className="font-thin text-gray-600">
           {movie.description}
         </div>
-        <MovieActionBar currentMovie={movie} />
-        <PlayLinksPanel playLinks={movie.playLinks} />
+        <MovieActionBar currentMovie={movie} currentPlayLinks={playLinks} setPlayLinks={setPlayLinks} />
+        <PlayLinksPanel playLinks={playLinks} />
       </div>
       <div className="flex flex-col flex-initial " >
         <div className="flex justify-center p-4" >
           <div>
             <Image className='border border-gray-300 rounded-2xl shadow-lg '
+              priority
               width={0} height={0}
               sizes='100vw'
               style={{ width: '100%', height: 'auto' }}

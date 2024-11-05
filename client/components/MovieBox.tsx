@@ -19,8 +19,9 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed: boolean 
              shadow-lg m-2">
                 {movie.posterUrl
                     ? <Image
+                        priority
                         src={movie.posterUrl} alt={movie.name}
-                        layout="fill"
+                        fill
                     />
                     : <div className='w-[200px] h-[300px] bg-slate-200' />
                 }
@@ -36,9 +37,11 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed: boolean 
              shadow-lg m-2
             transition-transform duration-500 ease-in-out transform hover:shadow-xl hover:shadow-slate-800/50 ">
                 {movie.posterUrl
-                    ? <Image
+                    ? <Image 
+                        priority
                         src={movie.posterUrl} alt={movie.name}
-                        layout="fill"
+                        fill
+                        sizes='100vw 100vh'
                         className="transition-transform duration-300 ease-in-out transform group-hover:scale-125"
                     />
                     : <div className='w-[200px] h-[300px] bg-slate-200' />
