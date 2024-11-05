@@ -1,7 +1,7 @@
 import React,{useEffect} from 'react';
 import models, { PlayLink } from '@/services/models';
 import { Modal, ModalBody, ModalHeader, ModalFooter, Button, ModalContent } from '@nextui-org/react';
-import ItemManager, { Item } from '@/components/ItemManager';
+import ItemManager, { Item,ItemManagerTitle } from '@/components/ItemManager';
 
 interface PlayLinksPopupProps {
     movieId: number;
@@ -15,8 +15,8 @@ const castPlayLinkToItem = (link: PlayLink): Item => {
     return {
         id: link.id,
         fields: [
-            { name: 'name', value: link.name, size: 1 },
-            { name: 'url', value: link.url, size: 2 }
+            { name: 'Name', value: link.name, size: 1 },
+            { name: 'URL', value: link.url, size: 2 }
         ]
     }
 }
@@ -105,6 +105,7 @@ export const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId,
                                 }}
                             />
                         </div>
+                        <ItemManagerTitle fields={newItem.fields} />
                         <div className='flex flex-col mt-5'>
                             {items.map((item) => {
                                 return <ItemManager key={item.id} item={item}

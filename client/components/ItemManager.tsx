@@ -110,7 +110,7 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onC
     }
     const InputBox = (index: number, size: number) => {
 
-        return <div key={`{"input${index}"}`}  className={`flex-1 `}
+        return <div key={`{"input${index}"}`} className={`flex-1 `}
             style={{ flex: size }}>
             <Input value={inputValues[index]}
                 ref={index === 0 ? firstInputRef : null}
@@ -122,8 +122,6 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onC
         </div>
     }
     const iconSize = 16;
-
-    console.log('currunt status:', status);
 
     return (
         <div className="flex items-center  ">
@@ -175,5 +173,32 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onC
         </div>
     );
 };
+
+
+export const ItemManagerTitle: React.FC<{ fields: ItemField[] }> = ({ fields }) => {
+    return (
+        <div className="flex items-center mt-3 border-b-1  ">
+            <div className="flex-1 flex flex-col justify-center mr-1">
+                <div className="flex gap-1 ">
+                    {fields.map((field, index) => (
+                        <div key={index} style={{ flex: field.size }}
+                            className="ml-2 overflow-hidden " >
+                            <h1 className="text-ellipsis whitespace-nowrap overflow-hidden font-thin ">
+                                {field.name}
+                            </h1>
+                        </div>
+                    )
+                    )}
+                </div>
+            </div>
+            <div className="flex">
+                <Button isIconOnly className='bg-transparent' disabled />
+                <Button isIconOnly className='bg-transparent' disabled />
+            </div>
+        </div>
+    );
+}
+
+
 
 export default ItemManager;

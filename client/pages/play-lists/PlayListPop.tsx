@@ -7,7 +7,7 @@ import { Movie } from "@/services/apiMovie";
 import models, { PlayList } from "@/services/models";
 import { FaPlus } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
-import ItemManager from "../../components/ItemManager";
+import ItemManager,{Item} from "../../components/ItemManager";
 
 
 interface PlayListPopProps {
@@ -15,6 +15,17 @@ interface PlayListPopProps {
     show: boolean;
     onClose: () => void;
 }
+
+const castPlayListToItem = (list: PlayList): Item => {
+    return {
+        id: list.id,
+        fields: [
+            { name: 'Name', value: list.name, size: 1 }
+        ]
+    }
+}
+
+
 
 export const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }) => {
     const size = "xs";
@@ -69,11 +80,11 @@ export const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }
         setIsShowManager(false);
     }
 
-    const handleUpdatePlayList = async (id: number, updatedValue: string) => {
-        const list = playLists.find(item => item.id === id);
+    const handleUpdatePlayList = async (item:Item) => {
+        const list = playLists.find(list => list.id === item.id);
         if (list) {
-            list.name = updatedValue;
-            const re = await models.playList.update(id, updatedValue);
+            list.name = item.fields[0].value;
+            const re = await models.playList.update(list.id, list.name);
             if (re) {
                 setPlayLists([...playLists]);
             } else {
@@ -98,7 +109,7 @@ export const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }
                 {playLists.map(list => (
                     <ItemManager
                         key={list.id}
-                        item={list}
+                        item={ castPlayListToItem(list) }
                         onUpdate={handleUpdatePlayList}
                         onDelete={handleDeletePlayList}
                     />
