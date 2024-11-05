@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { Movie } from '@/services/models';
 
 
-const MovieBox = ({ movie ,isZoomed=true }: { movie: Movie,isZoomed:boolean }) => {
+const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed: boolean }) => {
     const router = useRouter();
     const handleMovieClick = (movie: Movie) => {
         router.push(`/movies/${movie.id}`);
     }
 
-    const imageDiv=()=>{
+    const imageDiv = () => {
         return (
             <div className="w-48 h-72 
             border border-gray-300 rounded-2xl
@@ -28,13 +28,13 @@ const MovieBox = ({ movie ,isZoomed=true }: { movie: Movie,isZoomed:boolean }) =
         );
     }
 
-    const zoomedDiv=()=>{
+    const zoomedDiv = () => {
         return (
             <div className="w-48 h-72 group
             border border-gray-300 rounded-2xl
             overflow-hidden relative
              shadow-lg m-2
-             hover:shadow-xl hover:shadow-slate-800/50 ">
+            transition-transform duration-500 ease-in-out transform hover:shadow-xl hover:shadow-slate-800/50 ">
                 {movie.posterUrl
                     ? <Image
                         src={movie.posterUrl} alt={movie.name}
@@ -47,13 +47,14 @@ const MovieBox = ({ movie ,isZoomed=true }: { movie: Movie,isZoomed:boolean }) =
         );
     }
 
-
     return (
         // use div relative and image layout=fill to make image responsive.
         <div className='flex flex-col my-2'
-            onClick={() => { handleMovieClick(movie) }}>
+            onClick={() => {
+                if (movie.id) { handleMovieClick(movie) }
+            }}>
 
-            {isZoomed?zoomedDiv():imageDiv()}
+            {isZoomed ? zoomedDiv() : imageDiv()}
             <div className='w-48 h-6  mx-2 flex justify-between' >
                 <div className="font-thin text-gray-600">
                     {movie.sn || ' '}

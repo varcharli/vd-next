@@ -6,7 +6,7 @@ async function bootstrap() {
   // CORS
   const allowedOrigins = process.env.NODE_ENV === 'production'
     ? ['https://your-production-domain.com'] // 生产环境允许的域名
-    : ['http://localhost:3001']; // 开发环境允许的域名
+    : ['http://192.168.0.75:3001']; // 开发环境允许的域名
 
   app.enableCors({
     origin: allowedOrigins,

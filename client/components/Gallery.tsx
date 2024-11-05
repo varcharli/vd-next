@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image } from '@nextui-org/react';
 import { FaAngleLeft, FaAngleRight, FaWindowClose } from 'react-icons/fa';
 
@@ -57,7 +57,7 @@ export const GalleryPopup: React.FC<GalleryPopupProps> = ({ images, index, onClo
     return () => {
       window.removeEventListener('wheel', handleWheel);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -65,14 +65,12 @@ export const GalleryPopup: React.FC<GalleryPopupProps> = ({ images, index, onClo
       onClick={handleOverlayClick}>
       <button
         className="absolute top-4 right-4 text-white"
-        onClick={onClose}
-      >
+        onClick={onClose}>
         <FaWindowClose className="h-8 w-8" />
       </button>
       <button
         className="absolute left-4 text-white"
-        onClick={handlePrev}
-      >
+        onClick={handlePrev}>
         <FaAngleLeft className="h-12 w-12" />
       </button>
       <div className="relative w-full max-w-4xl h-3/4 flex items-center justify-center">

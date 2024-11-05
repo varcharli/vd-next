@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Avatar, Link } from '@nextui-org/react';
+import { Avatar } from '@nextui-org/react';
 import Image from 'next/image';
 import models, { Movie } from '@/services/models';
 import { useRouter } from 'next/router';
@@ -8,6 +8,8 @@ import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
 import { MovieActionBar } from './MovieActionBar';
 import { GalleryPopup } from '@/components/Gallery';
+import { PlayLinksPanel } from '../play-links/PlayLinksPanel';
+
 
 
 const MoviePage = () => {
@@ -16,6 +18,7 @@ const MoviePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isShowGallery, setIsShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+
 
   useEffect(() => {
     if (!router.isReady) {
@@ -41,26 +44,7 @@ const MoviePage = () => {
   }, [router]);
 
 
-  const playLinksPanel = () => {
-    if (!movie || !movie.playLinks || movie.playLinks.length === 0) {
-      return null;
-    }
-    return (
-      <div className="flex flex-col gap-3" >
-        {/* <h1 className="text-xl text-slate-500" >Play Links</h1> */}
-        <div className="flex flex-col gap-3 border-t-1" >
-          {movie.playLinks.map((link, index) => {
-            return (
-              <div key={index}
-                className="flex gap-3 cursor-pointer hover:bg-slate-100 p-2 " >
-                <Link href={link.url} target='_blank' >{link.name}</Link>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
+
 
   const handleBack = () => {
     window.history.back();
@@ -73,6 +57,7 @@ const MoviePage = () => {
   const handleHideGallery = () => {
     setIsShowGallery(false);
   }
+
 
   if (!movie || isLoading) {
     return <Loading />;
@@ -106,7 +91,7 @@ const MoviePage = () => {
           {movie.description}
         </div>
         <MovieActionBar currentMovie={movie} />
-        {playLinksPanel()}
+        <PlayLinksPanel playLinks={movie.playLinks} />
       </div>
       <div className="flex flex-col flex-initial " >
         <div className="flex justify-center p-4" >
@@ -130,6 +115,7 @@ const MoviePage = () => {
             index={galleryIndex}
             onClose={handleHideGallery}
           />}
+
         </div>
       </div>
     </div>

@@ -14,8 +14,9 @@ export class PlayLinkService {
     return this.playLinkRepository.save(playLink);
   }
 
-  update(id: number, playLink: PlayLink): Promise<PlayLink> {
-    return this.playLinkRepository.save({ ...playLink, id });
+  async update(id: number, playLink: PlayLink): Promise<boolean> {
+    const re= await this.playLinkRepository.update(id, playLink);
+    return true;
   }
 
   async delete(id: number): Promise<Boolean> {

@@ -7,7 +7,7 @@ import { Movie } from "@/services/apiMovie";
 import models, { PlayList } from "@/services/models";
 import { FaPlus } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
-import ItemManager from "./ItemManager";
+import ItemManager from "../../components/ItemManager";
 
 
 interface PlayListPopProps {

@@ -12,7 +12,7 @@ export class PlayLinkController {
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() playLink: PlayLink): Promise<PlayLink> {
+  update(@Param('id') id: number, @Body() playLink: PlayLink): Promise<boolean> {
     return this.playLinkService.update(id, playLink);
   }
 
