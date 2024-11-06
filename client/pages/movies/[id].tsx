@@ -56,11 +56,12 @@ const MoviePage = () => {
     setIsShowGallery(false);
   }
 
-  useEffect(() => {
-    console.log('PlayLinksPanel', playLinks);
+  const handleActorClick = (actorId: number) => {
+    router.push({
+      pathname: '/movies',
+      query: { actorId }
+    });
   }
-    , [playLinks]);
-
 
   if (!movie || isLoading) {
     return <Loading />;
@@ -83,7 +84,9 @@ const MoviePage = () => {
         <div className="font-thin gap-3 flex flex-wrap ">
           {movie.actors.map(actor => {
             return (
-              <div key={actor.id} className='flex flex-col gap-1 items-center' >
+              <div key={actor.id}
+                onClick={() => handleActorClick(actor.id)}
+                className='flex flex-col gap-1 items-center' >
                 <Avatar src={actor.photoUrl || UserImg} className='h-25 w-25' />
                 <h1 className='w-20' >{actor.name}</h1>
               </div>);

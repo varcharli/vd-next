@@ -15,6 +15,7 @@ const MoviesPage = () => {
     const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title || '';
     // const playListId = Number(router.query.playListId) || undefined;
     const [playListId, setPlayListId] = useState<number | undefined>(undefined);
+    const actorId = Number(router.query.actorId) || undefined;
     const [order, setOrder] = useState('id DESC');
 
     const [limit, setLimit] = useState(pageSize);
@@ -43,6 +44,7 @@ const MoviesPage = () => {
         if (limit) { query.limit = limit; }
         if (title) { query.title = title; }
         if (playListId) { query.playListId = playListId; }
+        if (actorId) { query.actorId = actorId; }
 
         router.push({
             pathname: `/movies`,
@@ -59,17 +61,12 @@ const MoviesPage = () => {
             } else {
                 setLimit(14);
             }
-            console.log('width', width);
+            // console.log('width', width);
         };
 
         if (limit == 0) {
             updateLimit();
         } // Set initial limit
-        // window.addEventListener('resize', updateLimit);
-
-        // return () => {
-        //     window.removeEventListener('resize', updateLimit);
-        // };
     }, [limit]);
 
     const handlePlayListChange = (playListId?: number) => {
@@ -125,7 +122,9 @@ const MoviesPage = () => {
             <div className='w-full flex justify-center'>
                 <div className="p-4 max-w-screen-2xl ">
                     {/* <h1 className="text-4xl font-bold my-4">Movies</h1> */}
-                    <MoviesList page={page} limit={limit} title={title} order={order} playListId={playListId} onPageChange={handlePageChange} />
+                    <MoviesList page={page} limit={limit} title={title} 
+                        order={order} playListId={playListId} actorId={actorId}
+                        onPageChange={handlePageChange} />
                 </div>
             </div>
         </div>

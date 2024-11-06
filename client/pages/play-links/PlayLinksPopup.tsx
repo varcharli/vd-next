@@ -45,10 +45,7 @@ export const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId,
         const newPlayLinks= items.map((item) => {
             return castItemToPlayLink(item);
         });
-        // playLinks.length=0;
-        // playLinks.push(...newPlayLinks);
         setPlayLinks(newPlayLinks);
-        console.log('updatePlayLinks', playLinks);
     }
 
     useEffect(() => {

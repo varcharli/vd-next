@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Movie } from '@/services/models';
 
 
-const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed: boolean }) => {
+const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean }) => {
     const router = useRouter();
     const handleMovieClick = (movie: Movie) => {
         router.push(`/movies/${movie.id}`);

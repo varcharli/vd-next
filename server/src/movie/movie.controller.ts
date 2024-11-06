@@ -33,9 +33,10 @@ export class MovieController {
     @Query('order') order?: string,
     @Query('title') title?: string,
     @Query('playListId') playListId?: number,
+    @Query('actorId') actorId?: number,
   ): Promise<[Movie[], number]> {
     const userId = req.user.userId;
-    return this.movieService.findAll({ limit, offset, order, title, playListId,userId });
+    return this.movieService.findAll({ limit, offset, order, title, playListId, actorId, userId });
   }
 
   @Get(':id')

@@ -10,10 +10,11 @@ interface MoviesListProps {
     title: string;
     order: string;
     playListId?: number;
+    actorId?: number;
     onPageChange: (page: number) => void;
 }
 
-const MoviesList = ({ page, limit, title, order,playListId, onPageChange }: MoviesListProps) => {
+const MoviesList = ({ page, limit, title, order, playListId, actorId, onPageChange }: MoviesListProps) => {
     const [movies, setMovies] = useState<Movie[]>([]);
     const [nullMovies, setNullMovies] = useState<Movie[]>([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -26,9 +27,9 @@ const MoviesList = ({ page, limit, title, order,playListId, onPageChange }: Movi
 
 
 
-    const fetchMovies = async (page: number, limit: number, title: string, order: string,playListId?:number): Promise<{ data: Movie[], totalPages: number }> => {
-
-        const response = await models.movie.get({ page, limit, title, order,playListId });
+    const fetchMovies = async (page: number, limit: number, title: string,
+        order: string, playListId?: number, actorId?: number): Promise<{ data: Movie[], totalPages: number }> => {
+        const response = await models.movie.get({ page, limit, title, order, playListId, actorId });
         const data = response.data[0];
         data.forEach((movie: Movie) => {
             const date = new Date(movie.releaseDate);
@@ -40,7 +41,7 @@ const MoviesList = ({ page, limit, title, order,playListId, onPageChange }: Movi
 
     useEffect(() => {
         const loadMovies = async () => {
-            const { data, totalPages } = await fetchMovies(page, limit, title, order,playListId);
+            const { data, totalPages } = await fetchMovies(page, limit, title, order, playListId,actorId);
             setMovies(data);
             setNullMovies([]);
             if (data.length < limit) {
@@ -63,7 +64,7 @@ const MoviesList = ({ page, limit, title, order,playListId, onPageChange }: Movi
         }
 
         loading();
-    }, [page, limit, title, order,playListId]);
+    }, [page, limit, title, order, playListId,actorId]);
 
     if (isLoading) {
         return <Loading />;

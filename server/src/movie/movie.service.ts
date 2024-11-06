@@ -13,6 +13,7 @@ interface FindAllParams {
   order?: string;
   title?: string;
   playListId?: number;
+  actorId?: number;
   userId?: number;
 }
 
@@ -47,13 +48,32 @@ export class MovieService {
       order = 'id DESC',
       title,
       playListId,
+      actorId,
       userId
     }: FindAllParams
   ): Promise<[Movie[], number]> {
     const [field, direction] = (order).split(' ');
 
-    if (playListId) {
+    if (actorId) {
+      const reCount = await this.movieRepository.query(
+        `select count(*) from movie a 
+          inner join movie_actors_actor b on a.id = b."movieId"
+          where b."actorId" = $1
+        `, [actorId]);
+      const count = parseInt(reCount[0].count, 10);
+      const re = await this.movieRepository.query(
+        `select a.* from movie a 
+          inner join movie_actors_actor b on a.id = b."movieId"
+          where b."actorId" = $1
+          order by a."${field}" ${direction.toUpperCase() as 'ASC' | 'DESC'} NULLS LAST
+          limit $2 
+          offset $3
+        `, [actorId, limit, offset]);
+      return [re, count];
+    }
 
+
+    if (playListId) {
       let orderStr = '';
       if (field === 'id') {
         orderStr = 'b."createAt" desc';
@@ -65,7 +85,7 @@ export class MovieService {
         `select count(*) from play_list_item a
       inner join play_list b on a."playListId" = b.id and b."userId"=1
       where a."playListId" = $1 ;`, [playListId]);
-      const count =parseInt( countRe[0].count,10);
+      const count = parseInt(countRe[0].count, 10);
       if (count === 0) {
         return [[], 0];
       }
