@@ -6,7 +6,7 @@ services:
     build:
       context: ./client
     ports:
-      - "6001:3000"
+      - "3101:3000"
     env_file:
       - ./client/.env.production
     environment:
@@ -19,7 +19,7 @@ services:
     build:
       context: ./server
     ports:
-      - "6000:3000"
+      - "3100:3000"
     env_file:
       - ./server/.env.production
     environment:
