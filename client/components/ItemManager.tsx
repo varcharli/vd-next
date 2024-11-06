@@ -54,6 +54,7 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onC
 
     useEffect(() => {
         resetValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fields]);
 
     useEffect(() => {

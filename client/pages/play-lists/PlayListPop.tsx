@@ -27,7 +27,7 @@ const castPlayListToItem = (list: PlayList): Item => {
 
 
 
-export const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }) => {
+const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }) => {
     const size = "xs";
     const [playLists, setPlayLists] = React.useState<PlayList[]>([]);
     const [selectedLists, setSelectedLists] = React.useState<string[]>([]);
@@ -167,3 +167,5 @@ export const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }
     );
 
 }
+
+export default PlayListPop;

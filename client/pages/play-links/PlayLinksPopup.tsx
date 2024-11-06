@@ -30,11 +30,11 @@ const castItemToPlayLink = (item: Item): PlayLink => {
 }
 
 
-export const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId, playLinks,setPlayLinks, onClose }) => {
+ const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId, playLinks,setPlayLinks, onClose }) => {
     // const [newName, setNewName] = React.useState('');
     // const [newUrl, setNewUrl] = React.useState('');
     const [items, setItems] = React.useState(
-        playLinks.map((link) => {
+        playLinks?.map((link) => {
             return castPlayLinkToItem(link);;
         }
         )
@@ -42,7 +42,7 @@ export const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId,
     const newItem = castPlayLinkToItem({ id: 0, name: '', url: '' } as PlayLink);
 
     const updatePlayLinks= () => {
-        const newPlayLinks= items.map((item) => {
+        const newPlayLinks= items?.map((item) => {
             return castItemToPlayLink(item);
         });
         setPlayLinks(newPlayLinks);
@@ -51,6 +51,7 @@ export const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId,
     useEffect(() => {
         updatePlayLinks();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     , [items]);
 
 
@@ -104,7 +105,7 @@ export const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId,
                         </div>
                         <ItemManagerTitle fields={newItem.fields} />
                         <div className='flex flex-col mt-5'>
-                            {items.map((item) => {
+                            {items?.map((item) => {
                                 return <ItemManager key={item.id} item={item}
                                     onUpdate={async (item) => {
                                         await handleUpdate(item)
@@ -127,3 +128,4 @@ export const PlayLinksPopup: React.FC<PlayLinksPopupProps> = ({ isOpen, movieId,
     );
 }
 
+export default PlayLinksPopup;

@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import { Gallery, LinkButton } from '@/components';
 import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
-import { MovieActionBar } from './MovieActionBar';
+import MovieActionBar from './MovieActionBar';
 import { GalleryPopup } from '@/components/Gallery';
-import { PlayLinksPanel } from '../play-links/PlayLinksPanel';
+import PlayLinksPanel from '../play-links/PlayLinksPanel';
 
 
 const MoviePage = () => {

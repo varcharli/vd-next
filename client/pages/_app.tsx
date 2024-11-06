@@ -2,7 +2,7 @@ import { NextUIProvider } from '@nextui-org/react';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { AppTopbar } from './appTopbar';
+import AppTopbar from './appTopbar';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (

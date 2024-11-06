@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { FaUserCircle } from "react-icons/fa";
 
-export const AppTopbar = () => {
+const AppTopbar = () => {
 
     const router = useRouter();
     const handleSearch = () => {
@@ -69,3 +69,4 @@ export const AppTopbar = () => {
     );
 }
 
+export default AppTopbar;

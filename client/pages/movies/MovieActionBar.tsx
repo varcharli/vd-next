@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
 import { FaBookmark, FaLink } from 'react-icons/fa';
-import { PlayListPop } from '../play-lists/PlayListPop';
+import PlayListPop from '../play-lists/PlayListPop';
 import { Movie } from '@/services/apiMovie';
-import { PlayLinksPopup } from '../play-links/PlayLinksPopup';
+import PlayLinksPopup from '../play-links/PlayLinksPopup';
 import { PlayLink } from '@/services/apiPlayLink';
 
 interface MovieActionBarProps {
@@ -12,9 +12,9 @@ interface MovieActionBarProps {
     setPlayLinks: (links: PlayLink[]) => void;
 }
 
-export const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie,currentPlayLinks,setPlayLinks }) => {
+const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie, currentPlayLinks, setPlayLinks }) => {
     const [showPlayList, setShowPlayList] = useState(false);
-    const [movie, setMovie] = useState<Movie | null>(currentMovie);
+    const [movie, setMovie] = useState<Movie | null>(currentMovie || null);
     const [isShowPlayLinks, setIsShowPlayLinks] = useState(false);
 
     const handleShowPlayList = () => {
@@ -51,18 +51,19 @@ export const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie,cur
             </Button>
             <Button isIconOnly color="primary" variant="flat"
                 onClick={handleShowPlayList}
-                className={`${movie.playLists.length ? "text-orange-500" : "text-slate-500"} hover:bg-slate-300`}  >
+                className={`${movie.playLists?.length ? "text-orange-500" : "text-slate-500"} hover:bg-slate-300`}  >
                 <FaBookmark size={20} />
             </Button>
             <PlayListPop movie={movie} show={showPlayList} onClose={handleHidePlayList} />
             <PlayLinksPopup
                 isOpen={isShowPlayLinks}
-                playLinks={currentPlayLinks}
-                setPlayLinks={setPlayLinks}
-                movieId={movie.id}
-                onClose={handleHidePlayLinks} 
-                />
+                playLinks={currentPlayLinks || []}
+                setPlayLinks={setPlayLinks || (() => { })}
+                movieId={movie?.id}
+                onClose={handleHidePlayLinks || (() => { })}
+            />
         </div>
-
     );
 }
+
+export default MovieActionBar;
