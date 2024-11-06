@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  nextjs:
+    restart: always
+    build:
+      context: ./client
+    ports:
+      - "6001:80"
+    env_file:
+      - ./client/.env.production
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - nestjs
+
+  nestjs:
+    restart: always
+    build:
+      context: ./server
+    ports:
+      - "6000:3000"
+    env_file:
+      - ./server/.env.production
+    environment:
+      - NODE_ENV=production

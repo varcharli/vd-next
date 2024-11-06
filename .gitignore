@@ -1,7 +1,10 @@
 .env
 /server/.env
+/server/.env.production
 /client/.env
 /client/.env.local
+/client/.env.production
+
 
 /server/node_modules
 /client/node_modules

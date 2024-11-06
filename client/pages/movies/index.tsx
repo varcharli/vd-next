@@ -7,7 +7,6 @@ import { GoTriangleRight } from "react-icons/go";
 import PlayListNav from './PlayListNav';
 import { FaHome } from 'react-icons/fa';
 
-
 const MoviesPage = () => {
     const router = useRouter();
     const page = Number(router.query.page) || 1;
