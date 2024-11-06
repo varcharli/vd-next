@@ -6,13 +6,6 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Stage 2: Setup Nginx and copy the build files
-FROM nginx:alpine AS production
-COPY --from=builder /app/.next /usr/share/nginx/html/_next
-COPY --from=builder /app/public /usr/share/nginx/html
-# COPY --from=builder /app/static /usr/share/nginx/html/static
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 3000
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
