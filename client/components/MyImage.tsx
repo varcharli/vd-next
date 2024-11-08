@@ -11,14 +11,15 @@ interface MyImageProps {
     priority?: boolean;
     onClick?: () => void;
     className?: string;
+    zoomed?: boolean;
 }
 
 type MyImageMode = 'full' | 'cover' | 'none';
 
-const MyImage: React.FC<MyImageProps> = ({ src, alt, width, height, mode, priority, onClick, className }) => {
-
+const MyImage: React.FC<MyImageProps> = ({ src, alt, width, height, mode, priority, onClick, className, zoomed }) => {
+    let content;
     if (mode == 'full') {
-        return (
+        content = (
             <Image
                 src={src}
                 alt={alt || ''}
@@ -34,7 +35,7 @@ const MyImage: React.FC<MyImageProps> = ({ src, alt, width, height, mode, priori
     }
 
     if (mode == 'cover') {
-        return (
+        content = (
             <div className={className} >
                 <div className={`w-[${width}px] h-[${height}px] relative`} >
                     <Image src={src} className='object-cover'
@@ -48,31 +49,30 @@ const MyImage: React.FC<MyImageProps> = ({ src, alt, width, height, mode, priori
                 </div>
             </div>
         );
+    }
+    if (!content) {
+        content = (
+            <Image
+                src={src}
+                alt={alt || ''}
+                width={width}
+                height={height}
+                priority={priority || true}
 
-        // return (<div className={`w-[${width}px] h-[${height}px] relative` } >
-        //     <Image 
-        //         src={src}
-        //         alt={alt || ''}
-        //         width={width || 0}
-        //         height={height || 0}
-        //         objectFit='cover'
-        //         // style={{ maxWidth: `{${width}px}` , maxHeight: `{${height}px}`,width:'100%',height:'100%' }}
-        //         priority={priority || true}
-        //         onClick={onClick}
-        //     /></div>
-        // );
+            />
+        );
     }
 
-    return (
-        <Image
-            src={src}
-            alt={alt || ''}
-            width={width}
-            height={height}
-            priority={priority || true}
-
-        />
-    );
+    if(zoomed){
+        return (
+            <div className=' transition-transform duration-500 ease-in-out transform 
+            hover:shadow-xl hover:shadow-slate-800/50 '>
+                {content}
+            </div>
+        );
+    } else {
+        return content;
+    }
 }
 
 interface MyLocalImageProps {

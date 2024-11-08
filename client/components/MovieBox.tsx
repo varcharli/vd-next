@@ -36,6 +36,7 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean
             src = { movie.posterUrl || '/default-poster.png' }
             alt = { movie.name }
             mode="full"
+            zoomed={false}
             /></div>
         );
     }
