@@ -1,10 +1,6 @@
-import Image from 'next/image';
-// import { Image } from '@nextui-org/react';
-import  MyImage  from './MyImage';
-
+import MyImage from './MyImage';
 import { useRouter } from 'next/navigation';
 import { Movie } from '@/services/models';
-
 
 const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean }) => {
     const router = useRouter();
@@ -14,30 +10,20 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean
 
     const imageDiv = () => {
         return (
-            <div className="w-48 h-72 
-            border border-gray-300 rounded-2xl
-            overflow-hidden relative
-             shadow-lg m-2">
-                {movie.posterUrl
-                    ? <Image
-                        priority
-                        src={movie.posterUrl} alt={movie.name}
-                        fill
-                    />
-                    : <div className='w-[200px] h-[300px] bg-slate-200' />
-                }
-            </div>
-        );
-    }
-
-    const zoomedDiv = () => {
-        return (<div className='flex justify-center'>
-            <MyImage className='rounded-2xl shadow-lg'
-            src = { movie.posterUrl || '/default-poster.png' }
-            alt = { movie.name }
-            mode="full"
-            zoomed={false}
-            /></div>
+        <div className='w-[200px]  h-[300px] 
+            border-1 border-gray-200 shadow-lg
+             bg-slate-50
+            flex rounded-2xl overflow-clip '>
+            <MyImage className='shadow-lg '
+                src={movie.posterUrl || '/default-poster.png'}
+                alt={movie.name}
+                mode="cover"
+                zoomed={isZoomed}
+                width={200}
+                height={300}
+            />
+             </div>
+            
         );
     }
 
@@ -48,7 +34,7 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean
                 if (movie.id) { handleMovieClick(movie) }
             }}>
 
-            {isZoomed ? zoomedDiv() : imageDiv()}
+            {imageDiv()}
             <div className='w-48 h-6  mx-2 flex justify-between' >
                 <div className="font-thin text-gray-600">
                     {movie.sn || ' '}

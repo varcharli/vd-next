@@ -22,13 +22,16 @@ const Gallery: React.FC<GalleryProps> = ({ images, onClick }) => {
         //   alt={`Gallery image ${index + 1}`}
         //   radius='sm'
         //   className="w-[90px] h-[90px] object-cover" />
-        <MyImage key={index} src={url}
-          className='rounded-lg overflow-clip'
-          onClick={() => onClick && onClick(index)}
-          width={100} height={100}
-          mode='cover'
-          alt={`Gallery image ${index + 1}`}
-        />
+        <div key={index} className='cursor-pointer ' >
+          <MyImage src={url}
+            onClick={() => onClick && onClick(index)}
+            width={100} height={100}
+            mode='cover'
+            zoomed={true}
+            alt={`Gallery image ${index + 1}`}
+            radius='sm'
+            // border={true}
+          /></div>
       ))}
     </div>
   );
@@ -82,13 +85,7 @@ export const GalleryPopup: React.FC<GalleryPopupProps> = ({ images, index, onClo
         <FaAngleLeft className="h-12 w-12" />
       </button>
       <div className="relative w-full max-w-4xl h-3/4 flex items-center justify-center">
-        <div className="absolute inset-0 " onClick={handleNext}></div>
-        {/* <Image
-          src={images[currentIndex]}
-          alt={`Image ${currentIndex + 1}`}
-          onClick={handleNext}
-          className="rounded-lg"
-        /> */}
+        <div className="absolute inset-0  " onClick={handleOverlayClick}></div>
         <MyImage className='rounded-xl'
           src={images[currentIndex]}
           mode='full'

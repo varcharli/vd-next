@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from '@nextui-org/react';
-// import Image from 'next/image';
 import models, { Movie, PlayLink, Gallery } from '@/services/models';
 import { useRouter } from 'next/router';
 import { Gallery as GalleryList, LinkButton } from '@/components';
@@ -107,16 +106,10 @@ const MoviePage = () => {
       <div className="flex flex-col flex-initial " >
         <div className="flex p-4" >
           <div>
-            <MyImage className='rounded-xl shadow-lg'
+            <MyImage className='rounded-xl shadow-lg border-1 border-gray-200'
               src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'}
               alt={movie.name}
               mode='full' />
-            {/* <Image className='border border-gray-300 rounded-2xl shadow-lg '
-              priority
-              width={0} height={0}
-              sizes='100vw'
-              style={{ width: '100%', height: 'auto' }}
-              src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'} alt={movie.name} /> */}
           </div>
         </div>
 

@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  crossOrigin: 'anonymous',
   // webpack: (config, { isServer }) => {
   //   if (!isServer) {
   //     config.resolve.fallback = { fs: false };
