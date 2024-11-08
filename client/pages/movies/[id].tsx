@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from '@nextui-org/react';
-import Image from 'next/image';
-import models, { Movie, PlayLink } from '@/services/models';
+// import Image from 'next/image';
+import models, { Movie, PlayLink, Gallery } from '@/services/models';
 import { useRouter } from 'next/router';
-import { Gallery, LinkButton } from '@/components';
+import { Gallery as GalleryList, LinkButton } from '@/components';
 import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
 import MovieActionBar from './MovieActionBar';
 import { GalleryPopup } from '@/components/Gallery';
 import PlayLinksPanel from '../play-links/PlayLinksPanel';
+import { MyImage } from '@/components';
 
 
 const MoviePage = () => {
@@ -18,6 +19,7 @@ const MoviePage = () => {
   const [isShowGallery, setIsShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [playLinks, setPlayLinks] = useState<PlayLink[]>([]);
+  const [galleries, setGalleries] = useState<Gallery[]>([]);
 
 
   useEffect(() => {
@@ -39,6 +41,7 @@ const MoviePage = () => {
       data.releaseDate = date.toLocaleDateString('en-CA');
       setMovie(data);
       setPlayLinks(data.playLinks);
+      setGalleries(data.galleries);
       setIsLoading(false);
     };
     fetchMovie();
@@ -75,7 +78,7 @@ const MoviePage = () => {
         </LinkButton>
         <h1 className="text-3xl">{movie.name}</h1>
 
-        <div className="font-thin">
+        <div className="text-orange-500 text-3xl ">
           {movie.sn}
         </div>
         <div className="font-thin" >
@@ -96,29 +99,35 @@ const MoviePage = () => {
         <div className="font-thin text-gray-600">
           {movie.description}
         </div>
-        <MovieActionBar currentMovie={movie} currentPlayLinks={playLinks} setPlayLinks={setPlayLinks} />
+        <MovieActionBar currentMovie={movie}
+          currentPlayLinks={playLinks} setPlayLinks={setPlayLinks}
+          currentGalleries={galleries} setGalleries={setGalleries} />
         <PlayLinksPanel playLinks={playLinks} />
       </div>
       <div className="flex flex-col flex-initial " >
-        <div className="flex justify-center p-4" >
+        <div className="flex p-4" >
           <div>
-            <Image className='border border-gray-300 rounded-2xl shadow-lg '
+            <MyImage className='rounded-xl shadow-lg'
+              src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'}
+              alt={movie.name}
+              mode='full' />
+            {/* <Image className='border border-gray-300 rounded-2xl shadow-lg '
               priority
               width={0} height={0}
               sizes='100vw'
               style={{ width: '100%', height: 'auto' }}
-              src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'} alt={movie.name} />
+              src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'} alt={movie.name} /> */}
           </div>
         </div>
 
-        <div className='p-4'>
-          <Gallery
-            images={movie.galleries.map((i) => i.url).
+        <div className='p-4 '>
+          <GalleryList
+            images={galleries.map((i) => i.url).
               filter((i) => i) as string[]}
             onClick={(index) => handleShowGallery(index)}
           />
           {isShowGallery && <GalleryPopup
-            images={movie.galleries.map((i) => i.url).filter((i) => i) as string[]}
+            images={galleries.map((i) => i.url).filter((i) => i) as string[]}
             index={galleryIndex}
             onClose={handleHideGallery}
           />}

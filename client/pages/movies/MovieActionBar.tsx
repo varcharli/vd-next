@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
-import { FaBookmark, FaLink } from 'react-icons/fa';
+import { FaBookmark, FaLink, FaRegImages } from 'react-icons/fa';
 import PlayListPop from '../play-lists/PlayListPop';
 import { Movie } from '@/services/apiMovie';
 import PlayLinksPopup from '../play-links/PlayLinksPopup';
 import { PlayLink } from '@/services/apiPlayLink';
+import GalleriesPopup from '../gallery/GalleryPopup';
+import { Gallery } from '@/services/apiGallery';
 
 interface MovieActionBarProps {
     currentMovie: Movie;
     currentPlayLinks: PlayLink[];
     setPlayLinks: (links: PlayLink[]) => void;
+    currentGalleries: Gallery[];
+    setGalleries: (galleries: Gallery[]) => void;
 }
 
-const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie, currentPlayLinks, setPlayLinks }) => {
+const MovieActionBar: React.FC<MovieActionBarProps> = ({ 
+    currentMovie,
+    currentPlayLinks, setPlayLinks,
+    currentGalleries, setGalleries }) => {
     const [showPlayList, setShowPlayList] = useState(false);
     const [movie, setMovie] = useState<Movie | null>(currentMovie || null);
     const [isShowPlayLinks, setIsShowPlayLinks] = useState(false);
+    const [isShowGalleries, setIsShowGalleries] = useState(false);
 
     const handleShowPlayList = () => {
         setShowPlayList(true);
@@ -23,6 +31,13 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie, currentPl
 
     const handleHidePlayList = () => {
         setShowPlayList(false);
+    }
+
+    const handleShowGalleries = () => {
+        setIsShowGalleries(true);
+    }
+    const handleHideGalleries = () => {
+        setIsShowGalleries(false);
     }
 
     React.useEffect(() => {
@@ -50,6 +65,11 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie, currentPl
                 <FaLink size={20} />
             </Button>
             <Button isIconOnly color="primary" variant="flat"
+                onClick={handleShowGalleries}
+                className='text-slate-500 hover:bg-slate-300'  >
+                <FaRegImages size={20} />
+            </Button>
+            <Button isIconOnly color="primary" variant="flat"
                 onClick={handleShowPlayList}
                 className={`${movie.playLists?.length ? "text-orange-500" : "text-slate-500"} hover:bg-slate-300`}  >
                 <FaBookmark size={20} />
@@ -61,6 +81,13 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({ currentMovie, currentPl
                 setPlayLinks={setPlayLinks || (() => { })}
                 movieId={movie?.id}
                 onClose={handleHidePlayLinks || (() => { })}
+            />
+            <GalleriesPopup
+                isOpen={isShowGalleries}
+                galleries={currentGalleries || []}
+                setGalleries={setGalleries}
+                movieId={movie.id}
+                onClose={handleHideGalleries}
             />
         </div>
     );

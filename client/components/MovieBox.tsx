@@ -1,5 +1,6 @@
 import Image from 'next/image';
 // import { Image } from '@nextui-org/react';
+import { MyImage } from './MyImage';
 
 import { useRouter } from 'next/navigation';
 import { Movie } from '@/services/models';
@@ -37,7 +38,7 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean
              shadow-lg m-2
             transition-transform duration-500 ease-in-out transform hover:shadow-xl hover:shadow-slate-800/50 ">
                 {movie.posterUrl
-                    ? <Image 
+                    ? <Image
                         priority
                         src={movie.posterUrl} alt={movie.name}
                         fill

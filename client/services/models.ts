@@ -7,6 +7,8 @@ import { playList } from './apiPlayList';
 export type { PlayList } from './apiPlayList';
 import { playLink } from './apiPlayLink';
 export type { PlayLink } from './apiPlayLink';
+import { gallery } from './apiGallery';
+export type { Gallery } from './apiGallery';
 
 const models = {
     movie,
@@ -14,6 +16,7 @@ const models = {
     auth,
     playList,
     playLink,
+    gallery,
 };
 
 export default models;

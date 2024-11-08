@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Image } from '@nextui-org/react';
+// import { Image } from '@nextui-org/react';
 import { FaAngleLeft, FaAngleRight, FaWindowClose } from 'react-icons/fa';
+import { MyImage } from '@/components';
 
 interface GalleryProps {
   images: string[];
@@ -16,11 +17,18 @@ const Gallery: React.FC<GalleryProps> = ({ images, onClick }) => {
   return (
     <div className="flex flex-wrap gap-2">
       {images.map((url, index) => (
-        <Image key={index} src={url}
+        // <Image key={index} src={url}
+        //   onClick={() => onClick && onClick(index)}
+        //   alt={`Gallery image ${index + 1}`}
+        //   radius='sm'
+        //   className="w-[90px] h-[90px] object-cover" />
+        <MyImage key={index} src={url}
+          className='rounded-lg overflow-clip'
           onClick={() => onClick && onClick(index)}
+          width={100} height={100}
+          mode='cover'
           alt={`Gallery image ${index + 1}`}
-          radius='sm'
-          className="w-[90px] h-[90px] object-cover" />
+        />
       ))}
     </div>
   );
@@ -74,12 +82,18 @@ export const GalleryPopup: React.FC<GalleryPopupProps> = ({ images, index, onClo
         <FaAngleLeft className="h-12 w-12" />
       </button>
       <div className="relative w-full max-w-4xl h-3/4 flex items-center justify-center">
-        <div className="absolute inset-0" onClick={handleOverlayClick}></div>
-        <Image
+        <div className="absolute inset-0 " onClick={handleNext}></div>
+        {/* <Image
           src={images[currentIndex]}
           alt={`Image ${currentIndex + 1}`}
           onClick={handleNext}
           className="rounded-lg"
+        /> */}
+        <MyImage className='rounded-xl'
+          src={images[currentIndex]}
+          mode='full'
+          alt={`Image ${currentIndex + 1}`}
+          onClick={handleNext}
         />
       </div>
       <button

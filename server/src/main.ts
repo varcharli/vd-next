@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DataSource} from 'typeorm';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,5 +16,9 @@ async function bootstrap() {
   });
 
   await app.listen(process.env.PORT ?? 3000);
+
+  const dataSource = app.get(DataSource);
+  console.log(`Connected to database:${process.env.DB_HOST ?? 'host not set'}:${process.env.DB_PORT ?? ''}//${dataSource.options.database}`);
+
 }
 bootstrap();

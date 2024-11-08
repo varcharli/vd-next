@@ -54,7 +54,7 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onC
 
     useEffect(() => {
         resetValues();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fields]);
 
     useEffect(() => {
@@ -106,7 +106,8 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onC
     const Textbox = (text: string, index: number, size: number) => {
         return <div key={index} style={{ flex: size }}
             className="ml-2 overflow-hidden " >
-            <h1 className="text-ellipsis whitespace-nowrap overflow-hidden">{text}</h1>
+            <div className="max-w-[200px] ">
+                <h1 className="text-ellipsis whitespace-nowrap overflow-hidden  break-all break-words" >{text}</h1></div>
         </div>;
     }
     const InputBox = (index: number, size: number) => {

@@ -8,14 +8,15 @@ export class GalleryService {
   constructor(
     @InjectRepository(Gallery)
     private readonly galleryRepository: Repository<Gallery>,
-  ) {}
+  ) { }
 
   create(gallery: Gallery): Promise<Gallery> {
     return this.galleryRepository.save(gallery);
   }
 
-  update(id: number, gallery: Gallery): Promise<Gallery> {
-    return this.galleryRepository.save({ ...gallery, id });
+  async update(id: number, gallery: Gallery): Promise<Gallery> {
+    const re = await this.galleryRepository.update(id, gallery);
+    return await this.galleryRepository.findOneBy({id});
   }
 
   async delete(id: number): Promise<Boolean> {
