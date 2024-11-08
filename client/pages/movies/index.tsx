@@ -60,7 +60,6 @@ const MoviesPage = () => {
             } else {
                 setLimit(14);
             }
-            // console.log('width', width);
         };
 
         if (limit == 0) {

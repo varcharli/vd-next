@@ -1,6 +1,6 @@
 import Image from 'next/image';
 // import { Image } from '@nextui-org/react';
-import { MyImage } from './MyImage';
+import  MyImage  from './MyImage';
 
 import { useRouter } from 'next/navigation';
 import { Movie } from '@/services/models';
@@ -31,29 +31,18 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean
     }
 
     const zoomedDiv = () => {
-        return (
-            <div className="w-48 h-72 group
-            border border-gray-300 rounded-2xl
-            overflow-hidden relative
-             shadow-lg m-2
-            transition-transform duration-500 ease-in-out transform hover:shadow-xl hover:shadow-slate-800/50 ">
-                {movie.posterUrl
-                    ? <Image
-                        priority
-                        src={movie.posterUrl} alt={movie.name}
-                        fill
-                        sizes='100vw 100vh'
-                        className="transition-transform duration-300 ease-in-out transform group-hover:scale-125"
-                    />
-                    : <div className='w-[200px] h-[300px] bg-slate-200' />
-                }
-            </div>
+        return (<div className='flex justify-center'>
+            <MyImage className='rounded-2xl shadow-lg'
+            src = { movie.posterUrl || '/default-poster.png' }
+            alt = { movie.name }
+            mode="full"
+            /></div>
         );
     }
 
     return (
         // use div relative and image layout=fill to make image responsive.
-        <div className='flex flex-col my-2'
+        <div className='flex flex-col my-2 justify-center'
             onClick={() => {
                 if (movie.id) { handleMovieClick(movie) }
             }}>

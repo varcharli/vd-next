@@ -37,11 +37,12 @@ const MyImage: React.FC<MyImageProps> = ({ src, alt, width, height, mode, priori
         return (
             <div className={className} >
                 <div className={`w-[${width}px] h-[${height}px] relative`} >
-                    <Image src={src}
+                    <Image src={src} className='object-cover'
                         alt={alt || ''}
                         fill
+                        sizes='100vw 100vh'
                         onClick={onClick}
-                        objectFit='cover'
+                        // objectFit='cover'
                         priority={priority || true}
                     />
                 </div>

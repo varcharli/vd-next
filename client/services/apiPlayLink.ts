@@ -16,9 +16,7 @@ export const playLink = {
         return await api.post('/play-links', data);
     },
     async update(id: number, data: PlayLink) {
-        console.log('playLink.update from', id, data);
         const re= await api.put(`/play-links/${id}`, data);
-        console.log('playLink.update', re);
         return re;
     },
     async delete(id: number) {

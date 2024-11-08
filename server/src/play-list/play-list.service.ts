@@ -19,7 +19,6 @@ export class PlayListService {
   }
 
   async update(id: number, playlist: PlayList): Promise<any> {
-    console.log('playlist update ----', { ...playlist, id });
     return this.playlistRepository.update(id, playlist);
   }
 
@@ -70,9 +69,7 @@ export class PlayListService {
       newFavorite.name = this.favoriteName;
       newFavorite.isSys = true;
       newFavorite.user = { id: userId } as any;
-      console.log('newFavorite', newFavorite);
       const re= await this.playlistRepository.save(newFavorite);
-      console.log('re', re);
       return re;
     }
   }

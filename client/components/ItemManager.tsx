@@ -92,14 +92,12 @@ const ItemManager: React.FC<ItemManagerProps> = ({ item, onUpdate, onDelete, onC
             item.fields[index].value = value;
         });
         if (onCreate) {
-            console.log('onCreate:', item);
             await onCreate(item);
         }
         inputValues.map((value, index) => {
             inputValues[index] = '';
         });
 
-        console.log('handleCreate:', item);
     }
 
 
