@@ -90,7 +90,6 @@ class MovieForm extends Component<FormProps, FormState> {
                 fields: castMovieToFields(newModel)
             }
         }
-        console.log('MovieForm.constructor', this.state);
     }
 
     readonly title = "Movie Form";
@@ -118,7 +117,7 @@ class MovieForm extends Component<FormProps, FormState> {
 
     protected handleSubmit =async () => {
         const submit = async () => {
-            const currentModel = castFieldsToMovie(this.state.fields);
+            const currentModel = castFieldsToMovie(this.state?.fields);
             if (this.props.mode === 'update') {
                 await this.handelUpdate(currentModel);
             }
@@ -142,7 +141,7 @@ class MovieForm extends Component<FormProps, FormState> {
                 placeholder='Enter value'
                 onChange={(e) => {
                     const value = e.target.value;
-                    const newFields = this.state.fields.map(f => {
+                    const newFields = this.state?.fields?.map(f => {
                         if (f.key === field.key) {
                             return { ...f, value };
                         }
@@ -168,7 +167,7 @@ class MovieForm extends Component<FormProps, FormState> {
                     <ModalHeader>{this.title}</ModalHeader>
                     <ModalBody className='min-h-64'>
                         <div className='flex flex-col gap-3'>
-                            {this.state.fields.map(this.fieldInput)}
+                            {this.state?.fields?.map(this.fieldInput)}
                         </div>
 
                     </ModalBody>
