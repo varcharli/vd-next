@@ -135,8 +135,9 @@ class MovieForm extends Component<FormProps, FormState> {
 
     protected fieldInput = (field: FormField) => {
         return (
+            <div className='flex flex-col' >
+            <label className='text-slate-500 ml-1' >{field.title}</label>
             <Input key={field.key}
-                label={field.title}
                 value={field.value}
                 placeholder='Enter value'
                 onChange={(e) => {
@@ -153,8 +154,8 @@ class MovieForm extends Component<FormProps, FormState> {
                     label: "text-red/50",
                     input:["placeholder:text-default-700/50"]
                 }}
-                labelPlacement="outside"
-            />
+                // labelPlacement="outside"
+            /></div>
         );
     }
 
