@@ -10,7 +10,6 @@ import { GalleryPopup } from '@/components/Gallery';
 import PlayLinksPanel from '../play-links/PlayLinksPanel';
 import { MyImage } from '@/components';
 
-
 const MoviePage = () => {
   const router = useRouter();
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -19,6 +18,9 @@ const MoviePage = () => {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [playLinks, setPlayLinks] = useState<PlayLink[]>([]);
   const [galleries, setGalleries] = useState<Gallery[]>([]);
+  const [formRefed, setFormRefed] = useState(false);
+  const movieId = parseInt(router.query.id as string, 10);
+
 
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const MoviePage = () => {
       setIsLoading(false);
     };
     fetchMovie();
-  }, [router]);
+  }, [router, formRefed]);
 
   const handleBack = () => {
     window.history.back();
@@ -63,6 +65,12 @@ const MoviePage = () => {
       pathname: '/movies',
       query: { actorId }
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handelFormRef = (_:Movie) => {
+    console.log('handelFormRef ', formRefed); 
+    setFormRefed(!formRefed);
   }
 
   if (!movie || isLoading) {
@@ -99,6 +107,8 @@ const MoviePage = () => {
           {movie.description}
         </div>
         <MovieActionBar currentMovie={movie}
+          movieId={movieId}
+          refMovie={handelFormRef}
           currentPlayLinks={playLinks} setPlayLinks={setPlayLinks}
           currentGalleries={galleries} setGalleries={setGalleries} />
         <PlayLinksPanel playLinks={playLinks} />

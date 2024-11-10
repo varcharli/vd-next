@@ -34,8 +34,9 @@ export class MovieService {
     return this.movieRepository.save(newMovie);
   }
 
-  update(id: number, movie: Movie): Promise<Movie> {
-    return this.movieRepository.save({ ...movie, id });
+  async update(id: number, movie: Movie): Promise<Movie> {
+    await this.movieRepository.update(id, movie);
+    return this.movieRepository.findOneBy({id});
   }
 
   delete(id: number): Promise<DeleteResult> {

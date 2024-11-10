@@ -26,7 +26,8 @@ const config: Config = {
               secondary: "#AAAAAA",
               background: "#FFFFFF",
               foreground: "#000000",
-            }
+              warning: '#F97316',
+            },
           }
         }
       }

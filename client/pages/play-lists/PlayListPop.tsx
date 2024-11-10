@@ -39,7 +39,7 @@ const PlayListPop: React.FC<PlayListPopProps> = ({ movie, show, onClose }) => {
             const lists = await models.playList.get();
             setPlayLists(lists);
         }
-        const selected = movie.playLists.map(list => String(list.id));
+        const selected = movie.playLists?.map(list => String(list.id));
         setSelectedLists(selected);
         load();
     }, [movie]);

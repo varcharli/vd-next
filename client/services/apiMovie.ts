@@ -51,6 +51,7 @@ export const movie = {
         return await api.post('/movies', data);
     },
     async update(id: number, data: Movie) {
+        // console.log('Update :',id,'/', data);
         return await api.put(`/movies/${id}`, data);
     },
     async delete(id: number) {
