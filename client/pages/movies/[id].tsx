@@ -49,8 +49,15 @@ const MoviePage = () => {
   }, [router, formRefed]);
 
   const handleBack = () => {
-    window.history.back();
-  }
+    const referrer = document.referrer;
+    const currentHost = window.location.host;
+  
+    if (referrer && new URL(referrer).host === currentHost) {
+      window.history.back();
+    } else {
+      window.location.href = '/movies';
+    }
+  };
 
   const handleShowGallery = (index: number) => {
     setGalleryIndex(index);
