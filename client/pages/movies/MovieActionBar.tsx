@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { Button, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { FaBookmark, FaLink, FaRegImages, FaPenAlt } from 'react-icons/fa';
 import PlayListPop from '../play-lists/PlayListPop';
 import { Movie } from '@/services/apiMovie';
@@ -8,6 +8,7 @@ import { PlayLink } from '@/services/apiPlayLink';
 import GalleriesPopup from '../gallery/GalleryPopup';
 import { Gallery } from '@/services/apiGallery';
 import MovieForm from './MovieForm';
+import { MyTooltip } from '@/components';
 
 interface MovieActionBarProps {
     movieId: number;
@@ -71,14 +72,13 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
     const button = (text: string, onClick: () => void, icon: ReactNode,
         className?: string) => {
         return (
-            <Tooltip color="warning" className='text-slate-100'
-            content={text} delay={1000}>
+            <MyTooltip content={text} >
                 <Button isIconOnly color="primary" variant="flat"
                     onClick={onClick}
                     className={className ?? 'text-slate-500 hover:bg-slate-300'} >
                     {icon}
                 </Button>
-            </Tooltip>
+            </MyTooltip>
         );
     }
 
@@ -113,7 +113,7 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
                 movieId={movieId}
                 movie={movie}
                 onClose={handleCloseForm}
-                onSubmit={(movie) => {refMovie(movie)}}
+                onSubmit={(movie) => { refMovie(movie) }}
                 mode='update'
             />
         </div>

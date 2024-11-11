@@ -56,6 +56,12 @@ const castItemToPlayLink = (item: Item): PlayLink => {
 
 
     const handleUpdate = async (item: Item) => {
+        const inf=validateItem(item);
+        if(inf!==''){
+            alert(inf);
+            return;
+        }
+
         const id = item.id;
         const name = item.fields[0].value;
         const url = item.fields[1].value;
@@ -74,6 +80,12 @@ const castItemToPlayLink = (item: Item): PlayLink => {
     }
 
     const handleCreate = async (item: Item) => {
+        const inf=validateItem(item);
+        if(inf!==''){
+            alert(inf);
+            return;
+        }
+
         const name = item.fields[0].value;
         const url = item.fields[1].value;
         const re = await models.playLink.create({
@@ -87,6 +99,35 @@ const castItemToPlayLink = (item: Item): PlayLink => {
         setItems([...items, newItem]);
     }
 
+    // auto generate index from link name.
+    const getLastIndexFromLinks = () => {
+        let maxIndex = 0;
+
+        playLinks.forEach((link) => {
+            const name = link.name;
+            const match = name.match(/\d+/); // 提取数字部分
+            if (match) {
+                const index = parseInt(match[0], 10);
+                if (index > maxIndex) {
+                    maxIndex = index;
+                }
+            }
+        });
+        maxIndex++; 
+        return maxIndex.toString().padStart(2, '0');
+    }
+
+    const validateItem = (item: Item) => {
+        if (item.fields[0].value === '') {
+            item.fields[0].value=getLastIndexFromLinks();
+        }
+
+        if (item.fields[1].value === '') {
+            return 'URL is required';
+        }
+
+        return '';
+    }
 
     return (
         <Modal size='lg' placement="bottom-center" backdrop="opaque"

@@ -1,6 +1,7 @@
 import React from 'react';
 import { PlayLink } from '@/services/models';
 import { Link } from '@nextui-org/react';
+import { MyTooltip } from '@/components';
 
 
 interface PlayLinksPanelProps {
@@ -24,10 +25,11 @@ const PlayLinksPanel: React.FC<PlayLinksPanelProps> = ({ playLinks }) => {
                     ? <div className="m-2 font-thin text-gray-500" >No play links.</div>
                     : playLinks.map((link, index) => {
                         return (
-                            <div key={index}
-                                className="flex gap-3 cursor-pointer hover:bg-slate-100 p-2 " >
-                                <Link href={link.url} target='_blank' >{link.name}</Link>
-                            </div>
+                            <MyTooltip key={index} content={`URL: ${link.url}`}  >
+                                <div className="flex gap-3 cursor-pointer hover:bg-slate-100 p-2 " >
+                                    <Link href={link.url} target='_blank' >{link.name}</Link>
+                                </div>
+                            </MyTooltip>
                         );
                     })
                 }
