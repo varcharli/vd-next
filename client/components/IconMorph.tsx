@@ -10,18 +10,15 @@ interface IconTurnedProps {
   faIcon?: React.ReactNode;
 }
 
-const IconTurned: React.FC<IconTurnedProps> = ({ onClick, text,faIcon }) => {
-  const icon = <div className='w-[16px] h-[16px]'> { faIcon ?? <GoArrowUpRight />}</div>;
+const IconTurned: React.FC<IconTurnedProps> = ({ onClick, text, faIcon }) => {
+  const icon = <div className='w-[16px] h-[16px]'> {faIcon ?? <GoArrowUpRight />}</div>;
   const [isStart, setIsStart] = useState(false);
-  const [isEnter, setIsEnter] = useState(false);
 
   const handelEnter = () => {
-    setIsEnter(true);
     setIsStart(true);
   }
 
   const handelLeave = () => {
-    setIsEnter(true);
     setIsStart(false);
   }
 
@@ -32,15 +29,10 @@ const IconTurned: React.FC<IconTurnedProps> = ({ onClick, text,faIcon }) => {
       onClick={onClick}>
       {text ?? ''}
       <div>
-        {
-          <div className={isEnter ?
-            isStart ? 'transition transform duration-500 rotate-45 '
-              : 'transition transform duration-500 rotate-0'
-            : ''} >
-            {icon}
-          </div>
-
-        }
+        {<div className={`transition transform duration-500 
+            ${isStart ? "rotate-45" : "rotate-0"}`} >
+          {icon}
+        </div>}
       </div>
     </div>
   );
