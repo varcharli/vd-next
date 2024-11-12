@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { Avatar } from '@nextui-org/react';
 import models, { Movie, PlayLink, Gallery } from '@/services/models';
 import { useRouter } from 'next/router';
-import { Gallery as GalleryList, LinkButton } from '@/components';
+import { Gallery as GalleryList } from '@/components';
 import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
 import MovieActionBar from './MovieActionBar';
 import { GalleryPopup } from '@/components/Gallery';
 import PlayLinksPanel from '../play-links/PlayLinksPanel';
-import { MyImage } from '@/components';
+import { MyImage, IconTurned } from '@/components';
 
 const MoviePage = () => {
   const router = useRouter();
@@ -51,7 +51,7 @@ const MoviePage = () => {
   const handleBack = () => {
     const referrer = document.referrer;
     const currentHost = window.location.host;
-  
+
     if (referrer && new URL(referrer).host === currentHost) {
       window.history.back();
     } else {
@@ -75,8 +75,8 @@ const MoviePage = () => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handelFormRef = (_:Movie) => {
-    console.log('handelFormRef ', formRefed); 
+  const handelFormRef = (_: Movie) => {
+    console.log('handelFormRef ', formRefed);
     setFormRefed(!formRefed);
   }
 
@@ -87,9 +87,13 @@ const MoviePage = () => {
   return (
     <div className="flex">
       <div className="p-4 flex flex-col gap-3 flex-initial w-[500px]" >
-        <LinkButton onClick={handleBack} >
-          Back to movies
-        </LinkButton>
+        <div className='flex justify-between'>
+          {/* <LinkButton onClick={handleBack} > */}
+          <IconTurned onClick={handleBack} text="Back to movies" />
+          {/* </LinkButton> */}
+
+        </div>
+
         <h1 className="text-3xl">{movie.name}</h1>
 
         <div className="text-orange-500 text-3xl ">

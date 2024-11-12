@@ -55,4 +55,12 @@ export class Movie {
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
+
+    @Column({ nullable: true })
+    fromUrl: string;
+
+    @Column({ nullable: true, type: 'timestamp' })
+    updateAt: Date;
+
+
 }

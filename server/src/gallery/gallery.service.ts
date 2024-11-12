@@ -31,4 +31,9 @@ export class GalleryService {
   findOne(id: number): Promise<Gallery> {
     return this.galleryRepository.findOneBy({ id });
   }
+
+  findByUrl(url: string): Promise<Gallery> {
+    return this.galleryRepository.findOneBy({ url });
+  }
+
 }

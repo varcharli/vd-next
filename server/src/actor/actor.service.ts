@@ -8,15 +8,15 @@ export class ActorService {
   constructor(
     @InjectRepository(Actor)
     private readonly actorRepository: Repository<Actor>,
-  ) {}
+  ) { }
 
   create(actor: Actor): Promise<Actor> {
     return this.actorRepository.save(actor);
   }
 
   async update(id: number, actor: Actor): Promise<Actor> {
-    await this.actorRepository.update(id,actor );
-    return this.actorRepository.findOneBy({id});
+    await this.actorRepository.update(id, actor);
+    return this.actorRepository.findOneBy({ id });
   }
 
   delete(id: number): Promise<DeleteResult> {
@@ -28,6 +28,18 @@ export class ActorService {
   }
 
   findById(id: number): Promise<Actor> {
-    return this.actorRepository.findOneBy({id});
+    return this.actorRepository.findOneBy({ id });
   }
+
+  findByName(name: string): Promise<Actor> {
+    return this.actorRepository.findOneBy({ name });
+  }
+
+  exsits(name: string): Promise<boolean> {
+    return this.actorRepository.exists(
+      { where: { name } }
+    )
+  }
+
+
 }

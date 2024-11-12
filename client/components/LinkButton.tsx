@@ -5,7 +5,7 @@ const LinkButton = ({ children, onClick }: { children: React.ReactNode, onClick?
     return (
         <div onClick={onClick}
             className="text-slate-500 flex items-center gap-x-2 basis-0
-            cursor-pointer text-lg
+            cursor-pointer text-lg whitespace-nowrap
           hover:text-black">
             {children}
         </div>

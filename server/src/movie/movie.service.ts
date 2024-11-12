@@ -3,8 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository, SelectQueryBuilder, In } from 'typeorm';
 import { Movie } from './movie.entity';
 import { Gallery } from '../gallery/gallery.entity';
+import { GalleryService } from 'src/gallery/gallery.service';
 import { PlayList, PlayListItem } from 'src/play-list/play-list.entity';
 import { PlayListService } from 'src/play-list/play-list.service';
+import { Actor } from 'src/actor/actor.entity';
+import { ActorService } from 'src/actor/actor.service';
 
 
 interface FindAllParams {
@@ -26,7 +29,9 @@ export class MovieService {
     private readonly playListRepository: Repository<PlayList>,
     @InjectRepository(PlayListItem)
     private readonly playListItemRepository: Repository<PlayListItem>,
-    private readonly playListService: PlayListService
+    private readonly playListService: PlayListService,
+    private readonly actorService: ActorService,
+    private readonly galleryService: GalleryService
   ) { }
 
   create(movie: Movie): Promise<Movie> {
@@ -36,7 +41,7 @@ export class MovieService {
 
   async update(id: number, movie: Movie): Promise<Movie> {
     await this.movieRepository.update(id, movie);
-    return this.movieRepository.findOneBy({id});
+    return this.movieRepository.findOneBy({ id });
   }
 
   delete(id: number): Promise<DeleteResult> {
@@ -175,4 +180,41 @@ export class MovieService {
 
     return true;
   }
+
+  // create movie and o2m,m2m fields
+  async createFullMovie(movie: Movie) {
+    if (movie.actors) {
+      movie.actors.forEach(
+        async (item) => {
+          const re = await this.actorService.findByName(item.name)
+          if (re) {
+            item = { id: re.id } as Actor;
+          } else {
+            const newActor = await this.actorService.create({ name: item.name } as Actor);
+            item = { id: newActor.id } as Actor;
+          }
+        }
+      );
+    }
+
+    if (movie.galleries) {
+      movie.galleries.forEach(
+        async (item) => {
+          const re = await this.galleryService.findByUrl(item.url);
+          if (re) {
+            item = { id: re.id } as Gallery;
+          }
+          else {
+            const newGallery = await this.galleryService.create({ url: item.url } as Gallery);
+            item = { id: newGallery.id } as Gallery;
+          }
+        }
+      );
+    }
+
+    const re = await this.movieRepository.save(movie);
+    return re;
+  }
+
+
 }

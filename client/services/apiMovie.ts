@@ -16,6 +16,8 @@ export interface Movie {
     galleries: Gallery[];
     playLists: PlayList[];
     playLinks:PlayLink[];
+    fromUrl?: string;
+    updateAt?: Date;
 }
 
 interface movieGetParams {
