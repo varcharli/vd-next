@@ -29,7 +29,7 @@ const IconTurned: React.FC<IconTurnedProps> = ({ onClick, text, faIcon }) => {
       onClick={onClick}>
       {text ?? ''}
       <div>
-        {<div className={`transition transform duration-500 
+        {<div className={`transition transform duration-500
             ${isStart ? "rotate-45" : "rotate-0"}`} >
           {icon}
         </div>}
