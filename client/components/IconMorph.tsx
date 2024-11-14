@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 
 import { GoArrowUpRight } from "react-icons/go";
+import { FaPlus, FaMinus } from 'react-icons/fa';
+import { GrAdd ,GrSubtract} from "react-icons/gr";
 
 
 interface IconTurnedProps {
@@ -37,5 +39,44 @@ const IconTurned: React.FC<IconTurnedProps> = ({ onClick, text, faIcon }) => {
     </div>
   );
 }
+
+
+interface IconOpenedProps {
+  isOpened?: boolean;
+  text?: string;
+  iconOpened?: React.ReactNode;
+  iconClosed?: React.ReactNode;
+}
+
+export const IconOpened: React.FC<IconOpenedProps> = ({ isOpened, iconOpened, iconClosed }) => {
+  const iOpened = iconOpened ?? <GrSubtract/>;
+  const iClosed = iconClosed ?? <GrAdd />;
+
+  // const [isOpened, setIsOpened] = useState(!(isClosed ?? true));
+  return (
+    <div className='text-slate-500 font-thin p-2  hover:bg-slate-100 rounded-md  ' >
+      <div className={`transition transform duration-500 
+        ${isOpened ? "rotate-180" : "rotate-90"} `}>
+        {isOpened ? iOpened : iClosed}
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default IconTurned;
