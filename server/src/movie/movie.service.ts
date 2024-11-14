@@ -181,39 +181,75 @@ export class MovieService {
     return true;
   }
 
+  async exists(sn: string): Promise<boolean> {
+    const re = await this.movieRepository.findOne({
+      where: { sn }
+    });
+    return !!re;
+  }
+
   // create movie and o2m,m2m fields
-  async createFullMovie(movie: Movie) {
+  async generate(movie: Movie) {
+    // if (await this.exists(movie.sn)) {
+    //   return null;
+    // }
+
+    const actors = [] as Actor[];
+    console.log("movie.actors:", movie.actors);
     if (movie.actors) {
-      movie.actors.forEach(
-        async (item) => {
-          const re = await this.actorService.findByName(item.name)
-          if (re) {
-            item = { id: re.id } as Actor;
-          } else {
-            const newActor = await this.actorService.create({ name: item.name } as Actor);
-            item = { id: newActor.id } as Actor;
-          }
+      for (const item of movie.actors) {
+        console.log("item:", item);
+        const re = await this.actorService.findByName(item.name)
+        if (re) {
+          // item = { id: re.id } as Actor;
+          console.log("same one", re.id, re.name);
+          actors.push(re);
+        } else {
+          const newActor = await this.actorService.create({ name: item.name, photoUrl: item.photoUrl } as Actor);
+          // item = { id: newActor.id } as Actor;
+          console.log("new one", newActor.id, newActor.name);
+          actors.push(newActor);
         }
-      );
+      }
+      console.log("actors:", actors);
     }
-
+    const galleries = [] as Gallery[];
     if (movie.galleries) {
-      movie.galleries.forEach(
-        async (item) => {
-          const re = await this.galleryService.findByUrl(item.url);
-          if (re) {
-            item = { id: re.id } as Gallery;
-          }
-          else {
-            const newGallery = await this.galleryService.create({ url: item.url } as Gallery);
-            item = { id: newGallery.id } as Gallery;
-          }
+      for (const item of movie.galleries) {
+        const re = await this.galleryService.findByUrl(item.url);
+        if (re) {
+          // item = { id: re.id } as Gallery;
+          // await this.galleryService.update(re.id, { movie: saved } as Gallery);
+          galleries.push(re);
         }
-      );
+        else {
+          const newGallery = await this.galleryService.create({ url: item.url } as Gallery);
+          // item = { id: newGallery.id } as Gallery;
+          galleries.push(newGallery);
+        }
+      }
+      console.log("movie.galleries:", movie.galleries, galleries);
     }
 
-    const re = await this.movieRepository.save(movie);
-    return re;
+
+    const m = new Movie();
+    m.sn = movie.sn;
+    m.name = movie.name;
+    m.releaseDate = movie.releaseDate;
+    m.posterUrl = movie.posterUrl;
+    m.largePosterUrl = movie.largePosterUrl;
+    m.description = movie.description;
+    m.fromUrl = movie.fromUrl;
+    m.actors = actors;
+    m.galleries = galleries;
+    console.log("m:", m.actors);
+    // m.galleries = galleries;
+    const saved = await this.movieRepository.save(m);
+    console.log("re", saved);
+
+
+
+    return saved;
   }
 
 

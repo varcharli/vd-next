@@ -5,20 +5,23 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 
 @Controller('movies')
-@UseGuards(JwtAuthGuard)
+
 export class MovieController {
   constructor(private readonly movieService: MovieService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() movie: Movie): Promise<Movie> {
     return this.movieService.create(movie);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(@Param('id') id: number, @Body() movie: Movie): Promise<Movie> {
     return this.movieService.update(id, movie);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<Boolean> {
     const result = await this.movieService.delete(id);
@@ -26,6 +29,7 @@ export class MovieController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Request() req,
     @Query('limit') limit?: number,
@@ -39,15 +43,22 @@ export class MovieController {
     return this.movieService.findAll({ limit, offset, order, title, playListId, actorId, userId });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findById(@Request() req,@Param('id') id: number): Promise<Movie> {
     const userId = req.user.userId;
     return this.movieService.findById(id,userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id/play-lists')
   setPlayLists(@Request() req,@Param('id') id: number, @Body('playListIds') playListIds: number[]): Promise<boolean> {
     const userId = req.user.userId;
     return this.movieService.setPlayLists(id, playListIds, userId);
+  }
+
+  @Post('generate')
+  generate(@Body() movie: Movie): Promise<Movie> {
+    return this.movieService.generate(movie);
   }
 }
