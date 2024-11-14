@@ -8,7 +8,8 @@ import { PlayList, PlayListItem } from 'src/play-list/play-list.entity';
 import { PlayListService } from 'src/play-list/play-list.service';
 import { Actor } from 'src/actor/actor.entity';
 import { ActorService } from 'src/actor/actor.service';
-
+import { DownloadLink } from '@/download-link/download-link.entity';
+import { DownloadLinkService } from '@/download-link/download-link.service';
 
 interface FindAllParams {
   limit?: number;
@@ -29,9 +30,14 @@ export class MovieService {
     private readonly playListRepository: Repository<PlayList>,
     @InjectRepository(PlayListItem)
     private readonly playListItemRepository: Repository<PlayListItem>,
+    @InjectRepository(DownloadLink)
+    private readonly downloadLinkRepository: Repository<DownloadLink>,
+    private readonly downloadLinkService: DownloadLinkService,
+
     private readonly playListService: PlayListService,
     private readonly actorService: ActorService,
-    private readonly galleryService: GalleryService
+    private readonly galleryService: GalleryService,
+
   ) { }
 
   create(movie: Movie): Promise<Movie> {
@@ -130,7 +136,7 @@ export class MovieService {
   async findById(id: number, userId: number): Promise<any> {
     const re = await this.movieRepository.findOne({
       where: { id },
-      relations: ['actors', 'tags', 'playLinks', 'directors', 'galleries'],
+      relations: ['actors', 'tags', 'playLinks', 'directors', 'galleries', 'downloadLinks'],
     }) as any;
 
     const playLists = await this.playListItemRepository.query(
@@ -177,7 +183,6 @@ export class MovieService {
     for (const playListId of playListsToRemove) {
       await this.playListService.removeMovie(userId, playListId, movieId);
     }
-
     return true;
   }
 
@@ -190,28 +195,21 @@ export class MovieService {
 
   // create movie and o2m,m2m fields
   async generate(movie: Movie) {
-    // if (await this.exists(movie.sn)) {
-    //   return null;
-    // }
+    if (await this.exists(movie.sn)) {
+      return null;
+    }
 
     const actors = [] as Actor[];
-    console.log("movie.actors:", movie.actors);
     if (movie.actors) {
       for (const item of movie.actors) {
-        console.log("item:", item);
         const re = await this.actorService.findByName(item.name)
         if (re) {
-          // item = { id: re.id } as Actor;
-          console.log("same one", re.id, re.name);
           actors.push(re);
         } else {
           const newActor = await this.actorService.create({ name: item.name, photoUrl: item.photoUrl } as Actor);
-          // item = { id: newActor.id } as Actor;
-          console.log("new one", newActor.id, newActor.name);
           actors.push(newActor);
         }
       }
-      console.log("actors:", actors);
     }
     const galleries = [] as Gallery[];
     if (movie.galleries) {
@@ -228,7 +226,14 @@ export class MovieService {
           galleries.push(newGallery);
         }
       }
-      console.log("movie.galleries:", movie.galleries, galleries);
+    }
+
+    const downloadLinks = [] as DownloadLink[];
+    if (movie.downloadLinks) {
+      for (const item of movie.downloadLinks) {
+        const newDownloadLink = await this.downloadLinkService.create({ url: item.url, name: movie.sn } as DownloadLink);
+        downloadLinks.push(newDownloadLink);
+      }
     }
 
 
@@ -242,12 +247,10 @@ export class MovieService {
     m.fromUrl = movie.fromUrl;
     m.actors = actors;
     m.galleries = galleries;
-    console.log("m:", m.actors);
+    m.downloadLinks = downloadLinks;
     // m.galleries = galleries;
     const saved = await this.movieRepository.save(m);
     console.log("re", saved);
-
-
 
     return saved;
   }

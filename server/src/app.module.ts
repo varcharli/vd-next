@@ -12,6 +12,8 @@ import { PlayLinkModule } from './play-link/play-link.module';
 import { PlayListModule } from './play-list/play-list.module';
 import { GalleryModule } from './gallery/gallery.module';
 import { TagModule } from './tag/tag.module';
+import { DownloadLinkModule } from './download-link/download-link.module';
+
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { TagModule } from './tag/tag.module';
     PlayListModule,
     GalleryModule,
     TagModule,
+    DownloadLinkModule,
   ],
   controllers: [
     AppController,

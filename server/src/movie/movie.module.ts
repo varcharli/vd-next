@@ -10,11 +10,13 @@ import { ActorService } from 'src/actor/actor.service';
 import { Actor } from 'src/actor/actor.entity';
 import { GalleryService } from 'src/gallery/gallery.service';
 import { Gallery } from 'src/gallery/gallery.entity';
+import { DownloadLink } from '@/download-link/download-link.entity';
+import { DownloadLinkService } from '@/download-link/download-link.service';
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Movie,PlayList,PlayListItem,Actor,Gallery])],
-    providers: [MovieService,PlayListService,ActorService,GalleryService],
+    imports: [TypeOrmModule.forFeature([Movie,PlayList,PlayListItem,Actor,Gallery,DownloadLink])],
+    providers: [MovieService,PlayListService,ActorService,GalleryService,DownloadLinkService],
     controllers: [MovieController],
     exports: [MovieService],
 })

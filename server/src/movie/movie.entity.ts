@@ -5,6 +5,7 @@ import { Tag } from '../tag/tag.entity';
 import { PlayLink } from '../play-link/play-link.entity';
 import { PlayList, PlayListItem } from '../play-list/play-list.entity';
 import { Gallery } from '../gallery/gallery.entity';
+import { DownloadLink } from '@/download-link/download-link.entity';
 
 // Movie Entity
 @Entity()
@@ -62,5 +63,6 @@ export class Movie {
     @Column({ nullable: true, type: 'timestamp' })
     updateAt: Date;
 
-
+    @OneToMany(() => DownloadLink, downloadLink => downloadLink.movie)
+    downloadLinks: DownloadLink[];
 }
