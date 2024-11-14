@@ -1,11 +1,13 @@
 import React, { ReactNode, useState } from 'react';
-import { FaBookmark, FaLink, FaRegImages, FaPenAlt } from 'react-icons/fa';
+import { FaBookmark, FaLink, FaRegImages, FaPenAlt,FaCloudDownloadAlt } from 'react-icons/fa';
 import PlayListPop from '../play-lists/PlayListPop';
 import { Movie } from '@/services/apiMovie';
 import PlayLinksPopup from '../play-links/PlayLinksPopup';
 import { PlayLink } from '@/services/apiPlayLink';
 import GalleriesPopup from '../gallery/GalleryPopup';
+import DownloadLinksPopup from '../download-links/DownloadLinksPopup';
 import { Gallery } from '@/services/apiGallery';
+import { DownloadLink } from '@/services/apiDownloadLink';
 import MovieForm from './MovieForm';
 import { MyTooltip } from '@/components';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button } from '@nextui-org/react';
@@ -20,6 +22,8 @@ interface MovieActionBarProps {
     currentGalleries: Gallery[];
     setGalleries: (galleries: Gallery[]) => void;
     refMovie: (movie: Movie) => void;
+    currentDownloadLinks: DownloadLink[];
+    setDownloadLinks: (downloadLinks: DownloadLink[]) => void;
 }
 
 
@@ -29,11 +33,14 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
     refMovie,
     currentMovie,
     currentPlayLinks, setPlayLinks,
-    currentGalleries, setGalleries }) => {
+    currentGalleries, setGalleries,
+    currentDownloadLinks, setDownloadLinks,
+ }) => {
     const [showPlayList, setShowPlayList] = useState(false);
     const [movie, setMovie] = useState<Movie | null>(currentMovie || null);
     const [isShowPlayLinks, setIsShowPlayLinks] = useState(false);
     const [isShowGalleries, setIsShowGalleries] = useState(false);
+    const [isShowDownloadLinks, setIsShowDownloadLinks] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const handleShowPlayList = () => {
         setShowPlayList(true);
@@ -48,6 +55,13 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
     }
     const handleHideGalleries = () => {
         setIsShowGalleries(false);
+    }
+    const handleShowDownloadLinks = () => {
+        setIsShowDownloadLinks(true);
+    }
+    const handleHideDownloadLinks = () => {
+        setIsShowDownloadLinks(false
+        );
     }
 
     React.useEffect(() => {
@@ -104,6 +118,8 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
                 className={`${movie.playLists?.length ? "text-orange-500" : "text-slate-500"} hover:bg-slate-300`}
             />)}
             {actionButton('Play Links', handleShowPlayLinks, <FaLink size={20} />)}
+            {actionButton('Download Links', handleShowDownloadLinks, <FaCloudDownloadAlt size={20} />)}
+        
             <Dropdown>
                 <DropdownTrigger>
                     <Button isIconOnly color="primary" variant="flat"
@@ -134,6 +150,13 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
                 setGalleries={setGalleries}
                 movieId={movieId}
                 onClose={handleHideGalleries}
+            />
+            <DownloadLinksPopup
+                movieId={movieId}
+                isOpen={isShowDownloadLinks}
+                downloadLinks={currentDownloadLinks || []}
+                setDownloadLinks={setDownloadLinks}
+                onClose={handleHideDownloadLinks}
             />
             <MovieForm
                 isOpen={isFormOpen}

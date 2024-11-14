@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from '@nextui-org/react';
-import models, { Movie, PlayLink, Gallery } from '@/services/models';
+import models, { Movie, PlayLink, Gallery,DownloadLink } from '@/services/models';
 import { useRouter } from 'next/router';
 import { Gallery as GalleryList } from '@/components';
 import UserImg from '@/public/images/user.svg';
@@ -8,6 +8,8 @@ import { Loading } from '@/components';
 import MovieActionBar from './MovieActionBar';
 import { GalleryPopup } from '@/components/Gallery';
 import PlayLinksPanel from '../play-links/PlayLinksPanel';
+import DownloadLinksPanel from '../download-links/DownloadLinksPanel';
+
 import { MyImage, IconTurned } from '@/components';
 
 const MoviePage = () => {
@@ -17,6 +19,7 @@ const MoviePage = () => {
   const [isShowGallery, setIsShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [playLinks, setPlayLinks] = useState<PlayLink[]>([]);
+  const [downloadLinks, setDownloadLinks] = useState<DownloadLink[]>([]);
   const [galleries, setGalleries] = useState<Gallery[]>([]);
   const [formRefed, setFormRefed] = useState(false);
   const movieId = parseInt(router.query.id as string, 10);
@@ -42,6 +45,7 @@ const MoviePage = () => {
       data.releaseDate = date.toLocaleDateString('en-CA');
       setMovie(data);
       setPlayLinks(data.playLinks);
+      setDownloadLinks(data.downloadLinks);
       setGalleries(data.galleries);
       setIsLoading(false);
     };
@@ -121,8 +125,11 @@ const MoviePage = () => {
           movieId={movieId}
           refMovie={handelFormRef}
           currentPlayLinks={playLinks} setPlayLinks={setPlayLinks}
-          currentGalleries={galleries} setGalleries={setGalleries} />
+          currentGalleries={galleries} setGalleries={setGalleries}
+          currentDownloadLinks={downloadLinks} setDownloadLinks={setDownloadLinks}
+        />
         <PlayLinksPanel playLinks={playLinks} />
+        <DownloadLinksPanel downloadLinks={downloadLinks} />
       </div>
       <div className="flex flex-col flex-initial " >
         <div className="flex p-4" >

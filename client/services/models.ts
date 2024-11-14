@@ -9,6 +9,8 @@ import { playLink } from './apiPlayLink';
 export type { PlayLink } from './apiPlayLink';
 import { gallery } from './apiGallery';
 export type { Gallery } from './apiGallery';
+import { downloadLink } from './apiDownloadLink';
+export type { DownloadLink } from './apiDownloadLink';
 
 const models = {
     movie,
@@ -17,6 +19,7 @@ const models = {
     playList,
     playLink,
     gallery,
+    downloadLink,
 };
 
 export default models;

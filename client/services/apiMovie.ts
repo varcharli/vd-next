@@ -3,6 +3,7 @@ import { Actor } from './apiActor';
 import { Gallery } from './apiGallery';
 import { PlayList } from './apiPlayList';
 import { PlayLink } from './apiPlayLink';
+import { DownloadLink } from './apiDownloadLink';
 
 export interface Movie {
     releaseDate: string;
@@ -16,6 +17,7 @@ export interface Movie {
     galleries: Gallery[];
     playLists: PlayList[];
     playLinks:PlayLink[];
+    downloadLinks: DownloadLink[];
     fromUrl?: string;
     updateAt?: Date;
 }
