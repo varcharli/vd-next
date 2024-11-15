@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from 'react';
-import { FaBookmark, FaLink, FaRegImages, FaPenAlt,FaCloudDownloadAlt } from 'react-icons/fa';
+import { FaBookmark } from 'react-icons/fa';
+import { GrLink,GrCloudDownload,GrMenu ,GrGallery,GrEdit} from 'react-icons/gr';
 import PlayListPop from '../play-lists/PlayListPop';
 import { Movie } from '@/services/apiMovie';
 import PlayLinksPopup from '../play-links/PlayLinksPopup';
@@ -11,8 +12,6 @@ import { DownloadLink } from '@/services/apiDownloadLink';
 import MovieForm from './MovieForm';
 import { MyTooltip } from '@/components';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button } from '@nextui-org/react';
-import { TiThMenu } from "react-icons/ti";
-
 
 interface MovieActionBarProps {
     movieId: number;
@@ -117,19 +116,19 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
             {actionButton('Play List', handleShowPlayList, <FaBookmark size={20}
                 className={`${movie.playLists?.length ? "text-orange-500" : "text-slate-500"} hover:bg-slate-300`}
             />)}
-            {actionButton('Play Links', handleShowPlayLinks, <FaLink size={20} />)}
-            {actionButton('Download Links', handleShowDownloadLinks, <FaCloudDownloadAlt size={20} />)}
+            {actionButton('Play Links', handleShowPlayLinks, <GrLink size={20} />)}
+            {actionButton('Download Links', handleShowDownloadLinks, <GrCloudDownload size={20} />)}
         
             <Dropdown>
                 <DropdownTrigger>
                     <Button isIconOnly color="primary" variant="flat"
                         className='text-slate-500 hover:bg-slate-300'>
-                        <TiThMenu size={20} />
+                        <GrMenu size={20} />
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                    {dropdownItem('Edit movie content', handleOpenForm, <FaPenAlt />)}
-                    {dropdownItem('Galleries', handleShowGalleries, <FaRegImages />, true)}
+                    {dropdownItem('Edit movie content', handleOpenForm, <GrEdit />)}
+                    {dropdownItem('Galleries', handleShowGalleries, <GrGallery />, true)}
                     {dropdownItem(movie.fromUrl ? `From ${movie.fromUrl}` : 'No source')}
                 </DropdownMenu>
             </Dropdown>

@@ -13,6 +13,7 @@ import { PlayListModule } from './play-list/play-list.module';
 import { GalleryModule } from './gallery/gallery.module';
 import { TagModule } from './tag/tag.module';
 import { DownloadLinkModule } from './download-link/download-link.module';
+import { ScraperModule } from './scraper/scraper.module';
 
 
 @Module({
@@ -44,6 +45,7 @@ import { DownloadLinkModule } from './download-link/download-link.module';
     GalleryModule,
     TagModule,
     DownloadLinkModule,
+    ScraperModule,
   ],
   controllers: [
     AppController,

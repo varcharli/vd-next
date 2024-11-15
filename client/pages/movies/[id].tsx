@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from '@nextui-org/react';
-import models, { Movie, PlayLink, Gallery,DownloadLink } from '@/services/models';
+import models, { Movie, PlayLink, Gallery, DownloadLink } from '@/services/models';
 import { useRouter } from 'next/router';
 import { Gallery as GalleryList } from '@/components';
 import UserImg from '@/public/images/user.svg';
@@ -128,8 +128,11 @@ const MoviePage = () => {
           currentGalleries={galleries} setGalleries={setGalleries}
           currentDownloadLinks={downloadLinks} setDownloadLinks={setDownloadLinks}
         />
-        <PlayLinksPanel playLinks={playLinks} />
-        <DownloadLinksPanel downloadLinks={downloadLinks} />
+        <div>
+          <PlayLinksPanel playLinks={playLinks} />
+          <DownloadLinksPanel downloadLinks={downloadLinks} />
+        </div>
+
       </div>
       <div className="flex flex-col flex-initial " >
         <div className="flex p-4" >

@@ -65,4 +65,7 @@ export class Movie {
 
     @OneToMany(() => DownloadLink, downloadLink => downloadLink.movie)
     downloadLinks: DownloadLink[];
+
+    @Column({ nullable: true, default: true })
+    scrapterFinished: boolean;
 }

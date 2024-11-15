@@ -10,6 +10,8 @@ import { Actor } from 'src/actor/actor.entity';
 import { ActorService } from 'src/actor/actor.service';
 import { DownloadLink } from '@/download-link/download-link.entity';
 import { DownloadLinkService } from '@/download-link/download-link.service';
+import { saveOneMovie, getUnfinishedMovies,saveMovieIndexs } from './movieScraper';
+import { get } from 'http';
 
 interface FindAllParams {
   limit?: number;
@@ -195,64 +197,34 @@ export class MovieService {
 
   // create movie and o2m,m2m fields
   async generate(movie: Movie) {
-    if (await this.exists(movie.sn)) {
-      return null;
+    // if (await this.exists(movie.sn)) {
+    //   return null;
+    // }
+    return saveOneMovie(
+      {
+        movie,
+        movieRepository: this.movieRepository,
+        actorService: this.actorService,
+        downloadLinkService: this.downloadLinkService,
+        galleryService: this.galleryService
+      });
+  }
+
+  // return affected rows
+  async generateIndexs(movies: Movie[]):Promise<number> {
+    return saveMovieIndexs({
+      movies,
+      movieRepository: this.movieRepository,
+    });
+  }
+
+  async findUnfinished(limit?:number,offset?:number ): Promise<Movie[]> {
+    return getUnfinishedMovies({
+      limit,
+      offset,
+      movieRepository: this.movieRepository,
     }
-
-    const actors = [] as Actor[];
-    if (movie.actors) {
-      for (const item of movie.actors) {
-        const re = await this.actorService.findByName(item.name)
-        if (re) {
-          actors.push(re);
-        } else {
-          const newActor = await this.actorService.create({ name: item.name, photoUrl: item.photoUrl } as Actor);
-          actors.push(newActor);
-        }
-      }
-    }
-    const galleries = [] as Gallery[];
-    if (movie.galleries) {
-      for (const item of movie.galleries) {
-        const re = await this.galleryService.findByUrl(item.url);
-        if (re) {
-          // item = { id: re.id } as Gallery;
-          // await this.galleryService.update(re.id, { movie: saved } as Gallery);
-          galleries.push(re);
-        }
-        else {
-          const newGallery = await this.galleryService.create({ url: item.url } as Gallery);
-          // item = { id: newGallery.id } as Gallery;
-          galleries.push(newGallery);
-        }
-      }
-    }
-
-    const downloadLinks = [] as DownloadLink[];
-    if (movie.downloadLinks) {
-      for (const item of movie.downloadLinks) {
-        const newDownloadLink = await this.downloadLinkService.create({ url: item.url, name: movie.sn } as DownloadLink);
-        downloadLinks.push(newDownloadLink);
-      }
-    }
-
-
-    const m = new Movie();
-    m.sn = movie.sn;
-    m.name = movie.name;
-    m.releaseDate = movie.releaseDate;
-    m.posterUrl = movie.posterUrl;
-    m.largePosterUrl = movie.largePosterUrl;
-    m.description = movie.description;
-    m.fromUrl = movie.fromUrl;
-    m.actors = actors;
-    m.galleries = galleries;
-    m.downloadLinks = downloadLinks;
-    // m.galleries = galleries;
-    const saved = await this.movieRepository.save(m);
-    console.log("re", saved);
-
-    return saved;
+    );
   }
 
 

@@ -58,7 +58,23 @@ export class MovieController {
   }
 
   @Post('generate')
-  generate(@Body() movie: Movie): Promise<Movie> {
+  generate(@Body() movie: Movie): Promise<number> {
+    // return movie id
+    // this will create or update movie by sn.
     return this.movieService.generate(movie);
   }
+
+  @Post('generate-indexs')
+  generateIndexs(@Body() movies: Movie[]): Promise<number> {
+    return this.movieService.generateIndexs(movies);
+  }
+
+  @Get('unfinished')
+  findUnfinishedMovies(@Query('limit') limit?: number, @Query('offset') offset?: number): 
+    Promise<Movie[]> {
+    return this.movieService.findUnfinished(
+      limit, 
+      offset,);
+  }
+
 }

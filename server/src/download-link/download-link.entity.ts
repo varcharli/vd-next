@@ -6,11 +6,17 @@ export class DownloadLink {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   name: string;
 
-  @Column()
+  @Column({nullable: true})
   url: string;
+
+  @Column({nullable: true})
+  size: string;
+
+  @Column({nullable: true})
+  date: string;
 
   @ManyToOne(() => Movie, movie => movie.downloadLinks)
   movie: Movie;
