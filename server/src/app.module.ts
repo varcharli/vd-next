@@ -14,6 +14,7 @@ import { GalleryModule } from './gallery/gallery.module';
 import { TagModule } from './tag/tag.module';
 import { DownloadLinkModule } from './download-link/download-link.module';
 import { ScraperModule } from './scraper/scraper.module';
+import { SettingModule } from './setting/setting.module';
 
 
 @Module({
@@ -46,6 +47,7 @@ import { ScraperModule } from './scraper/scraper.module';
     TagModule,
     DownloadLinkModule,
     ScraperModule,
+    SettingModule,
   ],
   controllers: [
     AppController,

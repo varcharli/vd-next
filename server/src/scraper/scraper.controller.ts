@@ -1,34 +1,75 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ScraperService } from './scraper.service';
-import { CreateScraperDto } from './dto/create-scraper.dto';
-import { UpdateScraperDto } from './dto/update-scraper.dto';
+import { Movie } from '@/movie/movie.entity';
+import { Injectable, Query } from '@nestjs/common';
+import { ScraperItem, ScraperLog, ScraperProject } from './scraper.entity';
 
 @Controller('scraper')
 export class ScraperController {
-  constructor(private readonly scraperService: ScraperService) {}
+  constructor(private readonly scraperService: ScraperService) { }
 
-  @Post()
-  create(@Body() createScraperDto: CreateScraperDto) {
-    return this.scraperService.create(createScraperDto);
+  // Auto generate projects.Dont need to create project manually.
+  // @Post('projects')
+  // createProject(@Body() project: ScraperProject): Promise<ScraperProject> {
+  //   return this.scraperService.createProject(project);
+  // }
+
+  @Get('projects')
+  getActivedProjects(): Promise<ScraperProject[]> {
+    return this.scraperService.getActivedProjects();
   }
 
-  @Get()
-  findAll() {
-    return this.scraperService.findAll();
+  @Post('projects/:id')
+  updateProject(@Param('id') id: number, @Body() project: ScraperProject): Promise<boolean> {
+    const p=new ScraperProject();
+    p.startDate=project.startDate;
+    p.pageNumber=project.pageNumber;
+    p.count=project.count;
+    p.description=project.description;
+    return this.scraperService.updateProject(id,p);
+  }
+  
+  @Post('projects/:id/generate')
+  generateIndexs(@Param('id') projectId: number, @Body() movies: Movie[]): Promise<number> {
+    return this.scraperService.generateIndexs(projectId, movies);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.scraperService.findOne(+id);
+  @Get('projects/:id/items')
+  getItems(@Param('id') id: number): Promise<ScraperItem[]> {
+    return this.scraperService.getProjectUnfinishedItems(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateScraperDto: UpdateScraperDto) {
-    return this.scraperService.update(+id, updateScraperDto);
+  @Post('items/:id/generate')
+  generate(@Param('id') itemId: number, @Body() movie: Movie): Promise<number> {
+    // return movie id
+    // this will create or update movie by sn.
+    return this.scraperService.generate(itemId, movie);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.scraperService.remove(+id);
+  @Post('projects/:id/finish')
+  finishProject(@Param('id') id: number): Promise<boolean> {
+    return this.scraperService.finishProject(id);
+  }
+
+  // @Get('setting')
+  // getSetting() {
+  //   return this.scraperService.getSetting();
+  // }
+
+
+
+
+
+  // @Get('unfinished')
+  // findUnfinishedMovies(@Query('limit') limit?: number, @Query('offset') offset?: number): 
+  //   Promise<Movie[]> {
+  //   return this.scraperService.findInitUnfinished (
+  //     limit, 
+  //     offset,);
+  // }
+
+  @Post('log')
+  log(@Body() log: string): Promise<ScraperLog> {
+    return this.scraperService.log(log, 'scraper');
   }
 }

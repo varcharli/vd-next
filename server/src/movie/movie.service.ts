@@ -10,8 +10,8 @@ import { Actor } from 'src/actor/actor.entity';
 import { ActorService } from 'src/actor/actor.service';
 import { DownloadLink } from '@/download-link/download-link.entity';
 import { DownloadLinkService } from '@/download-link/download-link.service';
-import { saveOneMovie, getUnfinishedMovies,saveMovieIndexs } from './movieScraper';
-import { get } from 'http';
+import { saveOneMovie, getUnfinishedMovies,saveMovieIndexs } from '../scraper/movieScraper';
+
 
 interface FindAllParams {
   limit?: number;
@@ -195,37 +195,6 @@ export class MovieService {
     return !!re;
   }
 
-  // create movie and o2m,m2m fields
-  async generate(movie: Movie) {
-    // if (await this.exists(movie.sn)) {
-    //   return null;
-    // }
-    return saveOneMovie(
-      {
-        movie,
-        movieRepository: this.movieRepository,
-        actorService: this.actorService,
-        downloadLinkService: this.downloadLinkService,
-        galleryService: this.galleryService
-      });
-  }
-
-  // return affected rows
-  async generateIndexs(movies: Movie[]):Promise<number> {
-    return saveMovieIndexs({
-      movies,
-      movieRepository: this.movieRepository,
-    });
-  }
-
-  async findUnfinished(limit?:number,offset?:number ): Promise<Movie[]> {
-    return getUnfinishedMovies({
-      limit,
-      offset,
-      movieRepository: this.movieRepository,
-    }
-    );
-  }
 
 
 }

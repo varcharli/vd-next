@@ -1,11 +1,13 @@
 import { Repository } from 'typeorm';
-import { Movie } from './movie.entity';
-import { Gallery } from '../gallery/gallery.entity';
-import { GalleryService } from 'src/gallery/gallery.service';
-import { Actor } from 'src/actor/actor.entity';
-import { ActorService } from 'src/actor/actor.service';
+import { Movie } from '@/movie/movie.entity';
+import { Gallery } from '@/gallery/gallery.entity';
+import { GalleryService } from '@/gallery/gallery.service';
+import { Actor } from '@/actor/actor.entity';
+import { ActorService } from '@/actor/actor.service';
 import { DownloadLink } from '@/download-link/download-link.entity';
 import { DownloadLinkService } from '@/download-link/download-link.service';
+import { ScraperItem } from './scraper.entity';
+import { ScraperService } from './scraper.service';
 
 export const saveOneMovie = async ({
     movie,
@@ -62,7 +64,7 @@ export const saveOneMovie = async ({
         }
     }
 
-    
+
 
 
     const m = new Movie();
@@ -80,9 +82,9 @@ export const saveOneMovie = async ({
 
     const curMovie = await movieRepository.findOneBy({ sn: movie.sn });
     if (curMovie) {
-        const updated= await movieRepository.update(curMovie.id, m);
+        const updated = await movieRepository.update(curMovie.id, m);
         return curMovie.id;
-    } else{
+    } else {
         const saved = await movieRepository.save(m);
         return saved.id;
     }
@@ -100,16 +102,40 @@ export const saveMovieIndexs = async ({
     movieRepository: Repository<Movie>,
 }) => {
     let count = 0;
+    const addItems = [] as ScraperItem[];
     for (const movie of movies) {
         const re = await movieRepository.findOneBy({ sn: movie.sn });
         if (!re) {
             movie.scrapterFinished = false;
-            await movieRepository.save(movie);
+            const m = await movieRepository.save(movie);
+            addItems.push({ url: m.fromUrl, movieId: m.id } as ScraperItem);
             count++;
         }
     }
-    return count;
+    return addItems;
 }
+
+const addScraperItem = async ({
+    name,
+    url,
+    movieId,
+    finished,
+    scraperItemRepository,
+}: {
+    name: string,
+    url: string,
+    movieId: number,
+    finished: boolean,
+    scraperItemRepository: Repository<ScraperItem>,
+}) => {
+    const item = new ScraperItem();
+    item.name = name;
+    item.url = url;
+    item.movieId = movieId;
+    item.finished = finished;
+    return scraperItemRepository.save(item);
+}
+
 
 export const getUnfinishedMovies = async ({
     limit = 100,
