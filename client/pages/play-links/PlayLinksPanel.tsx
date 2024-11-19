@@ -16,7 +16,7 @@ const PlayLinksPanel: React.FC<PlayLinksPanelProps> = ({ playLinks }) => {
     if (!playLinks || !Array.isArray(playLinks)) {
         isNull = true;
     } else
-        if (playLinks.length === 0) {
+        if (playLinks?.length === 0) {
             isNull = true;
         }
 
@@ -29,7 +29,7 @@ const PlayLinksPanel: React.FC<PlayLinksPanelProps> = ({ playLinks }) => {
                         Play Links
                         <div className='bg-slate-100 w-[30px] h-[30px] rounded-full
                             flex items-center justify-center '>
-                            {playLinks.length}
+                            {playLinks?.length}
                         </div>
                     </div>
                     <div onClick={() => setIsOpened(!isOpened)} >

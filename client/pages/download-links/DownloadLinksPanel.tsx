@@ -16,7 +16,7 @@ const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }
     let isNull = false;
     if (!downloadLinks || !Array.isArray(downloadLinks)) {
         isNull = true;
-    } else if (downloadLinks.length === 0) {
+    } else if (downloadLinks?.length === 0) {
         isNull = true;
     }
 
@@ -29,7 +29,7 @@ const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }
                         Download Links
                         <div className='bg-slate-100 w-[30px] h-[30px] rounded-full
                             flex items-center justify-center '>
-                            {downloadLinks.length}
+                            {downloadLinks?.length}
                         </div>
                     </div>
                     <div onClick={() => setIsOpened(!isOpened)} >
