@@ -24,4 +24,5 @@ import { Setting } from '@/setting/entities/setting.entity';
     ActorService,GalleryService,DownloadLinkService],
   exports: [ScraperService]
 })
+
 export class ScraperModule {}

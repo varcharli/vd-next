@@ -16,40 +16,43 @@ export class ScraperController {
 
   @Get('projects')
   getActivedProjects(): Promise<ScraperProject[]> {
-    return this.scraperService.getActivedProjects();
+    return this.scraperService.pullActivedProjects();
   }
 
-  @Post('projects/:id')
-  updateProject(@Param('id') id: number, @Body() project: ScraperProject): Promise<boolean> {
-    const p=new ScraperProject();
-    p.startDate=project.startDate;
-    p.pageNumber=project.pageNumber;
-    p.count=project.count;
-    p.description=project.description;
-    return this.scraperService.updateProject(id,p);
-  }
-  
-  @Post('projects/:id/generate')
-  generateIndexs(@Param('id') projectId: number, @Body() movies: Movie[]): Promise<number> {
-    return this.scraperService.generateIndexs(projectId, movies);
+  // @Post('projects/:id')
+  // updateProject(@Param('id') id: number, @Body() project: ScraperProject): Promise<boolean> {
+  //   const p=new ScraperProject();
+  //   p.startDate=project.startDate;
+  //   p.pageNumber=project.pageNumber;
+  //   p.count=project.count;
+  //   p.description=project.description;
+  //   return this.scraperService.updateProject(id,p);
+  // }
+
+  @Post('projects/:id/pages/:pageNumber')
+  pushProjectPage(@Param('id') projectId: number, @Param('pageNumber') pageNumber,
+    @Body() movies: Movie[]): Promise<ScraperProject> {
+    return this.scraperService.pushProjectPage(projectId, pageNumber, movies);
+    // return this.scraperService.generateIndexs(projectId, movies);
   }
 
   @Get('projects/:id/items')
-  getItems(@Param('id') id: number): Promise<ScraperItem[]> {
-    return this.scraperService.getProjectUnfinishedItems(id);
+  pullProjectItems(@Param('id') id: number): Promise<ScraperItem[]> {
+    return this.scraperService.pullProjectItems(id);
   }
 
-  @Post('items/:id/generate')
-  generate(@Param('id') itemId: number, @Body() movie: Movie): Promise<number> {
+  @Post('projects/:id/items/:itemId')
+  pushProjectItem(@Param('id') projectId, @Param('itemId') itemId: number, 
+    @Body() movie: Movie): Promise<boolean> {
     // return movie id
     // this will create or update movie by sn.
-    return this.scraperService.generate(itemId, movie);
+    return this.scraperService.pushProjectItem(projectId, itemId, movie);
   }
 
-  @Post('projects/:id/finish')
-  finishProject(@Param('id') id: number): Promise<boolean> {
-    return this.scraperService.finishProject(id);
-  }
+  // @Post('projects/:id/finish')
+  // finishProject(@Param('id') id: number): Promise<boolean> {
+  //   return this.scraperService.finishProject(id);
+  // }
 
   // @Get('setting')
   // getSetting() {

@@ -82,7 +82,8 @@ export const saveOneMovie = async ({
 
     const curMovie = await movieRepository.findOneBy({ sn: movie.sn });
     if (curMovie) {
-        const updated = await movieRepository.update(curMovie.id, m);
+        // const updated = await movieRepository.update(curMovie.id, m);
+        const updated = await movieRepository.save({...m, id: curMovie.id});
         return curMovie.id;
     } else {
         const saved = await movieRepository.save(m);
@@ -101,7 +102,6 @@ export const saveMovieIndexs = async ({
     movies: Movie[],
     movieRepository: Repository<Movie>,
 }) => {
-    let count = 0;
     const addItems = [] as ScraperItem[];
     for (const movie of movies) {
         const re = await movieRepository.findOneBy({ sn: movie.sn });
@@ -109,7 +109,10 @@ export const saveMovieIndexs = async ({
             movie.scrapterFinished = false;
             const m = await movieRepository.save(movie);
             addItems.push({ url: m.fromUrl, movieId: m.id } as ScraperItem);
-            count++;
+        } else {
+            if(re.scrapterFinished === false) {
+                addItems.push({ url: re.fromUrl, movieId: re.id } as ScraperItem);
+            }
         }
     }
     return addItems;
