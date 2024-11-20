@@ -5,4 +5,5 @@ export { Loading } from './Loading';
 export { default as Gallery } from './Gallery';
 export { default as MyImage} from './MyImage';
 export { default as MyTooltip } from './MyTooltip';
-export { default as IconTurned } from './IconMorph';
+export { default as IconTurned,IconChanged } from './IconMorph';
+export { default as copyToClipboard,delay } from './funcs';

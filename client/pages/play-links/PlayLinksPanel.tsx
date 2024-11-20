@@ -24,7 +24,9 @@ const PlayLinksPanel: React.FC<PlayLinksPanelProps> = ({ playLinks }) => {
         <div className="flex flex-col gap-3" >
             <div className="flex flex-col border-t-1 border-b-1 py-2 gap-1 ">
                 <div className="flex justify-between items-center px-2
-                    text-slate-500 font-thin w-full">
+                    text-slate-500 font-thin w-full
+                    cursor-pointer hover:text-orange-500"
+                    onClick={() => setIsOpened(!isOpened)}>
                     <div className='flex items-center gap-5' >
                         Play Links
                         <div className='bg-slate-100 w-[30px] h-[30px] rounded-full
@@ -32,7 +34,7 @@ const PlayLinksPanel: React.FC<PlayLinksPanelProps> = ({ playLinks }) => {
                             {playLinks?.length}
                         </div>
                     </div>
-                    <div onClick={() => setIsOpened(!isOpened)} >
+                    <div >
                         <IconOpened isOpened={isOpened} />
                     </div>
                 </div>
@@ -46,11 +48,14 @@ const PlayLinksPanel: React.FC<PlayLinksPanelProps> = ({ playLinks }) => {
                             : playLinks.map((link, index) => {
                                 return (
                                     <MyTooltip key={index} content={`URL: ${link.url}`}  >
-                                        <div className="flex gap-3 cursor-pointer hover:bg-slate-100 p-2 font-thin " >
-                                            <Link href={link.url} target='_blank' className='text-slate-900'>
+                                        {/* <div className="flex gap-3 cursor-pointer hover:bg-slate-100 
+                                        p-2 font-thin " > */}
+                                            <Link href={link.url} target='_blank' 
+                                            className='text-slate-900 cursor-pointer hover:text-orange-500
+                                            p-2 font-thin '>
                                                 {link.name}
                                             </Link>
-                                        </div>
+                                        {/* </div> */}
                                     </MyTooltip>
                                 );
                             })

@@ -134,7 +134,7 @@ class MovieForm extends Component<FormProps, FormState> {
 
     protected fieldInput = (field: FormField) => {
         return (
-            <div className='flex flex-col' >
+            <div key={field.key} className='flex flex-col' >
             <label className='text-slate-500 ml-1' >{field.title}</label>
             <Input key={field.key}
                 value={field.value}

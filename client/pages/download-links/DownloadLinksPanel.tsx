@@ -1,9 +1,9 @@
 import React from 'react';
 import { DownloadLink } from '@/services/models';
-import { Link } from '@nextui-org/react';
 import { IconOpened } from '@/components/IconMorph';
-// import { downloadLink } from '@/services/apiDownloadLink';
-// import { MyTooltip } from '@/components';
+import { FaPlay } from 'react-icons/fa';
+import { copyToClipboard, IconChanged } from '@/components';
+
 
 interface DownloadLinksPanelProps {
     downloadLinks: DownloadLink[];
@@ -11,6 +11,7 @@ interface DownloadLinksPanelProps {
 
 const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }) => {
     const [isOpened, setIsOpened] = React.useState(false);
+    const [isCopied, setIsCopied] = React.useState<boolean[]>([]);
 
 
     let isNull = false;
@@ -20,11 +21,26 @@ const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }
         isNull = true;
     }
 
+    const handelIsCopied = (index: number, value: boolean) => {
+        setIsCopied((prev) => {
+            const newIsCopied = [...prev];
+            newIsCopied[index] = value;
+            return newIsCopied;
+        });
+    }
+
+    const handelClickCopy = async (url: string, index: number) => {
+        await copyToClipboard(url);
+        handelIsCopied(index, true);
+    }
+
     return (
         <div className="flex flex-col gap-3">
             <div className="flex flex-col border-b-1 py-2 gap-1 ">
                 <div className="flex justify-between items-center px-2
-                    text-slate-500 font-thin w-full">
+                    text-slate-500 font-thin w-full 
+                    cursor-pointer hover:text-orange-500"
+                    onClick={() => setIsOpened(!isOpened)}>
                     <div className='flex items-center gap-5' >
                         Download Links
                         <div className='bg-slate-100 w-[30px] h-[30px] rounded-full
@@ -32,7 +48,7 @@ const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }
                             {downloadLinks?.length}
                         </div>
                     </div>
-                    <div onClick={() => setIsOpened(!isOpened)} >
+                    <div >
                         <IconOpened isOpened={isOpened} />
                     </div>
                 </div>
@@ -45,13 +61,27 @@ const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }
                             ? <div className="font-thin text-gray-500 p-2">No download links.</div>
                             : downloadLinks.map((link, index) => {
                                 return (
-                                    <div key={index} className="cursor-pointer hover:bg-slate-100 
+                                    <div key={index}
+                                        className="flex justify-between items-center
+                                    cursor-pointer hover:text-orange-500
                                         p-2 overflow-hidden whitespace-nowrap text-ellipsis 
-                                        font-thin">
-                                        <Link href={link.url} target='_blank'
-                                            className='text-slate-900 '>
-                                                {link.url}
-                                        </Link>
+                                        font-thin"
+                                    >
+                                        <div className='w-full'
+                                            onClick={() => handelClickCopy(link.url, index)}>
+                                            {link.name || link.url}
+                                        </div>
+                                        <div className='flex items-center gap-3' >
+                                            <div className='text-slate-500 hover:text-orange-500'>
+                                                <FaPlay />
+                                            </div>
+                                            <div className='p-2 text-slate-500'
+                                                onClick={() => handelClickCopy(link.url, index)} >
+                                                <IconChanged
+                                                    isStart={isCopied[index]} onFinished={() => { handelIsCopied(index, false) }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 );
                             })
@@ -62,8 +92,6 @@ const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }
         </div>
     );
 }
-
-
 
 
 

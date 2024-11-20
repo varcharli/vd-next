@@ -20,6 +20,13 @@ const MoviesPage = () => {
     const [limit, setLimit] = useState(pageSize);
     const [isLoading, setIsLoading] = useState(true);
 
+    const orderReleaseDate = 'releaseDate DESC';
+    const orderSerialNumber = 'sn ASC';
+    const orderCreateDate = 'id DESC';
+    const saveOrder = (order: string) => {
+        localStorage.setItem('movieOrder', order);
+    }
+
 
     useEffect(() => {
         const storedOrder = localStorage.getItem('movieOrder');
@@ -32,6 +39,7 @@ const MoviesPage = () => {
 
     const handleHome = () => {
         // setPlayListId(undefined);
+        saveOrder(orderReleaseDate);
         router.push('/movies');
     }
 
@@ -68,6 +76,7 @@ const MoviesPage = () => {
     }, [limit]);
 
     const handlePlayListChange = (playListId?: number) => {
+        saveOrder(orderCreateDate);
         setPlayListId(playListId);
         router.push({
             pathname: `/movies`,
@@ -76,7 +85,8 @@ const MoviesPage = () => {
     }
 
     const handleOrderChange = (order: string) => {
-        localStorage.setItem('movieOrder', order);
+        // localStorage.setItem('movieOrder', order);
+        saveOrder(order);
         setOrder(order);
         router.push({
             pathname: `/movies`,
@@ -87,6 +97,7 @@ const MoviesPage = () => {
     if (isLoading) {
         return <div>Loading...</div>
     }
+
 
     const orderLi = (orderName: string, orderTitle: string) => {
         return (
@@ -112,9 +123,9 @@ const MoviesPage = () => {
                 <PlayListNav onPlayListChange={handlePlayListChange} playListId={playListId} />
                 <h1 className="text-2xl font-thin text-gray-700 my-4">Sort by</h1>
                 <ul>
-                    {orderLi('id DESC', 'Create Date')}
-                    {orderLi('releaseDate DESC', 'Release Date')}
-                    {orderLi('sn ASC', 'Serial Number')}
+                    {orderLi(orderCreateDate, 'Create Date')}
+                    {orderLi(orderReleaseDate, 'Release Date')}
+                    {orderLi(orderSerialNumber, 'Serial Number')}
                 </ul>
             </div>
             <div className='w-full flex justify-center'>
