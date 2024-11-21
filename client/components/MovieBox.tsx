@@ -44,7 +44,7 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean
                 </div>
             </div>
             <div className="w-48 h-14 mx-2 ">
-                <h2 className="line-clamp-2 overflow-hidden text-ellipsis">{movie.name || ' '}</h2>
+                <h2 className="font-mono text-slate-500 line-clamp-2 overflow-hidden text-ellipsis">{movie.name || ' '}</h2>
             </div>
         </div>
     );

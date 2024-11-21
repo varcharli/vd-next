@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import PlayListNav from './PlayListNav';
 import { NavBar,NavTitle,NavItem } from '../home/NavBar';
+import { Loading } from '@/components';
 
 const MoviesPage = () => {
     const orderReleaseDate = 'releaseDate DESC';
@@ -95,7 +96,7 @@ const MoviesPage = () => {
     }
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return <Loading />;
     }
 
     const orderLi = (orderName: string, orderTitle: string) => {

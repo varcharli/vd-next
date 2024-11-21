@@ -9,7 +9,7 @@ interface NavItemProps {
 
 export const NavItem: React.FC<NavItemProps> = ({ onClick, actived, text }) => {
     const arrowRight = <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9.00378 5.99561L15.004 11.9959L9.00024 17.9996" stroke-width="null" stroke-linecap="round" stroke-linejoin="round" ></path>
+        <path d="M9.00378 5.99561L15.004 11.9959L9.00024 17.9996" strokeWidth="null" strokeLinecap="round" strokeLinejoin="round" ></path>
     </svg>
     return (
         <div onClick={onClick}
