@@ -72,7 +72,8 @@ const DownloadLinksPanel: React.FC<DownloadLinksPanelProps> = ({ downloadLinks }
                                             {link.name || link.url}
                                         </div>
                                         <div className='flex items-center gap-3' >
-                                            <div className='text-slate-500 hover:text-orange-500'>
+                                            <div className='p-2 text-slate-500 hover:text-orange-500'
+                                                onClick={() => window.open(link.url, '_blank')}>
                                                 <FaPlay />
                                             </div>
                                             <div className='p-2 text-slate-500'

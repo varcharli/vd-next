@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-// import { Loading } from '@/components';
 import models from '@/services/models';
 import type { PlayList } from '@/services/models';
-import { GoTriangleRight } from 'react-icons/go';
+import { NavItem, NavTitle } from '../home/NavBar';
 
 interface PlayListNavProps {
     onPlayListChange: (id?: number) => void;
     playListId?: number;
 }
 
-const PlayListNav: React.FC<PlayListNavProps> = ({ onPlayListChange,playListId }) => {
+const PlayListNav: React.FC<PlayListNavProps> = ({ onPlayListChange, playListId }) => {
     const [lists, setLists] = useState<PlayList[]>([]);
     const [currentList, setCurrentList] = useState(playListId);
     const [isLoading, setIsLoading] = useState(true);
@@ -32,14 +31,10 @@ const PlayListNav: React.FC<PlayListNavProps> = ({ onPlayListChange,playListId }
 
     const listItem = (listId: number, listName: string) => {
         return (
-            <li key={listId} className="py-2"  >
-                <GoTriangleRight className={`inline-block mb-1 mr-1
-                    ${currentList == listId ? "text-black-500" : "text-transparent"}`} />
-                <button onClick={() => handleChange(listId)}
-                    className={`${currentList == listId ? "" : "font-thin"}`} >
-                    {listName}
-                </button>
-            </li>
+            <NavItem key={listId}
+                onClick={() => handleChange(listId)}
+                actived={currentList == listId}
+                text={listName} />
         );
     }
 
@@ -51,15 +46,12 @@ const PlayListNav: React.FC<PlayListNavProps> = ({ onPlayListChange,playListId }
 
     return (
         <div>
-            
-            <div className='mt-8' >
-                <h1 className="text-2xl font-thin text-gray-700 my-4">Play List</h1>
-                <ul>
-                    {lists.map(list => (
-                        listItem(list.id, list.name)
-                    ))}
-                </ul>
-            </div>
+            <NavTitle text='Playlists' />
+            <ul>
+                {lists.map(list => (
+                    listItem(list.id, list.name)
+                ))}
+            </ul>
         </div>
     );
 }
