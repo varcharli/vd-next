@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private usersService: UserService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(name: string, pass: string): Promise<any> {
     // const user = await this.usersService.findOneByName(name);
@@ -19,7 +19,7 @@ export class AuthService {
     //   return result;
     // }
     // return null;
-    const user=await this.usersService.checkPasswordByUserName(name,pass);
+    const user = await this.usersService.checkPasswordByUserName(name, pass);
     return user;
   }
 
@@ -34,16 +34,18 @@ export class AuthService {
     };
   }
 
-  async me(id:number) {
+  async me(id: number) {
     return this.usersService.findById(id);
   }
 
-  async changePassword(id:number,oldPassword:string,newPassword:string){
-    const user = await this.usersService.checkPassword(id,oldPassword);
-    if(!user) return {ok:false};
-    await this.usersService.changePassword(id,newPassword);
-    return {ok:true};
+  async changePassword(id: number, oldPassword: string, newPassword: string) {
+    const user = await this.usersService.checkPassword(id, oldPassword);
+    if (!user) return { ok: false };
+    await this.usersService.changePassword(id, newPassword);
+    return { ok: true };
   }
 
-
+  async resetAdminPassword(newPassword: string, apiKey: string): Promise<boolean> {
+    return this.usersService._resetAdminPassword(newPassword, apiKey);
+  }
 }

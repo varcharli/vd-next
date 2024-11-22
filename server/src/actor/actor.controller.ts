@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, NotFoundException,Query,Request } from '@nestjs/common';
 import { ActorService } from './actor.service';
 import { Actor } from './actor.entity';
+
 
 @Controller('actors')
 export class ActorController {
@@ -33,8 +34,14 @@ export class ActorController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<Actor[]> {
-    return this.actorService.findAll();
+  async findAll(
+    @Request() req,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+    @Query('order') order?: string,
+    @Query('title') title?: string,
+  ): Promise<[Actor[],number]> {
+    return this.actorService.findAll(limit, offset, order, title);
   }
 
   @Get(':id')

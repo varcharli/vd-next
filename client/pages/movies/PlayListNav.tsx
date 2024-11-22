@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import models from '@/services/models';
 import type { PlayList } from '@/services/models';
-import { NavItem, NavTitle } from '../home/NavBar';
-
+import { MainNavTitle, MainNavItem } from '@/components/frame';
 interface PlayListNavProps {
     onPlayListChange: (id?: number) => void;
     playListId?: number;
@@ -31,7 +30,7 @@ const PlayListNav: React.FC<PlayListNavProps> = ({ onPlayListChange, playListId 
 
     const listItem = (listId: number, listName: string) => {
         return (
-            <NavItem key={listId}
+            <MainNavItem key={listId}
                 onClick={() => handleChange(listId)}
                 actived={currentList == listId}
                 text={listName} />
@@ -46,7 +45,7 @@ const PlayListNav: React.FC<PlayListNavProps> = ({ onPlayListChange, playListId 
 
     return (
         <div>
-            <NavTitle text='Playlists' />
+            <MainNavTitle text='Playlists' />
             <ul>
                 {lists.map(list => (
                     listItem(list.id, list.name)

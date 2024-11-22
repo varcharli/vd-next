@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import PlayListNav from './PlayListNav';
-import { NavBar,NavTitle,NavItem } from '../home/NavBar';
+import { MainNav,MainNavTitle,MainNavItem,MainContent,MainFrame } from '@/components/frame';
 import { Loading } from '@/components';
 
 const MoviesPage = () => {
@@ -101,7 +101,7 @@ const MoviesPage = () => {
 
     const orderLi = (orderName: string, orderTitle: string) => {
         return (
-            <NavItem key={orderName} 
+            <MainNavItem key={orderName} 
                 onClick={() => handleOrderChange(orderName)} 
                 actived={order === orderName} 
                 text={orderTitle} />
@@ -109,26 +109,26 @@ const MoviesPage = () => {
     }
 
     return (
-        <div className="flex">
-            <NavBar >
+        <MainFrame>
+            <MainNav >
                 <PlayListNav onPlayListChange={handlePlayListChange} playListId={playListId} />
                 {/* <h1 className="text-2xl font-thin text-gray-700 my-4">Sort by</h1> */}
-                <NavTitle text='Sort by' />
+                <MainNavTitle text='Sort by' />
                 <ul>
                     {orderLi(orderCreateDate, 'Create Date')}
                     {orderLi(orderReleaseDate, 'Release Date')}
                     {orderLi(orderSerialNumber, 'Serial Number')}
                 </ul>
-            </NavBar>
-            <div className='w-full flex justify-center'>
-                <div className="p-4 max-w-screen-2xl ">
+            </MainNav>
+            <MainContent>
+                
                     {/* <h1 className="text-4xl font-bold my-4">Movies</h1> */}
                     <MoviesList page={page} limit={limit} title={title}
                         order={order} playListId={playListId} actorId={actorId}
                         onPageChange={handlePageChange} />
-                </div>
-            </div>
-        </div>
+            
+            </MainContent>
+        </MainFrame>
     );
 };
 

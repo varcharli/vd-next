@@ -1,10 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 // Actor Entity
 @Entity()
 export class Actor {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Index()
     @Column({ nullable: false })
     name: string;
 

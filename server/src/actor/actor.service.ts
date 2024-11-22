@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, ILike, Repository } from 'typeorm';
 import { Actor } from './actor.entity';
 
 @Injectable()
@@ -23,8 +23,20 @@ export class ActorService {
     return this.actorRepository.delete(id);
   }
 
-  findAll(): Promise<Actor[]> {
-    return this.actorRepository.find();
+  async findAll(limit: number, offset: number, order: string, title: string): Promise<[Actor[], number]> {
+    const repo = this.actorRepository.createQueryBuilder('actor');
+    if (title) {
+      repo.where([
+        { name: ILike(`%${title}%`) },
+      ]);
+    }
+    // repo.orderBy(`actor."${field}"`, direction.toUpperCase() as 'ASC' | 'DESC');
+    repo.skip(offset ?? 0);
+    repo.take(limit ?? 12);
+    const data =await repo.getManyAndCount();
+    return data;
+
+    // return this.actorRepository.findAndCount();
   }
 
   findById(id: number): Promise<Actor> {

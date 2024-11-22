@@ -15,7 +15,7 @@ const MovieBox = ({ movie, isZoomed = true }: { movie: Movie, isZoomed?: boolean
              bg-slate-50
             flex rounded-2xl overflow-clip '>
             <MyImage className='shadow-lg '
-                src={movie.posterUrl || '/default-poster.png'}
+                src={movie.posterUrl || '' }
                 alt={movie.name}
                 mode="cover"
                 zoomed={isZoomed}

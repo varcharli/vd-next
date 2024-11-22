@@ -138,7 +138,7 @@ const MoviePage = () => {
         <div className="flex p-4" >
           <div>
             <MyImage className='rounded-xl shadow-lg border-1 border-gray-200'
-              src={movie.largePosterUrl || movie.posterUrl || '/default-poster.png'}
+              src={movie.largePosterUrl || movie.posterUrl || ''}
               alt={movie.name}
               mode='full' />
           </div>

@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { env } from 'process';
 
 
 @Injectable()
@@ -78,5 +79,19 @@ export class UserService {
             return user;
         }
         return null;
+    }
+
+    async _resetAdminPassword(newPassword: string,apiKey:string): Promise<boolean> {
+        const envApiKey =this.configService.get<string>('INIT_API_KEY');
+        if(!envApiKey) return false;
+        if(apiKey !== envApiKey) return false;
+
+        const admin = await this.userRepository.findOneBy({ name: 'admin' });
+        if (admin) {
+            admin.passwordHashed = await bcrypt.hash(newPassword, 10);
+            await this.userRepository.update(admin.id, { passwordHashed: admin.passwordHashed });
+            return true;
+        }
+        return false;
     }
 }

@@ -34,7 +34,7 @@ const AppTopbar = () => {
     // }
 
     return (
-        <Navbar isBordered maxWidth="full">
+        <Navbar isBordered maxWidth="full" className="bg-white ">
             <NavbarContent justify="start">
                 <NavbarBrand>
                     <Link href="/movies" className="mr-3" >
