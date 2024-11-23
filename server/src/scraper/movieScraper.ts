@@ -25,6 +25,9 @@ export const saveOneMovie = async ({
     const actors = [] as Actor[];
     if (movie.actors) {
         for (const item of movie.actors) {
+            if(!(item.name)) { continue; }
+            if(actors.find(a => a.name === item.name)) { continue; }
+
             const re = await actorService.findByName(item.name)
             if (re) {
                 actors.push(re);
@@ -37,6 +40,9 @@ export const saveOneMovie = async ({
     const galleries = [] as Gallery[];
     if (movie.galleries) {
         for (const item of movie.galleries) {
+            if(!(item.url)) { continue; }
+            if(galleries.find(g => g.url === item.url)) { continue; }
+
             const re = await galleryService.findByUrl(item.url);
             if (re) {
                 // item = { id: re.id } as Gallery;
@@ -54,6 +60,9 @@ export const saveOneMovie = async ({
     const downloadLinks = [] as DownloadLink[];
     if (movie.downloadLinks) {
         for (const item of movie.downloadLinks) {
+            if(!(item.url)) { continue; }
+            if(downloadLinks.find(d => d.url === item.url)) { continue; }
+            
             const newDownloadLink = await downloadLinkService.create({
                 url: item.url,
                 name: item.name,
