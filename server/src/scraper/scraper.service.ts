@@ -76,7 +76,7 @@ export class ScraperService {
       if (query && query.length > 0) {
         maxStartDate = query[0].date;
       }
-      console.log("maxStartDate", maxStartDate,'query',query);  
+      console.log("maxStartDate", maxStartDate, 'query', query);
       const setting = await this.getSetting();
       const lastDateTime = maxStartDate ? maxStartDate : cDate(setting.initEndDate);
       const currentTime = cDate(new Date());
@@ -128,7 +128,7 @@ export class ScraperService {
     const maxDate = cDate(project.startDate || project.endDate);
     const curMinDate = movies.reduce((min, p) => cDate(p.releaseDate, "2100-01-01") < min ? cDate(p.releaseDate) : min, "2100-01-01");
     const curMaxDate = movies.reduce((max, p) => cDate(p.releaseDate, "1900-01-01") > max ? cDate(p.releaseDate) : max, "1900-01-01");
-    console.log("page",page, "minDate", minDate, "maxDate", maxDate, "curMinDate", curMinDate, "curMaxDate", curMaxDate);
+    console.log("page", page, "minDate", minDate, "maxDate", maxDate, "curMinDate", curMinDate, "curMaxDate", curMaxDate);
     project.indexFinished = (curMinDate < minDate);
     // refresh startDate with project max date
     if (curMaxDate > maxDate) {
@@ -163,17 +163,22 @@ export class ScraperService {
     // if (await this.exists(movie.sn)) {
     //   return null;
     // }
-    const re = await saveOneMovie(
-      {
-        movie,
-        movieRepository: this.movieRepository,
-        actorService: this.actorService,
-        downloadLinkService: this.downloadLinkService,
-        galleryService: this.galleryService
-      });
+    try {
+      const re = await saveOneMovie(
+        {
+          movie,
+          movieRepository: this.movieRepository,
+          actorService: this.actorService,
+          downloadLinkService: this.downloadLinkService,
+          galleryService: this.galleryService
+        });
 
-    if (re) {
-      await this.finishItem(itemId);
+      if (re) {
+        await this.finishItem(itemId);
+      }
+    } catch (e) {
+      // internal error still finish item and mark error message to item name
+      await this.finishItem(itemId, "internal error");
     }
 
     return this.validateProjectFinished(projectId);
@@ -196,9 +201,12 @@ export class ScraperService {
     return this.scraperProjectRepository.save(project);
   }
 
-  async finishItem(id: number): Promise<boolean> {
+  async finishItem(id: number, error?: string): Promise<boolean> {
     const item = await this.scraperItemRepository.findOneBy({ id });
     item.finished = true;
+    if (error) {
+      item.name = error;
+    }
     await this.scraperItemRepository.update(id, item);
     return true;
   }
