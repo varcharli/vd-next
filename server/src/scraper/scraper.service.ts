@@ -21,15 +21,22 @@ const keyInitEndDate = "ScraperInitEndDate";
 const keyInitFinished = "ScraperInitFinished";
 const ScraperHour = 24;
 
-function cDate(date: string): Date {
-  const tryInt = parseInt(date, 10);
-  if (tryInt) {
-    return new Date(tryInt);
+// format all date to yyyy-mm-dd
+function cDate(date: any, nullDate: string = "1900-01-01"): string {
+  if (!date) return nullDate;
+  if (typeof date === "string") {
+    if (date.length === 10) return date;
+    if (date.length === 19) return date.slice(0, 10);
+    return nullDate;
   }
-  console.log("cDate", date);
-  const newDate = new Date(date);
-  console.log("cDate to", newDate);
-  return newDate;
+  if (typeof date === "number") return new Date(date).toISOString().slice(0, 10);
+  if (date instanceof Date) return date.toISOString().slice(0, 10);
+  return nullDate;
+}
+
+function cTime(date: string): number {
+  const d = new Date(date);
+  return d.getTime();
 }
 
 @Injectable()
@@ -61,18 +68,27 @@ export class ScraperService {
   // export
   async pullActivedProjects(): Promise<ScraperProject[]> {
     const projects = await this.scraperProjectRepository.findBy({ finished: false });
+    console.log("pullActivedProjects", projects.length);
     if (projects.length === 0) {
+      // get max startDate from scraperProject
+      const query = await this.scraperProjectRepository.query(`select max("startDate") as date from scraper_project`);
+      let maxStartDate = "";
+      if (query && query.length > 0) {
+        maxStartDate = query[0].date;
+      }
+      console.log("maxStartDate", maxStartDate,'query',query);  
       const setting = await this.getSetting();
-      const lastDateTime = new Date(setting.initEndDate);
-      const currentTime = new Date();
+      const lastDateTime = maxStartDate ? maxStartDate : cDate(setting.initEndDate);
+      const currentTime = cDate(new Date());
+      console.log("create auto project: lastDateTime", lastDateTime, "currentTime", currentTime);
       if (lastDateTime <= currentTime) {
         // const timeDifference = currentTime - lastDateTime;
-        const hoursDifference = (currentTime.getTime() - lastDateTime.getTime()) / (1000 * 60 * 60)
+        const hoursDifference = (cTime(currentTime) - cTime(lastDateTime)) / (1000 * 60 * 60)
         // timeDifference / (1000 * 60 * 60);
         if (hoursDifference > ScraperHour) {
           const project = new ScraperProject();
           project.name = keyInitProjectName;
-          project.startDate = currentTime.toString();
+          project.startDate = "";
           project.endDate = lastDateTime.toString();
           project.description = "auto project";
           project.finished = false;
@@ -110,14 +126,17 @@ export class ScraperService {
     console.log("startDate", project.startDate, "endDate", project.endDate);
     const minDate = cDate(project.endDate);
     const maxDate = cDate(project.startDate || project.endDate);
-    const curMinDate = movies.reduce((min, p) => cDate(p.releaseDate) < min ? cDate(p.releaseDate) : min, new Date("2100-01-01"));
-    const curMaxDate = movies.reduce((max, p) => cDate(p.releaseDate) > max ? cDate(p.releaseDate) : max, new Date('1900-01-01'));
-    console.log("minDate", minDate, "maxDate", maxDate, "curMinDate", curMinDate, "curMaxDate", curMaxDate);
+    const curMinDate = movies.reduce((min, p) => cDate(p.releaseDate, "2100-01-01") < min ? cDate(p.releaseDate) : min, "2100-01-01");
+    const curMaxDate = movies.reduce((max, p) => cDate(p.releaseDate, "1900-01-01") > max ? cDate(p.releaseDate) : max, "1900-01-01");
+    console.log("page",page, "minDate", minDate, "maxDate", maxDate, "curMinDate", curMinDate, "curMaxDate", curMaxDate);
     project.indexFinished = (curMinDate < minDate);
-
+    // refresh startDate with project max date
+    if (curMaxDate > maxDate) {
+      project.startDate = curMaxDate;
+    }
     await this.scraperProjectRepository.update(projectId, {
       pageNumber: page,
-      startDate: curMaxDate.toString(),
+      startDate: project.startDate,
       count: project.count + count,
       indexFinished: project.indexFinished
     });
