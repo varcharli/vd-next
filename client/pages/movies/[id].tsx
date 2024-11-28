@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Avatar } from '@nextui-org/react';
-import models, { Movie, PlayLink, Gallery, DownloadLink } from '@/services/models';
+// import { Avatar } from '@nextui-org/react';
+import models, { Movie, PlayLink, Gallery, DownloadLink, Actor } from '@/services/models';
 import { useRouter } from 'next/router';
 import { Gallery as GalleryList } from '@/components';
-import UserImg from '@/public/images/user.svg';
+// import UserImg from '@/public/images/user.svg';
 import { Loading } from '@/components';
 import MovieActionBar from './MovieActionBar';
 import { GalleryPopup } from '@/components/Gallery';
 import PlayLinksPanel from '../play-links/PlayLinksPanel';
 import DownloadLinksPanel from '../download-links/DownloadLinksPanel';
 
-import { MyImage, IconTurned } from '@/components';
+import { MyImage, IconTurned, MyAvatar } from '@/components';
 
 const MoviePage = () => {
   const router = useRouter();
@@ -21,6 +21,7 @@ const MoviePage = () => {
   const [playLinks, setPlayLinks] = useState<PlayLink[]>([]);
   const [downloadLinks, setDownloadLinks] = useState<DownloadLink[]>([]);
   const [galleries, setGalleries] = useState<Gallery[]>([]);
+  const [actors, setActors] = useState<Actor[]>([]);
   const [formRefed, setFormRefed] = useState(false);
   const movieId = parseInt(router.query.id as string, 10);
 
@@ -47,6 +48,7 @@ const MoviePage = () => {
       setPlayLinks(data.playLinks);
       setDownloadLinks(data.downloadLinks);
       setGalleries(data.galleries);
+      setActors(data.actors);
       setIsLoading(false);
     };
     fetchMovie();
@@ -55,7 +57,7 @@ const MoviePage = () => {
   const handleBack = () => {
     const referrer = document.referrer;
     const currentHost = window.location.host;
-
+    console.log('referrer:', referrer, 'currentHost:', currentHost);
     if (referrer && new URL(referrer).host === currentHost) {
       window.history.back();
     } else {
@@ -71,12 +73,12 @@ const MoviePage = () => {
     setIsShowGallery(false);
   }
 
-  const handleActorClick = (actorId: number) => {
-    router.push({
-      pathname: '/movies',
-      query: { actorId }
-    });
-  }
+  // const handleActorClick = (actorId: number) => {
+  //   router.push({
+  //     pathname: '/movies',
+  //     query: { actorId }
+  //   });
+  // }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handelFormRef = (_: Movie) => {
@@ -95,11 +97,8 @@ const MoviePage = () => {
           {/* <LinkButton onClick={handleBack} > */}
           <IconTurned onClick={handleBack} text="Back to movies" />
           {/* </LinkButton> */}
-
         </div>
-
         <h1 className="text-3xl">{movie.name}</h1>
-
         <div className="text-orange-500 text-3xl ">
           {movie.sn}
         </div>
@@ -107,14 +106,15 @@ const MoviePage = () => {
           {movie.releaseDate}
         </div>
         <div className="font-thin gap-3 flex flex-wrap ">
-          {movie.actors.map(actor => {
+          {actors.map(actor => {
             return (
-              <div key={actor.id}
-                onClick={() => handleActorClick(actor.id)}
-                className='flex flex-col gap-1 items-center' >
-                <Avatar src={actor.photoUrl || UserImg} className='h-25 w-25' />
-                <h1 className='w-20' >{actor.name}</h1>
-              </div>);
+              <a key={actor.id} href={`/movies?actorId=${actor.id}`}>
+                <MyAvatar src={actor.photoUrl} title={actor.name} />
+                {/* <div className='flex flex-col gap-1 items-center justify-center' >
+                  <Avatar src={actor.photoUrl || UserImg} className='h-25 w-25' />
+                  <h1 className='w-20 text-center' >{actor.name}</h1>
+                </div> */}
+              </a>);
           }
           )}
         </div>
@@ -127,6 +127,7 @@ const MoviePage = () => {
           currentPlayLinks={playLinks} setPlayLinks={setPlayLinks}
           currentGalleries={galleries} setGalleries={setGalleries}
           currentDownloadLinks={downloadLinks} setDownloadLinks={setDownloadLinks}
+          currentActors={actors} setActors={setActors}
         />
         <div>
           <PlayLinksPanel playLinks={playLinks} />

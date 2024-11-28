@@ -1,21 +1,21 @@
 
 import React, { Component } from 'react';
 import { Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react';
-import models, { Movie } from '@/services/models';
+import models, { Actor} from '@/services/models';
 
 type FormMode = 'create' | 'update';
 
 interface FormProps {
-    movieId?: number;
-    movie?: Movie;
-    onSubmit?: (movie: Movie) => void;
+    actorId?: number;
+    actor?: Actor;
+    onSubmit?: (actor: Actor) => void;
     mode: FormMode;
     isOpen: boolean;
     onClose: () => void;
 }
 
 interface FormState {
-    currentMovie: Movie;
+    currentActor: Actor;
     fields: FormField[];
 }
 
@@ -25,23 +25,23 @@ interface FormField {
     value: string;
 }
 
-const needFields = ['id', 'name', 'sn', 'releaseDate', 'posterUrl', 'largePosterUrl','fromUrl'];
+const needFields = ['id', 'name', 'description', 'photoUrl'];
 
-const castMovieToFields = (movie: Movie): FormField[] => {
+const castActorToFields = (actor: Actor): FormField[] => {
     const fields: FormField[] = []
     needFields.forEach((field) => {
         if (field !== 'id') {
             fields.push({
                 key:field,
                 title: field.charAt(0).toUpperCase() + field.slice(1),
-                value: String(movie[field as keyof Movie] || '')
+                value: String(actor[field as keyof Actor] || '')
             } as FormField);
         }
     });
     return fields;
 }
 
-const castFieldsToMovie = (fields: FormField[]): Movie => {
+const castFieldsToActor = (fields: FormField[]): Actor => {
     function f(key: string) {
         const value= fields.find(field => field.key === key)?.value;
         if(value=="null" || value=="undefined"  ){
@@ -50,29 +50,26 @@ const castFieldsToMovie = (fields: FormField[]): Movie => {
             return value;
         }
     }
-    const movie: Movie = {
+    const actor: Actor = {
         id: Number(f('id')),
         name: f('name'),
-        sn: f('sn'),
-        releaseDate: f('releaseDate'),
-        posterUrl: f('posterUrl'),
-        largePosterUrl: f('largePosterUrl'),
-        fromUrl: f('fromUrl'),
-    } as Movie;
-    return movie;
+        description: f('description'),
+        photoUrl: f('photoUrl'),
+    } as Actor;
+    return actor;
 }
 
-class MovieForm extends Component<FormProps, FormState> {
+class ActorForm extends Component<FormProps, FormState> {
     constructor(props: FormProps) {
         super(props);
 
         if (props.mode === 'update') {
-            if (!props.movie || !props.movieId) {
-                throw new Error('At update mode,Movie is required.');
+            if (!props.actor || !props.actorId) {
+                throw new Error('At update mode,Actor is required.');
             } else {
                 this.state = {
-                    currentMovie: props.movie,
-                    fields: castMovieToFields(props.movie)
+                    currentActor: props.actor,
+                    fields: castActorToFields(props.actor)
                 }
             }
         }
@@ -81,46 +78,41 @@ class MovieForm extends Component<FormProps, FormState> {
             const newModel = {
                 id: 0,
                 name: '',
-                sn: '',
-                releaseDate: '',
-                posterUrl: '',
-                largePosterUrl: '',
-                fromUrl: '',
-            } as Movie;
+                description: '',
+                photoUrl: '',
+
+            } as Actor;
             this.state = {
-                currentMovie: newModel,
-                fields: castMovieToFields(newModel)
+                currentActor: newModel,
+                fields: castActorToFields(newModel)
             }
         }
     }
 
-    readonly title = "Movie Form";
+    readonly title = "Actor Form";
 
-    protected getRecord =  (movie:Movie) => {
+    protected getRecord =  (actor:Actor) => {
         const record={
-            name: movie.name,
-            sn: movie.sn,
-            releaseDate: movie.releaseDate,
-            posterUrl: movie.posterUrl,
-            largePosterUrl: movie.largePosterUrl,
-            fromUrl: movie.fromUrl,
-        } as Movie;
+            name: actor.name,
+            description: actor.description,
+            photoUrl: actor.photoUrl,
+        } as Actor;
         return record;
     }
 
-    protected handelUpdate = async (movie: Movie) => {
-        const record= this.getRecord(movie);
-        await models.movie.update( this.props.movieId!, record);
+    protected handelUpdate = async (actor: Actor) => {
+        const record= this.getRecord(actor);
+        await models.actor.update( this.props.actorId!, record);
     }
 
-    protected handelCreate = async (movie: Movie) => {
-        const record= this.getRecord(movie);
-        await models.movie.create(record);
+    protected handelCreate = async (actor: Actor) => {
+        const record= this.getRecord(actor);
+        await models.actor.create(record);
     }
 
     protected handleSubmit =async () => {
         const submit = async () => {
-            const currentModel = castFieldsToMovie(this.state?.fields);
+            const currentModel = castFieldsToActor(this.state?.fields);
             if (this.props.mode === 'update') {
                 await this.handelUpdate(currentModel);
             }
@@ -172,6 +164,7 @@ class MovieForm extends Component<FormProps, FormState> {
                         <div className='flex flex-col gap-3'>
                             {this.state?.fields?.map(this.fieldInput)}
                         </div>
+
                     </ModalBody>
                     <ModalFooter>
                         <div className='flex flex-col w-full mt-3'>
@@ -186,4 +179,4 @@ class MovieForm extends Component<FormProps, FormState> {
     }
 }
 
-export default MovieForm;
+export default ActorForm;

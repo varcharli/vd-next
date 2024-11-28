@@ -38,5 +38,6 @@ export const actor = {
     },
     async update(id: number, data: Actor) {
         return await api.put(`/actors/${id}`, data);
-    }
+    },
+
 };

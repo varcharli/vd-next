@@ -63,6 +63,9 @@ export const movie = {
     },
     async setPlayLists(id: number, playListIds: number[]) {
         return await api.post(`/movies/${id}/play-lists`, { playListIds });
+    },
+    async setActors(id:number,actorIds:number[] ){
+        return await api.post(`/movies/${id}/actors`, { actorIds});
     }
 };
 

@@ -57,5 +57,11 @@ export class MovieController {
     return this.movieService.setPlayLists(id, playListIds, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/actors')
+  setActors(@Param('id') id: number, @Body('actorIds') actorIds: number[]): Promise<boolean> {
+    return this.movieService.setActors(id, actorIds);
+  }
+
 
 }

@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { FaBookmark } from 'react-icons/fa';
-import { GrLink,GrCloudDownload,GrMenu ,GrGallery,GrEdit} from 'react-icons/gr';
+import { GrLink, GrCloudDownload, GrMenu, GrGallery, GrEdit,GrUserAdd } from 'react-icons/gr';
 import PlayListPop from '../play-lists/PlayListPop';
 import { Movie } from '@/services/apiMovie';
 import PlayLinksPopup from '../play-links/PlayLinksPopup';
@@ -12,6 +12,9 @@ import { DownloadLink } from '@/services/apiDownloadLink';
 import MovieForm from './MovieForm';
 import { MyTooltip } from '@/components';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button } from '@nextui-org/react';
+import MovieActors from './MovieActors';
+import { Actor } from '@/services/apiActor';
+
 
 interface MovieActionBarProps {
     movieId: number;
@@ -23,6 +26,8 @@ interface MovieActionBarProps {
     refMovie: (movie: Movie) => void;
     currentDownloadLinks: DownloadLink[];
     setDownloadLinks: (downloadLinks: DownloadLink[]) => void;
+    currentActors: Actor[];
+    setActors: (actors: Actor[]) => void;
 }
 
 
@@ -34,13 +39,16 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
     currentPlayLinks, setPlayLinks,
     currentGalleries, setGalleries,
     currentDownloadLinks, setDownloadLinks,
- }) => {
+    currentActors,setActors
+}) => {
     const [showPlayList, setShowPlayList] = useState(false);
     const [movie, setMovie] = useState<Movie | null>(currentMovie || null);
     const [isShowPlayLinks, setIsShowPlayLinks] = useState(false);
     const [isShowGalleries, setIsShowGalleries] = useState(false);
     const [isShowDownloadLinks, setIsShowDownloadLinks] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isShowActors, setIsShowActors] = useState(false);
+
     const handleShowPlayList = () => {
         setShowPlayList(true);
     }
@@ -82,6 +90,30 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
         setIsFormOpen(false);
     }
 
+    const handleOpenActors = () => {
+        setIsShowActors(true);
+    }
+    const handleCloseActors = () => {
+        setIsShowActors(false);
+    }
+
+    const fromUrlTitle = () => {
+        const length=20;
+        if (movie && movie.fromUrl) {
+            let url=(movie.fromUrl).substring(0, length);
+            if(url.length==length){url=url+'...'}
+            return `From ${url}`;
+        } else {
+            return 'No source';
+        }
+    }
+
+    const handleFromUrl = () => {
+        if (movie && movie.fromUrl) {
+            window.open(movie.fromUrl, '_blank');
+        }
+    }
+
     const actionButton = (text?: string, onClick?: () => void, icon?: ReactNode,
         className?: string) => {
         return (
@@ -118,7 +150,7 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
             />)}
             {actionButton('Play Links', handleShowPlayLinks, <GrLink size={20} />)}
             {actionButton('Download Links', handleShowDownloadLinks, <GrCloudDownload size={20} />)}
-        
+
             <Dropdown>
                 <DropdownTrigger>
                     <Button isIconOnly color="primary" variant="flat"
@@ -129,7 +161,8 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
                 <DropdownMenu>
                     {dropdownItem('Edit movie content', handleOpenForm, <GrEdit />)}
                     {dropdownItem('Galleries', handleShowGalleries, <GrGallery />, true)}
-                    {dropdownItem(movie.fromUrl ? `From ${movie.fromUrl}` : 'No source')}
+                    {dropdownItem('Actors', handleOpenActors, <GrUserAdd/>, true)}
+                    {dropdownItem(fromUrlTitle(), handleFromUrl)}
                 </DropdownMenu>
             </Dropdown>
 
@@ -164,6 +197,13 @@ const MovieActionBar: React.FC<MovieActionBarProps> = ({
                 onClose={handleCloseForm}
                 onSubmit={(movie) => { refMovie(movie) }}
                 mode='update'
+            />
+            <MovieActors 
+                movieId={movieId}
+                isOpen={isShowActors}
+                onClose={handleCloseActors}
+                curActors={currentActors || []}
+                onUpdate={setActors}
             />
         </div>
     );

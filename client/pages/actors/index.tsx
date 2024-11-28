@@ -1,10 +1,11 @@
-import { MainNav, MainFrame, MainContent, MainNavItem, MainNavTitle } from "@/components/frame";
-import { Input, Avatar, Pagination, Skeleton } from "@nextui-org/react"
-import { Empty, Loading } from "@/components";
+import { MainFrame, MainContent } from "@/components/frame";
+import { Avatar, Pagination, Skeleton } from "@nextui-org/react"
+import { Empty, Loading, SearchInput } from "@/components";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import models from "@/services/models";
 import { Actor } from "@/services/models";
+import  ActorNav  from "./ActorNav";
 
 export default function ActorsPage() {
     const router = useRouter();
@@ -98,11 +99,7 @@ export default function ActorsPage() {
 
     return (
         <MainFrame>
-            <MainNav >
-                <MainNavTitle text="Actors" />
-                <MainNavItem text="Actors" onClick={() => { }} actived={false} />
-                <MainNavItem text="Create Actor" onClick={() => { }} actived={false} />
-            </MainNav>
+            <ActorNav />
             <MainContent>
                 <div className="flex flex-col items-center gap-3 text-slate-500
                     h-[200px] justify-center ">
@@ -110,18 +107,13 @@ export default function ActorsPage() {
                         Enter the name of the actor you want to search for
                     </div>
                     <div className="h-10 w-1/2 flex items-center ">
-                        <Input placeholder="Search Actor" value={searchText}
-                            onChange={(e) => { setSearchText(e.currentTarget.value) }}
-                            onKeyDown={(e) => { if (e.key === 'Enter') { handleSearch() } }}
-                        />
+                        <SearchInput value={searchText} placeholder="Search Actors"
+                            onSearch={handleSearch}
+                            onChange={setSearchText} />
                     </div>
-                    {/* <div className="h-10 flex items-center">
-                        {`Current Actors: 1111`}
-                    </div> */}
                 </div>
                 <div className="flex flex-col w-full ">
                     {actorsList()}
-
                     <div className="flex justify-center py-6">
                         {totalPages > 1 &&
                             <Pagination showControls total={totalPages} initialPage={page}

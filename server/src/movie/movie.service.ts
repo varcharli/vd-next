@@ -10,7 +10,7 @@ import { Actor } from 'src/actor/actor.entity';
 import { ActorService } from 'src/actor/actor.service';
 import { DownloadLink } from '@/download-link/download-link.entity';
 import { DownloadLinkService } from '@/download-link/download-link.service';
-import { saveOneMovie, getUnfinishedMovies,saveMovieIndexs } from '../scraper/movieScraper';
+import { saveOneMovie, getUnfinishedMovies, saveMovieIndexs } from '../scraper/movieScraper';
 
 
 interface FindAllParams {
@@ -186,6 +186,32 @@ export class MovieService {
       await this.playListService.removeMovie(userId, playListId, movieId);
     }
     return true;
+  }
+
+  async setActors(id: number, actorIds: number[]): Promise<boolean> {
+    const movie = await this.movieRepository.findOne({
+      where: { id },
+      relations: { actors: true }
+    });
+
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+
+    // remove id if not unique in actorIds.
+    const uniqueActorIds = [...new Set(actorIds)];
+    const actors = actorIds.map(id => ({ id } as Actor));
+    movie.actors = actors;
+    try {
+      await this.movieRepository.save(movie);
+      console.log ('setActors:',actorIds);
+      return true;
+    }
+    catch (e) {
+      console.log('setActors error:', e);
+      return false;
+    }
+
   }
 
   async exists(sn: string): Promise<boolean> {
