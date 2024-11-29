@@ -48,7 +48,7 @@ const MovieActors: React.FC<MovieActorsProps> = ({ isOpen, movieId, onClose, cur
 
     const getActors = async (title: string) => {
         const re = await models.actor.get({ title, limit: 10 });
-        if (re.data && re.data.length > 0) {
+        if (Array.isArray(re.data) && re.data.length > 0) {
             setSearchActors(re.data[0]);
         }
     }
@@ -196,8 +196,8 @@ const MovieActors: React.FC<MovieActorsProps> = ({ isOpen, movieId, onClose, cur
                     </div>
                     {/* <div>{`Selected: ${selectedId} inputValue: ${inputValue}`}</div> */}
                     <div className='flex flex-col gap-2'>
-                        {actors.length === 0 ? <Empty size='sm' /> :
-                            actors.map(actor => {
+                        {actors?.length === 0 ? <Empty size='sm' /> :
+                            actors?.map(actor => {
                                 return (
                                     <div key={actor.id}
                                         onClick={() => {
