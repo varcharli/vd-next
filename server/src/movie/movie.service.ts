@@ -204,7 +204,6 @@ export class MovieService {
     movie.actors = actors;
     try {
       await this.movieRepository.save(movie);
-      console.log ('setActors:',actorIds);
       return true;
     }
     catch (e) {

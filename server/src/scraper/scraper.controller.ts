@@ -71,8 +71,24 @@ export class ScraperController {
   //     offset,);
   // }
 
-  @Post('log')
-  log(@Body() log: string): Promise<ScraperLog> {
-    return this.scraperService.log(log, 'scraper');
+  @Post('logs')
+  pushLog(@Body() log: ScraperLog ): Promise<ScraperLog> {
+    return this.scraperService.pushLog(log.log, 'scraper');
+  }
+
+  @Get('logs/:id')
+  pullLog(@Param('id') id: number): Promise<ScraperLog> {
+    return this.scraperService.pullLog(id);
+  }
+
+  // params: {limit, offset, name} 
+  @Get('logs')
+  pullLogs(@Query('name') name?: string, @Query('limit') limit?: number, @Query('offset') offset?: number): Promise<[ScraperLog[],number]> {
+    return this.scraperService.pullLogs(name, limit, offset);
+  }
+
+  @Post('logs/:id')
+  updateLog(@Param('id') id: number, @Body() log: ScraperLog): Promise<boolean> {
+    return this.scraperService.updateLog(id, log);
   }
 }

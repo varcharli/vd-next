@@ -11,6 +11,8 @@ import { gallery } from './apiGallery';
 export type { Gallery } from './apiGallery';
 import { downloadLink } from './apiDownloadLink';
 export type { DownloadLink } from './apiDownloadLink';
+import {scraperLog} from './apiLogs';
+export type {ScraperLog} from './apiLogs';
 
 const models = {
     movie,
@@ -20,6 +22,7 @@ const models = {
     playLink,
     gallery,
     downloadLink,
+    scraperLog,
 };
 
 export default models;

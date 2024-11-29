@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ScraperItem, ScraperProject } from './scraper.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Movie } from '@/movie/movie.entity';
 import { PlayList, PlayListItem } from '@/play-list/play-list.entity';
@@ -12,6 +12,7 @@ import { PlayListService } from '@/play-list/play-list.service';
 import { SettingService } from '@/setting/setting.service';
 import { ScraperSetting } from './dto/scraper.dto';
 import { ScraperLog } from './scraper.entity';
+import { formateNow } from '@/func';
 
 import { saveOneMovie, getUnfinishedMovies, saveMovieIndexs } from './movieScraper';
 
@@ -211,12 +212,34 @@ export class ScraperService {
     return true;
   }
 
-  async log(log: string, name?: string): Promise<ScraperLog> {
-    const time = (new Date()).toISOString();
+  async pushLog(log: string, name?: string): Promise<ScraperLog> {
+    const time = formateNow();
     name = name || "default";
     return this.scraperLogRepository.save({
       log, name, time
     } as ScraperLog);
+  }
+
+  async pullLog(id: number): Promise<ScraperLog> {
+    return this.scraperLogRepository.findOneBy({ id });
+  }
+
+  async pullLogs(title?: string ,limit?:number,offset?:number): Promise<[ScraperLog[],number]> {
+    if(limit && limit>100) limit=100;
+    return this.scraperLogRepository.findAndCount({
+      where: title ? [
+        { name: ILike(`%${title}%`) },
+        { log: ILike(`%${title}%`) }
+      ] : {},
+      take: limit || 30,
+      skip: offset || 0,
+      order: { id: "DESC" }
+    });
+  }
+
+  async updateLog(id: number, log: ScraperLog): Promise<boolean> {
+    await this.scraperLogRepository.update(id, log);
+    return true;
   }
 
   async getSetting() {
