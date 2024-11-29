@@ -37,7 +37,7 @@ const AppTopbar = () => {
         <Navbar isBordered maxWidth="full" className="bg-white ">
             <NavbarContent justify="start">
                 <NavbarBrand>
-                    <Link href="/movies" className="mr-3" >
+                    <Link href="/" className="mr-3" >
                         <Image src={Logo} alt="logo" width={32} height={32} />
                     </Link>
                     <Input id="search_input"

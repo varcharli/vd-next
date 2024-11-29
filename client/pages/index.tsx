@@ -5,7 +5,7 @@ const Home = () => {
     const router = useRouter();
 
     useEffect(() => {
-        router.push('/movies');
+        router.push('/logs');
     }, [router]);
 
     return null;
