@@ -134,6 +134,10 @@ const MovieActors: React.FC<MovieActorsProps> = ({ isOpen, movieId, onClose, cur
     }
 
     const handleRemove = async (actorId: number) => {
+        const okCancel = window.confirm('Are you sure to remove this actor?');
+        if (!okCancel) {
+            return;
+        }
         const newActors = actors.filter(a => a.id !== actorId);
         await saveActors(newActors);
     }
@@ -147,7 +151,9 @@ const MovieActors: React.FC<MovieActorsProps> = ({ isOpen, movieId, onClose, cur
     function createPanel() {
         return (
             <ModalContent>
-                <ModalHeader>Create Actor & Add to Movie</ModalHeader>
+                <ModalHeader>
+                    {newActor.id > 0 ? "Edit Actor" : "Create Actor & Add to Movie"}
+                </ModalHeader>
                 <ModalBody>
                     {fieldInput('name', newActor.name)}
                     {fieldInput('photoUrl', newActor.photoUrl)}
@@ -157,7 +163,7 @@ const MovieActors: React.FC<MovieActorsProps> = ({ isOpen, movieId, onClose, cur
                 <ModalFooter>
                     <div className="mt-5 flex justify-between w-full" >
                         <Button onClick={handleAddCancel} className='text-orange-500 w-[150px]'>Cancel & Return</Button>
-                        <Button onClick={handleAddSave} className='text-blue-500 w-[150px]'>Save {newActor.id>0 ? "Edit" : "New" }</Button>
+                        <Button onClick={handleAddSave} className='text-blue-500 w-[150px]'>Save {newActor.id > 0 ? "Edit" : "New"}</Button>
                     </div>
                 </ModalFooter>
             </ModalContent>
