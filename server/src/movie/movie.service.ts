@@ -67,7 +67,7 @@ export class MovieService {
     }: FindAllParams
   ): Promise<[Movie[], number]> {
     const [field, direction] = (order).split(' ');
-
+    console.log("actorId", actorId);
     if (actorId) {
       const reCount = await this.movieRepository.query(
         `select count(*) from movie a 

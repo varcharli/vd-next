@@ -73,12 +73,12 @@ const MoviePage = () => {
     setIsShowGallery(false);
   }
 
-  // const handleActorClick = (actorId: number) => {
-  //   router.push({
-  //     pathname: '/movies',
-  //     query: { actorId }
-  //   });
-  // }
+  const handleActorClick = (actorId: number) => {
+    router.push({
+      pathname: '/movies',
+      query: { actorId }
+    });
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handelFormRef = (_: Movie) => {
@@ -108,13 +108,11 @@ const MoviePage = () => {
         <div className="font-thin gap-3 flex flex-wrap ">
           {actors.map(actor => {
             return (
-              <a key={actor.id} href={`/movies?actorId=${actor.id}`}>
+              <div key={actor.id} onClick={() => {handleActorClick(actor.id)}}
+                className='cursor-pointer'>
                 <MyAvatar src={actor.photoUrl} title={actor.name} />
-                {/* <div className='flex flex-col gap-1 items-center justify-center' >
-                  <Avatar src={actor.photoUrl || UserImg} className='h-25 w-25' />
-                  <h1 className='w-20 text-center' >{actor.name}</h1>
-                </div> */}
-              </a>);
+              </div>
+            );
           }
           )}
         </div>
