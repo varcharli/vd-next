@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   nextjs:
     restart: always
@@ -24,13 +22,3 @@ services:
       - ./server/.env.production
     environment:
       - NODE_ENV=production
-
-  scraper:
-    build: ./scraper
-    env_file:
-      - ./scraper/.env.production
-    environment:
-      - NODE_ENV=production
-    command: npm run production
-    depends_on:
-      - nestjs
