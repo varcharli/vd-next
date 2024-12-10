@@ -1,11 +1,12 @@
 import { MainFrame, MainContent } from "@/components/frame";
-import { Avatar, Pagination, Skeleton } from "@nextui-org/react"
+import { Pagination } from "@nextui-org/react"
 import { Empty, Loading, SearchInput } from "@/components";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import models from "@/services/models";
 import { Actor } from "@/services/models";
-import  ActorNav  from "./ActorNav";
+import ActorNav from "./ActorNav";
+import { MyAvatar } from "@/components";
 
 export default function ActorsPage() {
     const router = useRouter();
@@ -80,12 +81,13 @@ export default function ActorsPage() {
                         <div key={actor.id}
                             onClick={() => handleActorClick(actor.id)}
                             className='flex flex-col gap-1 items-center w-25 cursor-pointer' >
-                            <Skeleton className="rounded-lg" isLoaded={!isLoading} >
-                                <Avatar src={actor.photoUrl} className='h-25 w-25' />
-                            </Skeleton>
-                            <Skeleton className="w-20 h-16" isLoaded={!isLoading} >
+
+                            {/* <Avatar src={actor.photoUrl} className='h-25 w-25' /> */}
+                            <MyAvatar src={actor.photoUrl} title={actor.name} size={200} />
+
+                            {/* <Skeleton className="w-20 h-16" isLoaded={!isLoading} >
                                 <h1 className='w-20 h-16' >{actor.name}</h1>
-                            </Skeleton>
+                            </Skeleton> */}
                         </div>
                     )
                 })}

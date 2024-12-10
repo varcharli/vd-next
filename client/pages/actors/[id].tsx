@@ -54,7 +54,7 @@ export default function ActorPage() {
 
   return <MainFrame>
     <MainContent>
-      <div className="flex">
+      <div className="flex gap-5">
         <div className='flex flex-col gap-3 w-[600px] justify-start'>
           <IconTurned onClick={handleBack} text="Back to actors" />
           <Image src={actor.photoUrl} alt={actor.name} />
