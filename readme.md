@@ -131,6 +131,7 @@ To run the server-side application, navigate to the `server` directory and run:
 ```sh
 npm run start
 ```
+
 ## API Endpoints
 
 The server-side application exposes several API endpoints for managing video collections and playback. Here are some of the key endpoints:
@@ -139,21 +140,6 @@ The server-side application exposes several API endpoints for managing video col
 - `POST /scraper/projects/:id/pages/:pageNumber`: Push a new project page.
 - `GET /scraper/projects/:id/items`: Get all items for a project.
 - `POST /scraper/projects/:id/items/:itemId`: Push a new project item.
-
-## Services
-
-The server-side application includes several services for managing video collections and playback. Some of the key services include:
-
-- `ScraperService`: Provides methods for managing video collections and playback.
-- `DownloadLinkService`: Provides methods for managing download links.
-- `PlayListService`: Provides methods for managing playlists.
-- `ActorService`: Provides methods for managing actors.
-- `GalleryService`: Provides methods for managing galleries.
-- `SettingService`: Provides methods for managing settings.
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any changes.
 
 ## License
 
