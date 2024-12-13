@@ -73,9 +73,6 @@ export const saveOneMovie = async ({
         }
     }
 
-
-
-
     const m = new Movie();
     m.sn = movie.sn;
     m.name = movie.name;

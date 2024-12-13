@@ -16,7 +16,6 @@ import { DownloadLinkModule } from './download-link/download-link.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { SettingModule } from './setting/setting.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,7 +24,7 @@ import { SettingModule } from './setting/setting.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        type: 'postgres',
+        type: configService.get<string>('DB_TYPE') as 'mysql' | 'postgres',
         host: configService.get<string>('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
         username: configService.get<string>('DB_USERNAME'),

@@ -3,6 +3,7 @@ import { ScraperService } from './scraper.service';
 import { Movie } from '@/movie/movie.entity';
 import { Injectable, Query } from '@nestjs/common';
 import { ScraperItem, ScraperLog, ScraperProject } from './scraper.entity';
+import { ChromeScraperDto } from './dto/scraper.dto';
 
 @Controller('scraper')
 export class ScraperController {
@@ -49,27 +50,11 @@ export class ScraperController {
     return this.scraperService.pushProjectItem(projectId, itemId, movie);
   }
 
-  // @Post('projects/:id/finish')
-  // finishProject(@Param('id') id: number): Promise<boolean> {
-  //   return this.scraperService.finishProject(id);
-  // }
-
-  // @Get('setting')
-  // getSetting() {
-  //   return this.scraperService.getSetting();
-  // }
-
-
-
-
-
-  // @Get('unfinished')
-  // findUnfinishedMovies(@Query('limit') limit?: number, @Query('offset') offset?: number): 
-  //   Promise<Movie[]> {
-  //   return this.scraperService.findInitUnfinished (
-  //     limit, 
-  //     offset,);
-  // }
+  @Post('movies')
+  chromeScraper(@Body() movie: ChromeScraperDto ): Promise<boolean> {
+    console.log('chromeScraper', movie);
+    return this.scraperService.chromeScraper(movie);
+  }
 
   @Post('logs')
   pushLog(@Body() log: ScraperLog ): Promise<ScraperLog> {

@@ -4,8 +4,6 @@ This project is a video collection and playback application built with Next.js, 
 
 ![Movies](https://private-user-images.githubusercontent.com/13233550/395131521-40fe2133-662a-49cd-b081-4a9f60c56db0.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzQwMDI1MzUsIm5iZiI6MTczNDAwMjIzNSwicGF0aCI6Ii8xMzIzMzU1MC8zOTUxMzE1MjEtNDBmZTIxMzMtNjYyYS00OWNkLWIwODEtNGE5ZjYwYzU2ZGIwLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDEyMTIlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQxMjEyVDExMTcxNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTAxYWEyZmYyOTg1ZmViN2MyZDVjOTc3NTBhZGEyMjVkNzIyMDQyMDU4YTlmYmQyZGFmYWQ3ODIxZmUwNWM2MWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.dsERQ3JC1xmLuknBAfpTiThFCXLzYFWBem_eqqekZaw)
 
-
-
 ## Structure
 
 ```plainttext
@@ -116,6 +114,12 @@ To install the project dependencies, run the following command in both the `clie
 
 ```sh
 npm install
+```
+
+To install the MySQL driver for TypeORM, run the following command in the `server` directory:
+
+```sh
+npm install mysql2
 ```
 
 ### Running the Application under development mode

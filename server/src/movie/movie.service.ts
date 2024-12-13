@@ -11,7 +11,8 @@ import { ActorService } from 'src/actor/actor.service';
 import { DownloadLink } from '@/download-link/download-link.entity';
 import { DownloadLinkService } from '@/download-link/download-link.service';
 import { saveOneMovie, getUnfinishedMovies, saveMovieIndexs } from '../scraper/movieScraper';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 interface FindAllParams {
   limit?: number;
@@ -25,6 +26,7 @@ interface FindAllParams {
 
 @Injectable()
 export class MovieService {
+  private dbType: string;
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
@@ -40,7 +42,7 @@ export class MovieService {
     private readonly actorService: ActorService,
     private readonly galleryService: GalleryService,
 
-  ) { }
+  ) { this.dbType = process.env.DB_TYPE; }
 
   create(movie: Movie): Promise<Movie> {
     const newMovie = this.movieRepository.create(movie);
@@ -67,22 +69,49 @@ export class MovieService {
     }: FindAllParams
   ): Promise<[Movie[], number]> {
     const [field, direction] = (order).split(' ');
-    console.log("actorId", actorId);
     if (actorId) {
+      let sql;
+      switch (this.dbType) {
+        case 'mysql':
+          sql = `select count(*) from movie a 
+          inner join movie_actors_actor b on a.id = b.movieId
+          where b.actorId = ?`;
+          break;
+        case 'postgres':
+          sql = `select count(*) from movie a 
+          inner join movie_actors_actor b on a.id = b."movieId"
+          where b."actorId" = $1`;
+          break;
+        default:
+          throw new Error('Unknown db type');
+      }
       const reCount = await this.movieRepository.query(
-        `select count(*) from movie a 
-          inner join movie_actors_actor b on a.id = b."movieId"
-          where b."actorId" = $1
-        `, [actorId]);
+        sql, [actorId]);
       const count = parseInt(reCount[0].count, 10);
-      const re = await this.movieRepository.query(
-        `select a.* from movie a 
+
+
+      switch (this.dbType) {
+        case 'mysql':
+          sql = `select a.* from movie a 
+          inner join movie_actors_actor b on a.id = b.movieId
+          where b.actorId = ?
+          order by a.${field} ${direction.toUpperCase()} 
+          limit ? offset ?`;
+          break;
+        case 'postgres':
+          sql = `select a.* from movie a 
           inner join movie_actors_actor b on a.id = b."movieId"
           where b."actorId" = $1
-          order by a."${field}" ${direction.toUpperCase() as 'ASC' | 'DESC'} NULLS LAST
-          limit $2 
-          offset $3
-        `, [actorId, limit, offset]);
+          order by a."${field}" ${direction.toUpperCase()} NULLS LAST
+          limit $2 offset $3`;
+          break;
+        default:
+          throw new Error('Unknown db type');
+      }
+
+
+      const re = await this.movieRepository.query(
+        sql, [actorId, Number(limit), Number(offset)]);
       return [re, count];
     }
 
@@ -90,22 +119,68 @@ export class MovieService {
     if (playListId) {
       let orderStr = '';
       if (field === 'id') {
-        orderStr = 'b."createAt" desc';
+        switch (this.dbType) {
+          case 'mysql':
+            orderStr = 'b.createAt desc';
+            break;
+          case 'postgres':
+            orderStr = 'b."createAt" desc';
+            break;
+          default:
+            throw new Error('Unknown db type');
+        }
+        // orderStr = 'b."createAt" desc';
       }
       else {
-        orderStr = `a."${field}" ${direction.toUpperCase() as 'ASC' | 'DESC'}`;
+        switch (this.dbType) {
+          case 'mysql':
+            orderStr = `a.${field} ${direction.toUpperCase()}`;
+            break;
+          case 'postgres':
+            orderStr = `a."${field}" ${direction.toUpperCase() as 'ASC' | 'DESC'}`;
+            break;
+          default:
+            throw new Error('Unknown db type');
+        }
+        // orderStr = `a."${field}" ${direction.toUpperCase() as 'ASC' | 'DESC'}`;
       }
+
+      let sql = '';
+      switch (this.dbType) {
+        case 'mysql':
+          sql = `select count(*) from play_list_item a
+          inner join play_list b on a.playListId = b.id and b.userId = ?
+          where a.playListId = ?`;
+          break;
+        case 'postgres':
+          sql = `select count(*) from play_list_item a
+          inner join play_list b on a."playListId" = b.id and b."userId" = $1
+          where a."playListId" = $2`;
+          break;
+        default:
+          throw new Error('Unknown db type');
+      }
+
       const countRe = await this.movieRepository.query(
-        `select count(*) from play_list_item a
-      inner join play_list b on a."playListId" = b.id and b."userId"=1
-      where a."playListId" = $1 ;`, [playListId]);
+        sql, [userId, playListId]);
       const count = parseInt(countRe[0].count, 10);
       if (count === 0) {
         return [[], 0];
       }
 
-      const re = await this.movieRepository.query(
-        `select a.* from movie a 
+      switch (this.dbType) {
+        case 'mysql':
+          sql = `select a.* from movie a 
+          RIGHT join play_list_item b
+            on a.id = b.movieId
+          LEFT JOIN play_list c
+            on b.playListId = c.id and c.userId = ?
+          where c.id = ?
+          order by ${orderStr}
+          limit ? offset ?`;
+          break;
+        case 'postgres':
+          sql = `select a.* from movie a 
           RIGHT join play_list_item b
             on a.id = b."movieId"
           LEFT JOIN play_list c
@@ -113,8 +188,14 @@ export class MovieService {
           where c.id = $2 
           order by ${orderStr}
           limit $3 
-          offset $4
-        `, [userId, playListId, limit, offset]);
+          offset $4`;
+          break;
+        default:
+          throw new Error('Unknown db type');
+      }
+
+      const re = await this.movieRepository.query(
+        sql, [userId, playListId, limit, offset]);
       return [re, count];
     }
 
@@ -125,7 +206,17 @@ export class MovieService {
         { sn: ILike(`%${title}%`) }
       ]);
     }
-    repo.orderBy(`movie."${field}"`, direction.toUpperCase() as 'ASC' | 'DESC');
+    switch (this.dbType) {
+      case 'mysql':
+        repo.orderBy(`movie.${field}`, direction.toUpperCase() as 'ASC' | 'DESC');
+        break;
+      case 'postgres':
+        repo.orderBy(`movie."${field}"`, direction.toUpperCase() as 'ASC' | 'DESC');
+        break;
+      default:
+        throw new Error('Unknown db type');
+    }
+    // repo.orderBy(`movie."${field}"`, direction.toUpperCase() as 'ASC' | 'DESC');
     repo.skip(offset);
     repo.take(limit);
     const movies = repo.getManyAndCount();
@@ -138,14 +229,28 @@ export class MovieService {
   async findById(id: number, userId: number): Promise<any> {
     const re = await this.movieRepository.findOne({
       where: { id },
-      relations: ['actors', 'tags', 'playLinks', 'directors', 'galleries', 'downloadLinks'],
+      relations: ['actors', 'playLinks', 'directors', 'galleries', 'downloadLinks'],
     }) as any;
 
-    const playLists = await this.playListItemRepository.query(
-      `select a."playListId" as id,b.name from play_list_item a
+    let sql = '';
+    switch (this.dbType) {
+      case 'mysql':
+        sql = `select a.* from play_list_item a
+        inner join play_list b on a.playListId = b.id
+        where a.movieId = ? and b.userId = ?`;
+        break;
+      case 'postgres':
+        sql = `select a.* from play_list_item a
         inner join play_list b on a."playListId" = b.id
-      where "movieId" = $1 and b."userId" = $2`,
-      [id, userId]
+        where a."movieId" = $1 and b."userId" = $2`;
+        break;
+      default:
+        throw new Error('Unknown db type');
+    }
+
+
+    const playLists = await this.playListItemRepository.query(
+      sql, [id, userId]
     )
 
     // const playLists = await this.playListRepository.findByIds(playListIds);
@@ -162,13 +267,27 @@ export class MovieService {
       throw new Error('Movie not found');
     }
 
-    // Execute raw SQL query to get currentPlayListIds
-    const currentPlayListIdsResult = await this.movieRepository.query(
-      `select a."playListId" from play_list_item a 
+    let sql = '';
+    switch (this.dbType) {
+      case 'mysql':
+        sql = `select a.playListId from play_list_item a 
+        inner join movie b on a.movieId = b.id
+        inner join play_list c on a.playListId = c.id
+        where a.movieId = ? and c.userId = ?`;
+        break;
+      case 'postgres':
+        sql = `select a."playListId" from play_list_item a 
         inner join movie b on a."movieId" = b.id
         inner join play_list c on a."playListId" = c.id
-        where a."movieId" = $1 and c."userId" = $2`,
-      [movieId, userId]
+        where a."movieId" = $1 and c."userId" = $2`;
+        break;
+      default:
+        throw new Error('Unknown db type');
+    }
+
+    // Execute raw SQL query to get currentPlayListIds
+    const currentPlayListIdsResult = await this.movieRepository.query(
+      sql, [movieId, userId]
     );
 
     const currentPlayListIds = currentPlayListIdsResult.map(row => parseInt(row.playListId, 10)) as number[];

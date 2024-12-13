@@ -32,3 +32,22 @@ export class ScraperItemDto {
     log: string;
     time: string;
   }
+
+  export class ChromeScraperActorDto {
+    name:string;
+    url:string;
+  }
+
+  export class ChromeScraperDto {
+    name: string;
+    sn: string;
+    releaseDate: string;
+    directorNames: string[];
+    actors: ChromeScraperActorDto[];
+    // tagNames: movieTags,
+    posterUrl: string;
+    rating: string;
+    fromUrl: string;
+    description: string;
+    relatedPictures: string[];
+  }

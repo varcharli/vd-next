@@ -41,9 +41,9 @@ export class Movie {
     @JoinTable()
     actors: Actor[];
 
-    @ManyToMany(() => Tag)
-    @JoinTable()
-    tags: Tag[];
+    // @ManyToMany(() => Tag)
+    // @JoinTable()
+    // tags: Tag[];
 
     @ManyToOne(() => PlayListItem, playListItem => playListItem.movie)
     playListItems: PlayListItem[];

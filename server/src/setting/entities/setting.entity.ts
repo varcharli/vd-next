@@ -6,7 +6,7 @@ export class Setting {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Index()
+    // @Index()
     @Column({ unique: true, nullable: false })
     name: string;
 

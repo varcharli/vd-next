@@ -10,11 +10,13 @@ import { DownloadLinkService } from '@/download-link/download-link.service';
 import { GalleryService } from '@/gallery/gallery.service';
 import { PlayListService } from '@/play-list/play-list.service';
 import { SettingService } from '@/setting/setting.service';
-import { ScraperSetting } from './dto/scraper.dto';
+import { ScraperSetting,ChromeScraperDto } from './dto/scraper.dto';
 import { ScraperLog } from './scraper.entity';
 import { formateNow } from '@/func';
 
 import { saveOneMovie, getUnfinishedMovies, saveMovieIndexs } from './movieScraper';
+import { Actor } from '@/actor/actor.entity';
+import { Gallery } from '@/gallery/gallery.entity';
 
 const keyInitProjectName = "init";
 const keyInitLastPage = "ScraperInitLastPage";
@@ -285,5 +287,37 @@ export class ScraperService {
 
   //   return items.map(item => { return { id: item.movieId, fromUrl: item.url } as Movie });
   // }
+
+  async chromeScraper(dto: ChromeScraperDto): Promise<boolean> {
+    // use sn as unique key.
+    if(!dto.sn) return false;
+
+    const movie = new Movie();
+    movie.sn = dto.sn;
+    movie.name = dto.name;
+    movie.releaseDate = dto.releaseDate;
+    movie.actors = dto.actors.map(actor => ({name:actor.name,photoUrl:actor.url} as Actor));
+    // movie.directors = dto.directorNames.map(name => ({ name } as Actor));
+    movie.posterUrl = dto.posterUrl;
+    movie.galleries = dto.relatedPictures.map(url => ({url} as Gallery));
+
+    try {
+      const re = await saveOneMovie(
+        {
+          movie,
+          movieRepository: this.movieRepository,
+          actorService: this.actorService,
+          downloadLinkService: this.downloadLinkService,
+          galleryService: this.galleryService
+        });
+      return true;
+    } catch (e) {
+      // internal error still finish item and mark error message to item name
+      console.log('chromeScraper error', e);
+      return false;
+    }
+  }
+
+
 
 }
