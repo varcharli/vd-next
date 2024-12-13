@@ -41,7 +41,7 @@ docker-compose up --build
 
 `docker-compose.yml`
 
-```docker
+```yml
 services:
   nextjs:
     restart: always
@@ -71,7 +71,7 @@ services:
 If you need to add a database service, you can choose either Postgres or MySQL.
 The following example adds a Postgres service.
 
-```docker
+```yml
   db:
     image: postgres:15
     restart: always
@@ -88,7 +88,7 @@ The following example adds a Postgres service.
 
 MySql service.
 
-```docker
+```yml
   db:
     image: mysql:8
     restart: always
