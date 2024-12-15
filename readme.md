@@ -2,7 +2,14 @@
 
 This project is a video collection and playback application built with Next.js, NestJS, and Postgres or MySQL. The project includes a client-side application for displaying videos and a server-side application for managing them.
 
+`Movies`
 ![Movies](https://github.com/user-attachments/assets/40fe2133-662a-49cd-b081-4a9f60c56db0)
+`Movie Detail`
+![Detail](https://github.com/user-attachments/assets/1909aca9-cada-4f17-853a-414aeef31f1b)
+`Actors`
+![Actors](https://github.com/user-attachments/assets/7326f6f0-1ce4-459c-94d4-b771c558d880)
+`Playlist`
+![Playlist](https://github.com/user-attachments/assets/f961d809-ed0c-418f-9254-de1c096ff385)
 
 ## Structure
 
